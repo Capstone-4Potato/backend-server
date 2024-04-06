@@ -19,6 +19,13 @@ public class CardListService {
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardScoreRepository cardScoreRepository;
 
+    //controller getCardList request 처리
+    public List<ResponseCardDto> resolveCardListRequest(String category, String subcategory){
+        Long requestCategory = returnRequestCategory(category, subcategory);
+        List<ResponseCardDto> cardDtoList = returnResponseCardDtoList(requestCategory);
+        return cardDtoList;
+    }
+
     //요청하는 카테고리 찾기
     public Long returnRequestCategory(String category, String subcategory){
         //부모 카테고리 아이디 찾기

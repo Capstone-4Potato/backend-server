@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Result<T> {
+public class Response<T> {
     private T data;
     private int count;
 
-    public Result(T data, int count) {
+    public Response(T data, int count) {
         this.data = data;
         this.count = count;
     }
