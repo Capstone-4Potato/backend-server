@@ -11,7 +11,7 @@ public class CardScore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "highest_score", nullable = false)
-    private Integer highestScore;
+    private int highestScore;
     @Column(name = "user_id", nullable = false)
     private Long userId;
     @Column(name = "card_id", nullable = false)
