@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 @Entity(name = "card_weaksound")
 @Getter
-@IdClass(CardWeakSound.class)
-public class CardWeakSound implements Serializable {
+@IdClass(CardWeakSoundId.class)
+public class CardWeakSound  {
     @Id
     @Column(name = "user_id")
     private Long userId;

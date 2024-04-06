@@ -8,4 +8,5 @@ import java.util.List;
 public interface CardRepository extends JpaRepository<Card, Long> {
     @Override
     List<Card> findAll();
+    List<Card> findAllByCategoryId(Long id);
 }

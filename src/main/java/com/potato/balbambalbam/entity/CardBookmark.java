@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 @Entity(name = "card_bookmark")
 @Getter
-@IdClass(CardBookmark.class)
-public class CardBookmark implements Serializable {
+@IdClass(CardBookmarkId.class)
+public class CardBookmark {
 
     @Id
     @Column(name = "user_id")
