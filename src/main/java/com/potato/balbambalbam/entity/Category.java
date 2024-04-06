@@ -5,9 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.ToString;
 
 @Entity(name = "category")
 @Getter
+@ToString
 public class Category {
 
     @Id
