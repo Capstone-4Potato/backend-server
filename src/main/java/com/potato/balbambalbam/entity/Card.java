@@ -2,6 +2,7 @@ package com.potato.balbambalbam.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 @Getter
 @Entity(name = "card")
+@ToString
 public class Card {
     @Id
     @Column(name = "id")
