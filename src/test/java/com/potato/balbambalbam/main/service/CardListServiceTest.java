@@ -37,11 +37,17 @@ class CardListServiceTest {
         //then
         List<ResponseCardDto> cardDtoList = cardListService.returnResponseCardDtoList(categoryId);
 
-        //
-        for (ResponseCardDto responseCardDto : cardDtoList) {
-            System.out.println("responseCardDto = " + responseCardDto);
-        }
+        //when
+        Assertions.assertThat(cardDtoList.get(0).getId()).isEqualTo(1);
+    }
 
+    @Test
+    void testResolveCardListRequest(){
+        //given
+
+        //then
+
+        //when
     }
 
 }
