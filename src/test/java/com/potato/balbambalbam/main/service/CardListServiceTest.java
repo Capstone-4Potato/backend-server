@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+
 @SpringBootTest
 class CardListServiceTest {
     @Autowired
@@ -25,8 +27,8 @@ class CardListServiceTest {
         Long requestCategory2 = cardListService.returnRequestCategory(category2, subCategory);
 
         //then
-        Assertions.assertThat(requestCategory).isEqualTo(8);
-        Assertions.assertThat(requestCategory2).isEqualTo(15);
+        assertThat(requestCategory).isEqualTo(8);
+        assertThat(requestCategory2).isEqualTo(15);
     }
 
     @Test
@@ -38,7 +40,7 @@ class CardListServiceTest {
         List<ResponseCardDto> cardDtoList = cardListService.returnResponseCardDtoList(categoryId);
 
         //when
-        Assertions.assertThat(cardDtoList.get(0).getId()).isEqualTo(1);
+        assertThat(cardDtoList.get(0).getId()).isEqualTo(1);
     }
 
     @Test
@@ -52,7 +54,28 @@ class CardListServiceTest {
         ResponseCardDto cardDto = cardDtoList.get(0);
 
         //when
-        Assertions.assertThat(cardDtoList.size()).isEqualTo()
+        assertThat(cardDtoList.size()).isEqualTo(8);
+        assertThat(cardDto.getText()).isEqualTo("아");
     }
 
+    @Test
+    void returnRequestCategoryErrorTest(){
+        //given
+        String category1 = "ㅂ뤡";
+        String category2 = " ";
+        String subCategory1 = "abc";
+        String subCategory2 = " ";
+
+        //then
+
+        //when
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            cardListService.returnRequestCategory(category1, subCategory1);
+        });
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            cardListService.returnRequestCategory(category2, category2);
+        });
+
+
+    }
 }
