@@ -44,10 +44,15 @@ class CardListServiceTest {
     @Test
     void testResolveCardListRequest(){
         //given
+        String category = "음절";
+        String subCategory = "단모음";
 
         //then
+        List<ResponseCardDto> cardDtoList = cardListService.resolveCardListRequest(category, subCategory);
+        ResponseCardDto cardDto = cardDtoList.get(0);
 
         //when
+        Assertions.assertThat(cardDtoList.size()).isEqualTo()
     }
 
 }

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@Schema(description = "카드 정보")
+@Schema(description = "카드리스트 각 카드 정보 Response")
 public class ResponseCardDto {
 
     private Long id;
