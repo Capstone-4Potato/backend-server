@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +39,9 @@ public class CardListService {
      */
     protected Long returnRequestCategory(String category, String subcategory){
         //부모 카테고리 아이디 찾기
-        Long parentId = categoryRepository.findByName(category).map(Category::getId).orElseThrow(()->new NoSuchElementException("잘못된 요청입니다"));
+        Long parentId = categoryRepository.findByName(category).map(Category::getId).orElseThrow(()->new IllegalArgumentException("잘못된 URL 요청입니다"));
         //하위 카테고리 아이디 찾기
-        Long requestCategoryId = categoryRepository.findByNameAndParentId(subcategory, parentId).getId();
+        Long requestCategoryId = categoryRepository.findByNameAndParentId(subcategory, parentId).map(Category::getId).orElseThrow(()->new IllegalArgumentException("잘못된 URL 요청입니다"));
 
         return requestCategoryId;
     }

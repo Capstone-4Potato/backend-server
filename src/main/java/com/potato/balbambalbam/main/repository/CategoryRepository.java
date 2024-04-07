@@ -10,7 +10,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Override
     List<Category> findAll();
-
     Optional<Category> findByName(String name);
-    Category findByNameAndParentId(String name, Long parentId);
+    Optional<Category> findByNameAndParentId(String name, Long parentId);
 }
