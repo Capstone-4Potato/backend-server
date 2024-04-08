@@ -1,8 +1,11 @@
 package com.potato.balbambalbam.main.service;
 
+import com.potato.balbambalbam.entity.Card;
 import com.potato.balbambalbam.entity.Phoneme;
+import com.potato.balbambalbam.main.repository.CardRepository;
 import com.potato.balbambalbam.main.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,8 +19,10 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PhonemeService {
     private final PhonemeRepository phonemeRepository;
+    private final CardRepository cardRepository;
 
     private static final String[] CHOSUNG = {
             "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
@@ -74,5 +79,17 @@ public class PhonemeService {
         List<Long> distinctPhonemeIds= phonemeIds.stream().distinct().collect(Collectors.toList());    //중복 제거
 
         return distinctPhonemeIds;
+    }
+
+    //TODO : CML로만 실행시킬 수 있도록 변경 필요
+    public void updateCardPhonemeColumn(){
+        List<Card> cardList = cardRepository.findAll();
+
+        cardList.stream().forEach(card -> {
+            Card cardById = cardRepository.findById(card.getId()).get();
+            cardById.setPhonemesMap(convertTextToPhonemeIds(cardById.getText()));
+            cardRepository.save(cardById);
+            log.info(cardById + "update");
+        });
     }
 }
