@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CardBookmarkRepository extends JpaRepository<CardBookmark, CardBookmarkId> {
 
     boolean existsByCardIdAndUserId(Long cardId, Long userId);
+    void deleteByCardIdAndUserId(Long cardId, Long userId);
 }

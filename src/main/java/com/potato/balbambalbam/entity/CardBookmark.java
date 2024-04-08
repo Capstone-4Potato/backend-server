@@ -23,4 +23,9 @@ public class CardBookmark {
     public CardBookmark() {
 
     }
+
+    public CardBookmark(Long userId, Long cardId) {
+        this.userId = userId;
+        this.cardId = cardId;
+    }
 }
