@@ -59,24 +59,29 @@ public class CardListService {
      */
     protected List<ResponseCardDto> returnResponseCardDtoList(Long id){
         List<Card> cardList = cardRepository.findAllByCategoryId(id);
-
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
-
-        for (Card card : cardList) {
-            ResponseCardDto responseCardDto = new ResponseCardDto();
-            Long cardId = card.getId();
-            responseCardDto.setId(cardId);
-            responseCardDto.setText(card.getText());
-            /**
-             * userId 부분 나중에 바꿔야됨!
-             */
-            responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, TEMPORARY_USER_ID).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
-            responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
-            responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
-            cardDtoList.add(responseCardDto);
-        }
+        cardList.stream().forEach(card -> cardDtoList.add(cardMapper(card)));
 
         return cardDtoList;
+    }
+
+    /**
+     * Card Entity를 ResponseCardDto에 맞게 변환
+     * @param card
+     * @return
+     */
+    protected ResponseCardDto cardMapper(Card card){
+        ResponseCardDto responseCardDto = new ResponseCardDto();
+        Long cardId = card.getId();
+        responseCardDto.setId(cardId);
+        responseCardDto.setText(card.getText());
+
+        //TODO: userid를 동적으로 처리하도록 변경 필요
+        responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, TEMPORARY_USER_ID).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
+        responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
+        responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
+
+        return responseCardDto;
     }
 
     /**
