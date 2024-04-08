@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -22,11 +23,11 @@ public class Card {
     private String pronunciation;
     @Column(name = "phonemes")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Long> phonemesMap;
+    private List<Long> phonemesMap;
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    public Card(String text, String pronunciation, Map<String, Long> phonemesMap, Long categoryId){
+    public Card(String text, String pronunciation, List<Long> phonemesMap, Long categoryId){
         this.text = text;
         this.pronunciation = pronunciation;
         this.phonemesMap = phonemesMap;

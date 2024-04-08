@@ -30,7 +30,7 @@ public class CardListController {
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
     public ResponseEntity<CardListResponse<List<ResponseCardDto>>> getCardList(@RequestParam("category") String category, @RequestParam("subcategory") String subcategory){
-        List<ResponseCardDto> cardDtoList = cardListService.resolveCardListRequest(category, subcategory);
+        List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subcategory);
         CardListResponse<List<ResponseCardDto>> response = new CardListResponse<>(cardDtoList, cardDtoList.size());
 
         return ResponseEntity.ok().body(response);
@@ -43,7 +43,7 @@ public class CardListController {
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카드", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
     public ResponseEntity updateCardBookmark(@PathVariable("cardId") Integer cardId){
-        String message = cardListService.updateCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
+        String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
         return ResponseEntity.ok().body(message);
     }
 

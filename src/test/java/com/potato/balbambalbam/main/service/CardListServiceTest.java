@@ -16,15 +16,15 @@ class CardListServiceTest {
     @Autowired
     private CardListService cardListService;
     @Test
-    void testFindRequestCategory(){
+    void getSubCategoryIdTest(){
         //given
         String category = "음절";
         String category2 = "단어";
         String subCategory = "자음ㄱㅋㄲ";
 
         //when
-        Long requestCategory = cardListService.returnRequestCategory(category, subCategory);
-        Long requestCategory2 = cardListService.returnRequestCategory(category2, subCategory);
+        Long requestCategory = cardListService.getSubCategoryId(category, subCategory);
+        Long requestCategory2 = cardListService.getSubCategoryId(category2, subCategory);
 
         //then
         assertThat(requestCategory).isEqualTo(8);
@@ -32,25 +32,25 @@ class CardListServiceTest {
     }
 
     @Test
-    void testReturnResponseCardDtoList(){
+    void createCardDtoListForCategoryTest(){
         //given
         Long categoryId = 5L;    //음절 - 단모음 ( 아어오우.. )
 
         //then
-        List<ResponseCardDto> cardDtoList = cardListService.returnResponseCardDtoList(categoryId);
+        List<ResponseCardDto> cardDtoList = cardListService.createCardDtoListForCategory(categoryId);
 
         //when
         assertThat(cardDtoList.get(0).getId()).isEqualTo(1);
     }
 
     @Test
-    void testResolveCardListRequest(){
+    void getCardsByCategoryTest(){
         //given
         String category = "음절";
         String subCategory = "단모음";
 
         //then
-        List<ResponseCardDto> cardDtoList = cardListService.resolveCardListRequest(category, subCategory);
+        List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subCategory);
         ResponseCardDto cardDto = cardDtoList.get(0);
 
         //when
@@ -59,7 +59,7 @@ class CardListServiceTest {
     }
 
     @Test
-    void returnRequestCategoryErrorTest(){
+    void getSubCategoryIdErrorTest(){
         //given
         String category1 = "ㅂ뤡";
         String category2 = " ";
@@ -70,12 +70,10 @@ class CardListServiceTest {
 
         //when
         org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            cardListService.returnRequestCategory(category1, subCategory1);
+            cardListService.getSubCategoryId(category1, subCategory1);
         });
         org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            cardListService.returnRequestCategory(category2, category2);
+            cardListService.getSubCategoryId(category2, category2);
         });
-
-
     }
 }
