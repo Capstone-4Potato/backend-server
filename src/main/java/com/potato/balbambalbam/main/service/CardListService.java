@@ -32,9 +32,9 @@ public class CardListService {
      * @param subcategory
      * @return cardDtoList
      */
-    public List<ResponseCardDto> resolveCardListRequest(String category, String subcategory){
-        Long requestCategory = returnRequestCategory(category, subcategory);
-        List<ResponseCardDto> cardDtoList = returnResponseCardDtoList(requestCategory);
+    public List<ResponseCardDto> getCardsByCategory(String category, String subcategory){
+        Long requestCategory = getSubCategoryId(category, subcategory);
+        List<ResponseCardDto> cardDtoList = createCardDtoListForCategory(requestCategory);
         return cardDtoList;
     }
 
@@ -43,7 +43,7 @@ public class CardListService {
      * @param subcategory
      * @return requestCategoryId
      */
-    protected Long returnRequestCategory(String category, String subcategory){
+    protected Long getSubCategoryId(String category, String subcategory){
         //부모 카테고리 아이디 찾기
         Long parentId = categoryRepository.findByName(category).map(Category::getId).orElseThrow(()->new CategoryNotFoundException("잘못된 URL 요청입니다"));
         //하위 카테고리 아이디 찾기
@@ -57,10 +57,10 @@ public class CardListService {
      * @param id
      * @return cardDtoList
      */
-    protected List<ResponseCardDto> returnResponseCardDtoList(Long id){
+    protected List<ResponseCardDto> createCardDtoListForCategory(Long id){
         List<Card> cardList = cardRepository.findAllByCategoryId(id);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
-        cardList.stream().forEach(card -> cardDtoList.add(cardMapper(card)));
+        cardList.stream().forEach(card -> cardDtoList.add(convertCardToDto(card)));
 
         return cardDtoList;
     }
@@ -70,7 +70,7 @@ public class CardListService {
      * @param card
      * @return
      */
-    protected ResponseCardDto cardMapper(Card card){
+    protected ResponseCardDto convertCardToDto(Card card){
         ResponseCardDto responseCardDto = new ResponseCardDto();
         Long cardId = card.getId();
         responseCardDto.setId(cardId);
@@ -89,7 +89,7 @@ public class CardListService {
      * @param cardId
      * @param userId
      */
-    public String updateCardBookmark(Long cardId, Long userId){
+    public String toggleCardBookmark(Long cardId, Long userId){
         cardRepository.findById(cardId).orElseThrow(()->new CardNotFoundException("존재하지 않는 카드입니다."));
 
         if(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId)){
