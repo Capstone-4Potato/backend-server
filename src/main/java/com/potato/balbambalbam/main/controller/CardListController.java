@@ -4,6 +4,7 @@ import com.potato.balbambalbam.main.dto.CardListResponse;
 import com.potato.balbambalbam.main.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.dto.ExceptionDto;
 import com.potato.balbambalbam.main.service.CardListService;
+import com.potato.balbambalbam.main.service.PhonemeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CardListController {
     public static final long TEMPORARY_USER_ID = 1L;
     private final CardListService cardListService;
+    private final PhonemeService phonemeService;
 
     @GetMapping ("/cards")
     @Operation(summary = "CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
@@ -45,6 +47,13 @@ public class CardListController {
     public ResponseEntity updateCardBookmark(@PathVariable("cardId") Integer cardId){
         String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
         return ResponseEntity.ok().body(message);
+    }
+
+    //TODO : CML로만 실행시킬 수 있도록 변경 필요 (삭제)
+    @GetMapping("/phonemes")
+    public ResponseEntity updateCardPhoneme(){
+        phonemeService.updateCardPhonemeColumn();
+        return ResponseEntity.ok("업데이트 성공");
     }
 
 }
