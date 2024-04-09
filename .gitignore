@@ -36,5 +36,3 @@ application-local.properties
 
 ### VS Code ###
 .vscode/
-
-src/main/java/com/potato/balbambalbam/weaksoundtest/mock
