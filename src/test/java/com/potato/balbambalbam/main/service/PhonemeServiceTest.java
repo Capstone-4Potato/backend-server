@@ -11,12 +11,12 @@ import java.util.List;
 class PhonemeServiceTest {
 
     @Autowired
-    public PhonemeService phonemeService;
+    public UpdatePhonemeService updatePhonemeService;
 
     @Test
     public void dividePronunciationToPhoneme() {
         String text = "아닌데";
-        List<Long> phonemeIds = phonemeService.convertTextToPhonemeIds(text);
+        List<Long> phonemeIds = updatePhonemeService.convertTextToPhonemeIds(text);
 
         Assertions.assertThat(phonemeIds).contains(8L, 19L, 2L, 24L, 41L, 3L, 26L);
     }

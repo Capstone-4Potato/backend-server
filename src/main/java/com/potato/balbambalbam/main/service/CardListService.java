@@ -35,6 +35,7 @@ public class CardListService {
     public List<ResponseCardDto> getCardsByCategory(String category, String subcategory){
         Long requestCategory = getSubCategoryId(category, subcategory);
         List<ResponseCardDto> cardDtoList = createCardDtoListForCategory(requestCategory);
+
         return cardDtoList;
     }
 

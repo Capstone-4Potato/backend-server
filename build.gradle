@@ -41,3 +41,9 @@ compileJava.options.encoding='UTF-8'
 tasks.withType(JavaCompile){
 	options.encoding='UTF-8'
 }
+
+bootJar{
+	archiveBaseName = 'BalbamBalbam-Application'
+	archiveVersion = '0.0.0'
+	exclude '**/application-local.properties'
+}
