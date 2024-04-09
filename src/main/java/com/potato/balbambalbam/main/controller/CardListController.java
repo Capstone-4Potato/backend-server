@@ -1,10 +1,10 @@
 package com.potato.balbambalbam.main.controller;
 
 import com.potato.balbambalbam.main.dto.CardListResponse;
-import com.potato.balbambalbam.main.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.dto.ExceptionDto;
+import com.potato.balbambalbam.main.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.service.CardListService;
-import com.potato.balbambalbam.main.service.PhonemeService;
+import com.potato.balbambalbam.main.service.UpdatePhonemeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,9 +12,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 @RestController
@@ -23,7 +26,7 @@ import java.util.List;
 public class CardListController {
     public static final long TEMPORARY_USER_ID = 1L;
     private final CardListService cardListService;
-    private final PhonemeService phonemeService;
+    private final UpdatePhonemeService updatePhonemeService;
 
     @GetMapping ("/cards")
     @Operation(summary = "CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
@@ -35,10 +38,15 @@ public class CardListController {
         List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subcategory);
         CardListResponse<List<ResponseCardDto>> response = new CardListResponse<>(cardDtoList, cardDtoList.size());
 
-        return ResponseEntity.ok().body(response);
+        //header : json, utf-8 인코딩
+        HttpHeaders httpHeaders = new HttpHeaders();
+        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
+        httpHeaders.setContentType(mediaType);
+
+        return ResponseEntity.ok().headers(httpHeaders).body(response);
     }
 
-    @PostMapping("/cards/bookmark/{cardId}")
+    @GetMapping("/cards/bookmark/{cardId}")
     @Operation(summary = "Card Bookmark 갱신", description = "해당 카드의 북마크 on / off")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 북마크 UPDATE(있으면 삭제 없으면 추가)", useReturnTypeSchema = true),
@@ -52,8 +60,7 @@ public class CardListController {
     //TODO : CML로만 실행시킬 수 있도록 변경 필요 (삭제)
     @GetMapping("/phonemes")
     public ResponseEntity updateCardPhoneme(){
-        phonemeService.updateCardPhonemeColumn();
+        updatePhonemeService.updateCardPhonemeColumn();
         return ResponseEntity.ok("업데이트 성공");
     }
-
 }
