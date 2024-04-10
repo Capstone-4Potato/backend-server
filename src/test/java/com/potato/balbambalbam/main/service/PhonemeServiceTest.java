@@ -14,10 +14,11 @@ class PhonemeServiceTest {
     public UpdatePhonemeService updatePhonemeService;
 
     @Test
-    public void dividePronunciationToPhoneme() {
+    public void convertTextToPhonemeIdsTest() {
         String text = "아닌데";
         List<Long> phonemeIds = updatePhonemeService.convertTextToPhonemeIds(text);
 
         Assertions.assertThat(phonemeIds).contains(8L, 19L, 2L, 24L, 41L, 3L, 26L);
     }
+
 }

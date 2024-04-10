@@ -22,4 +22,8 @@ public class CardWeakSound  {
     public CardWeakSound() {
 
     }
+    public CardWeakSound(Long userId, Long cardId) {
+        this.userId = userId;
+        this.cardId = cardId;
+    }
 }

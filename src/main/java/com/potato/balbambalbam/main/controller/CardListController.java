@@ -56,4 +56,16 @@ public class CardListController {
         String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
         return ResponseEntity.ok().body(message);
     }
+
+    //TODO : 취약음 갱신 시 cardWeakSound Update Controller(취약음 Test 완료 시 진행)
+//    @PostMapping("/cards/weaksound")
+//    @Operation(summary = "Card WeakSound 갱신", description = "사용자 취약음 갱신 시 전체 카드에 대한 취약음 여부 갱신")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "OK : Card WeakSound Update 성공)", useReturnTypeSchema = true),
+//            @ApiResponse(responseCode = "400", description = "ERROR : Update 실패", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+//    })
+//    public ResponseEntity updateCardWeakSound(@RequestBody("updateWeaksoundList") List<String> updateWeakSounds){
+//        String message = cardListService.updateCardWeakSound(TEMPORARY_USER_ID);
+//        return ResponseEntity.ok().body(message);
+//    }
 }
