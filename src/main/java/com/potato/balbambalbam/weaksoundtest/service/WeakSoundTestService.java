@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Map;
+
 @Service
 public class WeakSoundTestService {
 
@@ -27,7 +29,8 @@ public class WeakSoundTestService {
     @Autowired
     private WeakSoundTestRepository weakSoundTestRepository;
 
-    public WeakSoundTestDto sendToAi(String testRequestJson) throws JsonProcessingException {
+    public WeakSoundTestDto sendToAi(Map<String, Object> dataToSend) throws JsonProcessingException {
+        String testRequestJson = objectMapper.writeValueAsString(dataToSend); // dataToSend -> testRequestJson <Json>
         String testResponseJson = webClient.post()
                 .uri("/ai/test")
                 .contentType(MediaType.APPLICATION_JSON)
