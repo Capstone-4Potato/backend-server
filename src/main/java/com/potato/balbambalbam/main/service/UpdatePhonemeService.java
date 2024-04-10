@@ -80,15 +80,34 @@ public class UpdatePhonemeService {
         return distinctPhonemeIds;
     }
 
-    //TODO : CML로만 실행시킬 수 있도록 변경 필요
     public void updateCardPhonemeColumn(){
         List<Card> cardList = cardRepository.findAll();
 
         cardList.stream().forEach(card -> {
-            Card cardById = cardRepository.findById(card.getId()).get();
-            cardById.setPhonemesMap(convertTextToPhonemeIds(cardById.getText()));
-            cardRepository.save(cardById);
-            log.info(cardById + "update");
+            Card foundCard  = cardRepository.findById(card.getId()).get();
+            if(isProceedCard(card)){
+                foundCard.setPhonemesMap(convertTextToPhonemeIds(foundCard.getText()));
+                cardRepository.save(foundCard);
+                log.info(foundCard + "update");
+            }
         });
+    }
+
+    /**
+     * Update를 진행할 카드인지 검사 (문장 category가 아니고 phoneme column이 null일때만)
+     * @param card
+     * @return
+     */
+    protected boolean isProceedCard(Card card){
+        //문장 카테고리는 phoneme update X
+        if(card.getCategoryId() > 31){
+            return false;
+        }
+
+        if(card.getPhonemesMap() != null){
+            return false;
+        }
+
+        return true;
     }
 }

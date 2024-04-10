@@ -56,11 +56,4 @@ public class CardListController {
         String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
         return ResponseEntity.ok().body(message);
     }
-
-    //TODO : CML로만 실행시킬 수 있도록 변경 필요 (삭제)
-    @GetMapping("/phonemes")
-    public ResponseEntity updateCardPhoneme(){
-        updatePhonemeService.updateCardPhonemeColumn();
-        return ResponseEntity.ok("업데이트 성공");
-    }
 }
