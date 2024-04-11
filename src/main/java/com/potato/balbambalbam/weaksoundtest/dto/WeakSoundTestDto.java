@@ -10,5 +10,4 @@ import java.util.Map;
 public class WeakSoundTestDto {
     private Map<String, Integer> userWeakPhoneme;
     private Map<String, Integer> userWeakPhonemeLast;
-    private String userText;
 }
