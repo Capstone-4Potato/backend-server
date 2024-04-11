@@ -6,8 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import lombok.Getter;
 
-import java.io.Serializable;
-
 @Entity(name = "card_weaksound")
 @Getter
 @IdClass(CardWeakSoundId.class)
