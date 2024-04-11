@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
+
 /**
  * 인공지능서버와 통신하여 생성된 음성을 받아옴
  */
@@ -24,6 +27,8 @@ public class AiCardInfoService {
                 .body(voiceRequestDto, VoiceRequestDto.class)
                 .retrieve()//요청
                 .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
+                .onErrorReturn("TimeoutException")    //에러 대신 -1 return
                 .block();
 
         return wavFile;

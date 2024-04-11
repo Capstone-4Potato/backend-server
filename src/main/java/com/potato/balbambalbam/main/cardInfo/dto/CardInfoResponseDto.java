@@ -12,5 +12,6 @@ public class CardInfoResponseDto {
     private Long id;
     private String text;
     private String pronunciation;
+    private boolean isBookmark;
     private String ttsVoice;
 }
