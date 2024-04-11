@@ -17,13 +17,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class AiCardInfoService {
     public static final String TEMPORARY_URI = "/아직안정해짐";
     WebClient webClient = WebClient.builder().build();
-    public MultipartFile getTtsVoice(VoiceRequestDto voiceRequestDto) {
-        MultipartFile wavFile = webClient.post()
+    public String getTtsVoice(VoiceRequestDto voiceRequestDto) {
+        String wavFile = webClient.post()
                 .uri(TEMPORARY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(voiceRequestDto, VoiceRequestDto.class)
                 .retrieve()//요청
-                .bodyToMono(MultipartFile.class)
+                .bodyToMono(String.class)
                 .block();
 
         return wavFile;

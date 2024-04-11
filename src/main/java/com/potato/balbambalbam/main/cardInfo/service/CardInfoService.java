@@ -28,8 +28,7 @@ public class CardInfoService {
     public CardInfoResponseDto getCardInfo(Long cardId, Long userId) {
         //음성 생성
 //        VoiceRequestDto voiceRequestDto = getUserInfo(userId);
-//        MultipartFile ttsVoice = aiCardInfoService.getTtsVoice(voiceRequestDto);
-//        String wavToString = convertWavToString(ttsVoice);
+//        String wavToString = aiCardInfoService.getTtsVoice(voiceRequestDto);
         String wavToString = "테스트입니다";
 
         //카드 정보 생성
@@ -43,20 +42,6 @@ public class CardInfoService {
         Integer gender = user.getGender();
 
         return new VoiceRequestDto(age, gender);
-    }
-
-    protected String convertWavToString(MultipartFile ttsVoice) {
-
-        try{
-            byte[] voiceBytes = ttsVoice.getBytes();
-            String voiceString = Base64.getEncoder().encodeToString(voiceBytes);
-
-            return voiceString;
-        }catch (IOException ex){
-            ex.printStackTrace();
-        }
-
-        return null;
     }
 
 }
