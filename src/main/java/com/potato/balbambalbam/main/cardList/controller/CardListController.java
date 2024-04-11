@@ -1,10 +1,10 @@
-package com.potato.balbambalbam.main.controller;
+package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.main.dto.CardListResponse;
-import com.potato.balbambalbam.main.dto.ExceptionDto;
-import com.potato.balbambalbam.main.dto.ResponseCardDto;
-import com.potato.balbambalbam.main.service.CardListService;
-import com.potato.balbambalbam.main.service.UpdatePhonemeService;
+import com.potato.balbambalbam.main.cardList.dto.CardListResponse;
+import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
+import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
+import com.potato.balbambalbam.main.cardList.service.CardListService;
+import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

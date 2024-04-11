@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.service;
+package com.potato.balbambalbam.main.cardList.service;
 
 import com.potato.balbambalbam.entity.Card;
 import com.potato.balbambalbam.entity.Phoneme;
