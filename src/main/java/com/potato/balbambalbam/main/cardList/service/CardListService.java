@@ -1,16 +1,18 @@
-package com.potato.balbambalbam.main.service;
+package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.entity.*;
-import com.potato.balbambalbam.main.dto.ResponseCardDto;
-import com.potato.balbambalbam.main.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.exception.CategoryNotFoundException;
+import com.potato.balbambalbam.entity.Card;
+import com.potato.balbambalbam.entity.CardBookmark;
+import com.potato.balbambalbam.entity.CardScore;
+import com.potato.balbambalbam.entity.Category;
+import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
+import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
+import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
 import com.potato.balbambalbam.main.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service

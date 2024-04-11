@@ -1,8 +1,7 @@
 package com.potato.balbambalbam.main.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.main.dto.ResponseCardDto;
-import org.assertj.core.api.Assertions;
+import com.potato.balbambalbam.main.cardList.service.CardListService;
+import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

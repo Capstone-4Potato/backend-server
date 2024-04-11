@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.dto;
+package com.potato.balbambalbam.main.cardList.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
