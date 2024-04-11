@@ -4,7 +4,6 @@ import com.potato.balbambalbam.entity.Card;
 import com.potato.balbambalbam.entity.User;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
-import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.repository.CardBookmarkRepository;
