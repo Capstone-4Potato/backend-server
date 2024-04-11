@@ -2,6 +2,7 @@ package com.potato.balbambalbam.main.cardInfo.service;
 
 import com.potato.balbambalbam.entity.Card;
 import com.potato.balbambalbam.entity.User;
+import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
@@ -10,6 +11,10 @@ import com.potato.balbambalbam.main.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -20,17 +25,15 @@ public class CardInfoService {
     private final CardRepository cardRepository;
     private final AiCardInfoService aiCardInfoService;
 
-    public String getCardInfo(Long cardId, Long userId){
+    public CardInfoResponseDto getCardInfo(Long cardId, Long userId) {
         //음성 생성
         VoiceRequestDto voiceRequestDto = getUserInfo(userId);
-
+        MultipartFile ttsVoice = aiCardInfoService.getTtsVoice(voiceRequestDto);
+        String wavToString = convertWavToString(ttsVoice);
 
         //카드 정보 생성
         Card card = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
-        String text = card.getText();
-        String pronunciation = card.getPronunciation();
-
-        return null;
+        return new CardInfoResponseDto(cardId, card.getText(), card.getPronunciation(), wavToString);
     }
 
     protected VoiceRequestDto getUserInfo(Long userId){
@@ -39,6 +42,20 @@ public class CardInfoService {
         Integer gender = user.getGender();
 
         return new VoiceRequestDto(age, gender);
+    }
+
+    protected String convertWavToString(MultipartFile ttsVoice) {
+
+        try{
+            byte[] voiceBytes = ttsVoice.getBytes();
+            String voiceString = Base64.getEncoder().encodeToString(voiceBytes);
+
+            return voiceString;
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 
 }
