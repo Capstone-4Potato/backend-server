@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "CardList", description = "CardList API")
 public class CardListController {
+    //TODO : user 동적으로 할당
     public static final long TEMPORARY_USER_ID = 1L;
     private final CardListService cardListService;
     private final UpdatePhonemeService updatePhonemeService;
