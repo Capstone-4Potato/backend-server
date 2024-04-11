@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 @Controller
@@ -22,7 +21,7 @@ public class CardInfoController {
     public static final long TEMPORARY_USER_ID = 1L;
     private final CardInfoService cardInfoService;
 
-    @GetMapping("cards/{cardId}")
+    @GetMapping("/cards/{cardId}")
     @Operation(summary = "card info 제공", description = "카드 id, 카드 text, 발음 text, 맞춤 음성 제공")
     @ApiResponses()
     public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
