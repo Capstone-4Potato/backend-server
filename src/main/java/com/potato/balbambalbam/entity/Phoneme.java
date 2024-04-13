@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Entity(name = "phoneme")
 @Getter
-@Setter
 public class Phoneme {
 
     @Id

@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.weaksoundtest.repository.WeakSoundTestRepository;
+import com.potato.balbambalbam.weaksoundtest.service.PhonemeService;
 import com.potato.balbambalbam.weaksoundtest.service.WeakSoundTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,8 +22,12 @@ public class WeakSoundTestController {
 
     @Autowired
     private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
     private WeakSoundTestService weakSoundTestService;
+    @Autowired
     private WeakSoundTestRepository weakSoundTestRepository;
+    @Autowired
+    private PhonemeService phonemeService;
 
     @Autowired
     public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
@@ -34,12 +36,13 @@ public class WeakSoundTestController {
         this.weakSoundTestRepository = weakSoundTestRepository;
     }
 
-    @PostMapping("/test/{id}")
+    @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile
-            (@PathVariable("id") Long id,
+            (@PathVariable("cardId") Long id,
+             @RequestParam("userId") Long userId,
              @RequestParam("userAudio")MultipartFile userAudio) throws JsonProcessingException {
         if(userAudio.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("클라이언트 에러 발생!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 음성 파일이 비었습니다.");
         }
         return weakSoundTestRepository.findById(id)
                 .map(weakSoundTest -> {
@@ -51,13 +54,29 @@ public class WeakSoundTestController {
                         dataToSend.put("userAudio",userAudioBase64);
                         dataToSend.put("correctText",weakSoundTest.getText());
 
-                        WeakSoundTestDto testResponse = weakSoundTestService.sendToAi(dataToSend);
+                        WeakSoundTestDto testResponse = weakSoundTestService.sendToAi(userId, dataToSend);
                         String testResponseJson = objectMapper.writeValueAsString(testResponse);
                         return ResponseEntity.ok(testResponseJson);
                     } catch (IOException e){
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러 발생!");
                     }
                 })
-                .orElseGet(()-> ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID를 가진 데이터 없음!"));
+                .orElseGet(()-> ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id를 가진 테스트 카드가 없습니다."));
+    }
+
+    @PostMapping("/test/finalize")
+    public ResponseEntity<Map<Long, Integer>> finalizeAnalysis(@RequestParam Long userId) {
+        Map<Long, Integer> topPhonemes = phonemeService.getTopPhonemes(userId);
+
+        if (!topPhonemes.isEmpty()) {
+            System.out.println(userId + ":");
+            topPhonemes.forEach((phonemeId, count)
+                    -> System.out.println("Phoneme ID: " + phonemeId + ", Count: " + count));
+        } else {
+            System.out.println("user id "+ userId + " 의 취얌음 테스트 결과가 없습니다.");
+        }
+
+        phonemeService.clearTemporaryData(userId);
+        return ResponseEntity.ok(topPhonemes);
     }
 }

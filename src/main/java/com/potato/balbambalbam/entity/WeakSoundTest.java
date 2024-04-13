@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name="weaksound_test")
 public class WeakSoundTest {
 
