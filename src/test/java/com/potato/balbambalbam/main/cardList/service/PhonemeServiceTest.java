@@ -1,5 +1,6 @@
-package com.potato.balbambalbam.main.service;
+package com.potato.balbambalbam.main.cardList.service;
 
+import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

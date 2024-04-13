@@ -1,6 +1,6 @@
 package com.potato.balbambalbam;
 
-import com.potato.balbambalbam.main.service.UpdatePhonemeService;
+import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -12,16 +12,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class MyCommandLineRunner implements CommandLineRunner {
 
     private final UpdatePhonemeService updatePhonemeService;
     @Override
     public void run(String... args) throws Exception {
-        updateCardPhoneme();
-    }
-
-    protected void updateCardPhoneme(){
         updatePhonemeService.updateCardPhonemeColumn();
     }
 }

@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.dto;
+package com.potato.balbambalbam.main.cardList.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

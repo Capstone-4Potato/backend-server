@@ -1,10 +1,10 @@
-package com.potato.balbambalbam.main.controller;
+package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.main.dto.CardListResponse;
-import com.potato.balbambalbam.main.dto.ExceptionDto;
-import com.potato.balbambalbam.main.dto.ResponseCardDto;
-import com.potato.balbambalbam.main.service.CardListService;
-import com.potato.balbambalbam.main.service.UpdatePhonemeService;
+import com.potato.balbambalbam.main.cardList.dto.CardListResponse;
+import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
+import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
+import com.potato.balbambalbam.main.cardList.service.CardListService;
+import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "CardList", description = "CardList API")
 public class CardListController {
+    //TODO : user 동적으로 할당
     public static final long TEMPORARY_USER_ID = 1L;
     private final CardListService cardListService;
     private final UpdatePhonemeService updatePhonemeService;
