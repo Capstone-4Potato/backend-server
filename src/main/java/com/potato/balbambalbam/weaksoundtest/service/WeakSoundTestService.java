@@ -16,9 +16,12 @@ import java.util.Map;
 public class WeakSoundTestService {
 
     private WebClient webClient;
-
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private PhonemeService phonemeService;
+    @Autowired
+    private WeakSoundTestRepository weakSoundTestRepository;
 
     public WeakSoundTestService(WebClient.Builder webClientBuilder,
                                    @Value("${ai.service.url}") String aiServiceUrl){
@@ -26,10 +29,7 @@ public class WeakSoundTestService {
         this.objectMapper = objectMapper;
     }
 
-    @Autowired
-    private WeakSoundTestRepository weakSoundTestRepository;
-
-    public WeakSoundTestDto sendToAi(Map<String, Object> dataToSend) throws JsonProcessingException {
+    public WeakSoundTestDto sendToAi(Long userId, Map<String, Object> dataToSend) throws JsonProcessingException {
         String testRequestJson = objectMapper.writeValueAsString(dataToSend); // dataToSend -> testRequestJson <Json>
         String testResponseJson = webClient.post()
                 .uri("/ai/test")
@@ -38,6 +38,9 @@ public class WeakSoundTestService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return objectMapper.readValue(testResponseJson, WeakSoundTestDto.class); // testResponseJson<Json> -> WeakSoundTestDto
+        WeakSoundTestDto weakSoundTestDto = objectMapper.readValue(testResponseJson, WeakSoundTestDto.class);
+        phonemeService.storePhonemeData(userId, weakSoundTestDto);
+        return weakSoundTestDto;
     }
+
 }
