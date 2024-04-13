@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -22,11 +23,11 @@ public class AiCardInfoService {
         String wavFile = webClient.post()
                 .uri(TEMPORARY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(voiceRequestDto, VoiceRequestDto.class)
+                .body(Mono.just(voiceRequestDto), VoiceRequestDto.class)
                 .retrieve()//요청
                 .bodyToMono(String.class)
                 .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
-                .onErrorReturn("TimeoutException")    //에러 대신 -1 return
+                .onErrorReturn("TimeoutException")    //에러 대신 TimeoutException return
                 .block();
 
         return wavFile;
