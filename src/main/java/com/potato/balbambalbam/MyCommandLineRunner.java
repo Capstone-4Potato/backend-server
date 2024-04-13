@@ -12,16 +12,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class MyCommandLineRunner implements CommandLineRunner {
 
     private final UpdatePhonemeService updatePhonemeService;
     @Override
     public void run(String... args) throws Exception {
-        updateCardPhoneme();
-    }
-
-    protected void updateCardPhoneme(){
         updatePhonemeService.updateCardPhonemeColumn();
     }
 }
