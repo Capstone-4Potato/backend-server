@@ -19,4 +19,10 @@ public class CardScore {
 
     public CardScore() {
     }
+
+    public CardScore(int highestScore, Long userId, Long cardId) {
+        this.highestScore = highestScore;
+        this.userId = userId;
+        this.cardId = cardId;
+    }
 }
