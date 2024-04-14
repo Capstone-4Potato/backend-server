@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class MainExceptionResolverController {
 
     @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class})
-    public ResponseEntity<ExceptionDto> aiConnectionException(Exception ex){
+    public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class})
-    public ResponseEntity<ExceptionDto> illegalArgumentExceptionHandler(IllegalArgumentException ex){
+    public ResponseEntity<ExceptionDto> badRequestExceptionHandler (IllegalArgumentException ex){
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
     }
 

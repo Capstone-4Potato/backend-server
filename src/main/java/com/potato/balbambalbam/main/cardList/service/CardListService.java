@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -80,10 +81,10 @@ public class CardListService {
         responseCardDto.setId(cardId);
         responseCardDto.setText(card.getText());
 
-
         responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, TEMPORARY_USER_ID).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
+        responseCardDto.setPronunciation(cardRepository.findById(cardId).map(Card::getPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
 
         return responseCardDto;
     }
