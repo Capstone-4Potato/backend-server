@@ -20,4 +20,9 @@ public class UserWeakSound {
     public UserWeakSound() {
     }
 
+    public UserWeakSound(Long userId, Long userPhoneme){
+        this.userId = userId;
+        this.userPhoneme = userPhoneme;
+    }
+
 }

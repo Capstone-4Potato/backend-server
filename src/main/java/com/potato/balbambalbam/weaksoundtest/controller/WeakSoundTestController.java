@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.weaksoundtest.repository.WeakSoundTestRepository;
-import com.potato.balbambalbam.weaksoundtest.service.PhonemeService;
 import com.potato.balbambalbam.weaksoundtest.service.WeakSoundTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +25,6 @@ public class WeakSoundTestController {
     private WeakSoundTestService weakSoundTestService;
     @Autowired
     private WeakSoundTestRepository weakSoundTestRepository;
-    @Autowired
-    private PhonemeService phonemeService;
 
     @Autowired
     public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
@@ -39,7 +36,7 @@ public class WeakSoundTestController {
     @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile
             (@PathVariable("cardId") Long id,
-             @RequestParam("userId") Long userId,
+             @RequestHeader("userId") Long userId,
              @RequestParam("userAudio")MultipartFile userAudio) throws JsonProcessingException {
         if(userAudio.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 음성 파일이 비었습니다.");
@@ -62,21 +59,5 @@ public class WeakSoundTestController {
                     }
                 })
                 .orElseGet(()-> ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id를 가진 테스트 카드가 없습니다."));
-    }
-
-    @PostMapping("/test/finalize")
-    public ResponseEntity<Map<Long, Integer>> finalizeAnalysis(@RequestParam Long userId) {
-        Map<Long, Integer> topPhonemes = phonemeService.getTopPhonemes(userId);
-
-        if (!topPhonemes.isEmpty()) {
-            System.out.println(userId + ":");
-            topPhonemes.forEach((phonemeId, count)
-                    -> System.out.println("Phoneme ID: " + phonemeId + ", Count: " + count));
-        } else {
-            System.out.println("user id "+ userId + " 의 취얌음 테스트 결과가 없습니다.");
-        }
-
-        phonemeService.clearTemporaryData(userId);
-        return ResponseEntity.ok(topPhonemes);
     }
 }
