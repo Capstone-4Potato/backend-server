@@ -2,9 +2,10 @@ package com.potato.balbambalbam.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "card_score")
-@Getter
+@Getter @Setter
 public class CardScore {
     @Id
     @Column(name = "id")

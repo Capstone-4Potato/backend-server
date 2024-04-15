@@ -32,6 +32,7 @@ class CardFeedbackServiceTest {
 
         //then
         Assertions.assertThat(recommendCards).containsValues("싸", "예", "반달");
+        Assertions.assertThat(recommendCards).containsKeys(297L, 14L, 95L);
 
     }
 }

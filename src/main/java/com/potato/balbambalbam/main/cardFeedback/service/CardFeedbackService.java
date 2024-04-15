@@ -31,7 +31,7 @@ public class CardFeedbackService {
         AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
         //app 피드백 생성
-        Integer highestScore = updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
+        updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
 
         //학습카드 추천
         Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
@@ -41,7 +41,7 @@ public class CardFeedbackService {
             recommendCards = getRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
         }
 
-        return setUserFeedbackResponseDto(aiFeedbackResponseDto, highestScore, recommendCards);
+        return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCards);
     }
 
     protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId){
@@ -62,16 +62,18 @@ public class CardFeedbackService {
         return aiFeedbackRequestDto;
     }
 
-    protected Integer updateScoreIfLarger(Long userId, Long cardId, Integer cardScore){
-        Integer highestScore = cardScore;
+    protected void updateScoreIfLarger(Long userId, Long cardId, Integer userScore){
+         Optional<CardScore> optionalCardScore = cardScoreRepository.findByCardIdAndUserId(cardId, userId);
 
-        Integer userScore = cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0);
-        if(userScore > cardScore){
-            highestScore = userScore;
+        if(optionalCardScore.isPresent()){
+            CardScore cardScore = optionalCardScore.get();
+            if(cardScore.getHighestScore() < userScore){
+                cardScore.setHighestScore(userScore);
+                cardScoreRepository.save(cardScore);
+            }
+        }else{
+            cardScoreRepository.save(new CardScore(userScore, userId, cardId));
         }
-
-        cardScoreRepository.save(new CardScore(highestScore, userId, cardId));
-        return highestScore;
     }
 
 
@@ -130,14 +132,9 @@ public class CardFeedbackService {
         return null;
     }
 
-    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback,
-                                                                 Integer highestScore,
-                                                                 Map<Long, String> recommendCards){
+    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, String> recommendCards){
         //사용자 오디오 데이터 생성
         UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());
-
-        //사용자 점수 데이터 생성
-        UserFeedbackResponseDto.UserScore userScore = new UserFeedbackResponseDto.UserScore(aiFeedback.getUserAccuracy(), highestScore);
 
         //waveform 데이터 생성
         UserFeedbackResponseDto.Waveform waveform = new UserFeedbackResponseDto.Waveform(aiFeedback.getUserWaveform(), aiFeedback.getUserAudioDuration(), aiFeedback.getCorrectWaveform(), aiFeedback.getCorrectAudioDuration());
@@ -145,7 +142,7 @@ public class CardFeedbackService {
         //객체 생성 및 설정
         UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
         userFeedbackResponseDto.setUserAudio(userAudio);
-        userFeedbackResponseDto.setUserScore(userScore);
+        userFeedbackResponseDto.setUserScore(aiFeedback.getUserAccuracy());
         userFeedbackResponseDto.setRecommendCard(recommendCards);
         userFeedbackResponseDto.setWaveform(waveform);
 

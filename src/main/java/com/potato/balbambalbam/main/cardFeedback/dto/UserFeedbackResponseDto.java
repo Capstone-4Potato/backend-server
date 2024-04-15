@@ -12,7 +12,7 @@ import java.util.Map;
 public class UserFeedbackResponseDto {
 
     private UserAudio userAudio;
-    private UserScore userScore;
+    private Integer userScore;
     private Map<Long, String> recommendCard;
     private Waveform waveform;
     @Getter @Setter
@@ -26,17 +26,7 @@ public class UserFeedbackResponseDto {
             this.mistakenIndexes = mistakenIndexes;
         }
     }
-    @Getter @Setter
 
-    public static class UserScore{
-        private Integer currentScore;
-        private Integer highestScore;
-
-        public UserScore(Integer currentScore, Integer highestScore) {
-            this.currentScore = currentScore;
-            this.highestScore = highestScore;
-        }
-    }
     @Getter @Setter
     public static class Waveform{
         private String userWaveform;
