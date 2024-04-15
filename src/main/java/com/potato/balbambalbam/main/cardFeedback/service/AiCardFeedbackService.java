@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 import java.time.Duration;
 
@@ -21,7 +22,8 @@ public class AiCardFeedbackService {
                 .body(Mono.just(aiFeedbackRequestDto), AiFeedbackRequestDto.class)
                 .retrieve()//요청
                 .bodyToMono(AiFeedbackResponseDto.class)
-                .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
+                .retryWhen(Retry.backoff(1, Duration.ofSeconds(10)))    //10초 간격으로 1번 재시도 요청
+                .timeout(Duration.ofSeconds(10)) //20초 안에 응답 오지 않으면 TimeoutException 발생
                 .block();
 
         return aiFeedbackResponseDto;

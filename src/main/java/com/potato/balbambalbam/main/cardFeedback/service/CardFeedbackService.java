@@ -1,48 +1,54 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
+import com.potato.balbambalbam.entity.Card;
 import com.potato.balbambalbam.entity.CardScore;
+import com.potato.balbambalbam.entity.Phoneme;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
+import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import com.potato.balbambalbam.main.repository.CardRepository;
 import com.potato.balbambalbam.main.repository.CardScoreRepository;
+import com.potato.balbambalbam.main.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class CardFeedbackService {
-
     private final CardRepository cardRepository;
     private final CardScoreRepository cardScoreRepository;
     private final AiCardFeedbackService aiCardFeedbackService;
-
-    public UserFeedbackResponseDto postUserFeedbackForTest(){
-        return setUserFeedbackResponseDtoForTest();
-    }
+    private final PhonemeRepository phonemeRepository;
+    private final UpdatePhonemeService updatePhonemeService;
 
     public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId){
-        AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(userFeedbackRequestDto, cardId);
-        AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
-        Integer highestScore = updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
-        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
+        //인공지능서버와 통신
+        AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
-        //TODO : 학습카드 추천 구현
+        //app 피드백 생성
+        Integer highestScore = updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
+
+        //학습카드 추천
+        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
+        Map<Long, String> recommendCards = new HashMap<>();
+
         if(categoryId >= 15 && categoryId <= 31){
-            List<Integer> recommendCardIds = getRecommendCardId(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
-        }else{
-            //음절이나 문장인 경우 null 반환
-            List<Character> pronunciations = new ArrayList<>();
-            List<Integer> recommendCardIds = new ArrayList<>();
+            recommendCards = getRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
         }
 
-        return null;
+        return setUserFeedbackResponseDto(aiFeedbackResponseDto, highestScore, recommendCards);
+    }
+
+    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId){
+        AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(aiFeedbackRequest, cardId);
+        AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
+
+        return aiFeedbackResponseDto;
     }
 
     protected AiFeedbackRequestDto createAiFeedbackRequestDto (UserFeedbackRequestDto userFeedbackRequestDto, Long cardId){
@@ -68,52 +74,42 @@ public class CardFeedbackService {
         return highestScore;
     }
 
-    protected UserFeedbackResponseDto setUserFeedbackResponseDtoForTest(){
-        //사용자 오디오 데이터 생성
-        List<Integer> mistakenIndexes = Arrays.asList(1,2);
-        UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio("사용자발음", mistakenIndexes);
 
-        //사용자 점수 데이터 생성
-        UserFeedbackResponseDto.UserScore userScore = new UserFeedbackResponseDto.UserScore(20, 80);
 
-        //추천 카드 데이터 생성
-        List<Character> pronunciation = Arrays.asList('ㄱ', 'ㄴ');
-        List<Long> ids = Arrays.asList(22L, 134L);
-        UserFeedbackResponseDto.RecommendCard recommendCard = new UserFeedbackResponseDto.RecommendCard(pronunciation, ids);
-
-        //waveform 데이터 생성
-        UserFeedbackResponseDto.Waveform waveform = new UserFeedbackResponseDto.Waveform("userWaveForm", 2.5, "correctWaveform", 3.3);
-
-        //객체 생성 및 설정
-        UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
-        userFeedbackResponseDto.setUserAudio(userAudio);
-        userFeedbackResponseDto.setUserScore(userScore);
-        userFeedbackResponseDto.setRecommendCard(recommendCard);
-        userFeedbackResponseDto.setWaveform(waveform);
-
-        return userFeedbackResponseDto;
-    }
-
-    protected List<Integer> getRecommendCardId(List<Character> recommendCards, List<Character> recommendLastCards){
-        List<Integer> recommendCardIds = new ArrayList<>();
+    protected Map<Long, String> getRecommendCards(List<String> recommendPhonemes, List<String> recommendLastPhonemes){
+        Map<Long, String> recommendCards = new HashMap<>();
         //틀린거 4개이상 => 필요없음 걍 다시 도전해보세요!
-        if(recommendCards.size() + recommendLastCards.size() > 3){
-            recommendCardIds.add(-1);
-            return recommendCardIds;
+        if(recommendPhonemes.size() + recommendLastPhonemes.size() > 3){
+            recommendCards.put(-1L, null);
+            return recommendCards;
         }
 
         //틀린 음소가 3개 이하일 경우
-        //종성
-//        recommendLastCards.forEach(card -> {
-//
-//        });
-//        recommendCards.stream().map(card -> {
-//
-//        })
+        recommendPhonemes.forEach(phoneme -> {
+            Phoneme foundPhoneme = phonemeRepository.findPhonemeByTextOrderById(phoneme).get(0);
+            List<Long> phonemesList = new ArrayList<>();
+            String hangul = "";
+            if(foundPhoneme.getType() == 0){    //초성
+                hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
 
-        return recommendCardIds;
+            }else if(foundPhoneme.getType() == 1){  //중성
+                hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
+            }
+            Card foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
+            recommendCards.put(foundCard.getId(), hangul);
+        });
+
+        //종성
+        recommendLastPhonemes.forEach(phoneme -> {
+            Long categoryId = getCategoryId(phoneme);
+            Card recommendCard = cardRepository.findAllByCategoryId(categoryId).get(0);
+            recommendCards.put(recommendCard.getId(), recommendCard.getText());
+        });
+
+        return recommendCards;
     }
 
+    //종성 카테고리 아이디 찾기
     protected Long getCategoryId(String phoneme){
         if(phoneme.equals("ㄱ")){
             return 25L;
@@ -132,6 +128,28 @@ public class CardFeedbackService {
         }
 
         return null;
+    }
+
+    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback,
+                                                                 Integer highestScore,
+                                                                 Map<Long, String> recommendCards){
+        //사용자 오디오 데이터 생성
+        UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());
+
+        //사용자 점수 데이터 생성
+        UserFeedbackResponseDto.UserScore userScore = new UserFeedbackResponseDto.UserScore(aiFeedback.getUserAccuracy(), highestScore);
+
+        //waveform 데이터 생성
+        UserFeedbackResponseDto.Waveform waveform = new UserFeedbackResponseDto.Waveform(aiFeedback.getUserWaveform(), aiFeedback.getUserAudioDuration(), aiFeedback.getCorrectWaveform(), aiFeedback.getCorrectAudioDuration());
+
+        //객체 생성 및 설정
+        UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
+        userFeedbackResponseDto.setUserAudio(userAudio);
+        userFeedbackResponseDto.setUserScore(userScore);
+        userFeedbackResponseDto.setRecommendCard(recommendCards);
+        userFeedbackResponseDto.setWaveform(waveform);
+
+        return userFeedbackResponseDto;
     }
 
 }

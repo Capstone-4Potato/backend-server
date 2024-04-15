@@ -37,9 +37,9 @@ public class CardFeedbackController {
     @Operation(summary = "card Feedback 제공", description = "userAudio, userScore, recommendCard, waveform 제공")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "OK : 카드 피드백 제공 성공"),
+                    @ApiResponse(responseCode = "200", description = "OK : 카드 피드백 제공 성공", content = @Content(schema = @Schema(implementation = UserFeedbackResponseDto.class))),
                     @ApiResponse(responseCode = "400", description = "ERROR : JSON 형식 오류", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
-                    @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+                    @ApiResponse(responseCode = "404", description = "ERROR : 존재하지 않는 사용자 or 카드",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
@@ -52,7 +52,7 @@ public class CardFeedbackController {
         }
 
         //성공 로직
-        UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedbackForTest();
+        UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, 1L, cardId);
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));

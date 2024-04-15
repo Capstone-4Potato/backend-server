@@ -18,7 +18,7 @@ public class AiFeedbackResponseDto {
     private String correctWaveform;
     private Double userAudioDuration;
     private String userWaveform;
-    private List<Character> recommendedLastPronunciations;
-    private List<Character> recommendedPronunciations;
+    private List<String> recommendedLastPronunciations;
+    private List<String> recommendedPronunciations;
 
 }
