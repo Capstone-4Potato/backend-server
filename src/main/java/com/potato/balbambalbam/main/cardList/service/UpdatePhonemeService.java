@@ -108,4 +108,28 @@ public class UpdatePhonemeService {
         }
         return true;
     }
+
+    /**
+     * 한글 합치는 메소드
+     * @param cho
+     * @param jung
+     * @return
+     */
+    public String createHangul (String cho, String jung){
+        int choIndex = getIndex(CHOSUNG, cho);
+        int jungIndex = getIndex(JUNGSUNG, jung);
+
+        int unicode = 0xAC00 + (choIndex * 588) + (jungIndex * 28);
+        return String.valueOf((char) unicode);
+    }
+
+    protected int getIndex(String[] array, String value){
+        for (int i = 0; i < array.length; i++) {
+            if(array[i].equals(value)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

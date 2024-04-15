@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.concurrent.TimeoutException;
+
 @Slf4j
 @RestControllerAdvice
 public class MainExceptionResolverController {
@@ -23,6 +26,11 @@ public class MainExceptionResolverController {
     @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler (Exception ex){
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({TimeoutException.class})
+    public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
+        return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
