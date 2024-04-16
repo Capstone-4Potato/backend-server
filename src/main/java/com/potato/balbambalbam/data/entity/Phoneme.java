@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity(name = "phoneme")
 @Getter
 public class Phoneme {
