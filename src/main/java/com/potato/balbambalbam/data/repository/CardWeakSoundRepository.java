@@ -1,7 +1,7 @@
-package com.potato.balbambalbam.main.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.CardWeakSound;
-import com.potato.balbambalbam.entity.CardWeakSoundId;
+import com.potato.balbambalbam.data.entity.CardWeakSound;
+import com.potato.balbambalbam.data.entity.CardWeakSoundId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

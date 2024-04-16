@@ -1,10 +1,11 @@
-package com.potato.balbambalbam.entity;
+package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "card_score")
-@Getter
+@Getter @Setter
 public class CardScore {
     @Id
     @Column(name = "id")
@@ -18,5 +19,11 @@ public class CardScore {
     private Long cardId;
 
     public CardScore() {
+    }
+
+    public CardScore(int highestScore, Long userId, Long cardId) {
+        this.highestScore = highestScore;
+        this.userId = userId;
+        this.cardId = cardId;
     }
 }

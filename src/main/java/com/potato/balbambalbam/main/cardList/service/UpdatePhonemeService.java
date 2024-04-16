@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.entity.Phoneme;
-import com.potato.balbambalbam.main.repository.CardRepository;
-import com.potato.balbambalbam.main.repository.PhonemeRepository;
+import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.Phoneme;
+import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -107,5 +107,29 @@ public class UpdatePhonemeService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 한글 합치는 메소드
+     * @param cho
+     * @param jung
+     * @return
+     */
+    public String createHangul (String cho, String jung){
+        int choIndex = getIndex(CHOSUNG, cho);
+        int jungIndex = getIndex(JUNGSUNG, jung);
+
+        int unicode = 0xAC00 + (choIndex * 588) + (jungIndex * 28);
+        return String.valueOf((char) unicode);
+    }
+
+    protected int getIndex(String[] array, String value){
+        for (int i = 0; i < array.length; i++) {
+            if(array[i].equals(value)){
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
