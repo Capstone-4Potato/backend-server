@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.entity.Phoneme;
-import com.potato.balbambalbam.main.repository.CardRepository;
-import com.potato.balbambalbam.main.repository.PhonemeRepository;
+import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.Phoneme;
+import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

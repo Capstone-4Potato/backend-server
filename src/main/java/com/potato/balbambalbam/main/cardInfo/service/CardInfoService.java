@@ -1,15 +1,15 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.entity.User;
+import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.User;
+import com.potato.balbambalbam.data.repository.CardBookmarkRepository;
+import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
 import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.repository.CardBookmarkRepository;
-import com.potato.balbambalbam.main.repository.CardRepository;
-import com.potato.balbambalbam.main.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

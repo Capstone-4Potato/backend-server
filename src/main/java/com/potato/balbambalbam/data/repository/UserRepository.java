@@ -1,6 +1,6 @@
-package com.potato.balbambalbam.main.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.User;
+import com.potato.balbambalbam.data.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
