@@ -1,7 +1,7 @@
-package com.potato.balbambalbam.main.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.CardBookmark;
-import com.potato.balbambalbam.entity.CardBookmarkId;
+import com.potato.balbambalbam.data.entity.CardBookmark;
+import com.potato.balbambalbam.data.entity.CardBookmarkId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

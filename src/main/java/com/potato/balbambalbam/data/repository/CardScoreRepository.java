@@ -1,6 +1,6 @@
-package com.potato.balbambalbam.main.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.CardScore;
+import com.potato.balbambalbam.data.entity.CardScore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

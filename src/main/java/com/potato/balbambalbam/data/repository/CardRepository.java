@@ -1,6 +1,6 @@
-package com.potato.balbambalbam.main.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.Card;
+import com.potato.balbambalbam.data.entity.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,5 +11,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findAll();
     List<Card> findAllByCategoryId(Long id);
     Optional<Card> findById(Long id);
+    List<Card> findByTextOrderById(String text);
 
 }

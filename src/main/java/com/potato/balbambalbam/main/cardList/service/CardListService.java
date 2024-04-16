@@ -1,13 +1,13 @@
 package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.entity.CardBookmark;
-import com.potato.balbambalbam.entity.CardScore;
-import com.potato.balbambalbam.entity.Category;
+import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.CardBookmark;
+import com.potato.balbambalbam.data.entity.CardScore;
+import com.potato.balbambalbam.data.entity.Category;
+import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
-import com.potato.balbambalbam.main.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -80,10 +80,10 @@ public class CardListService {
         responseCardDto.setId(cardId);
         responseCardDto.setText(card.getText());
 
-
         responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, TEMPORARY_USER_ID).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
+        responseCardDto.setPronunciation(cardRepository.findById(cardId).map(Card::getPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
 
         return responseCardDto;
     }

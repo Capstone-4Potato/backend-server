@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.entity;
+package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,10 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import lombok.Getter;
 
-@Entity(name = "card_weaksound")
+@Entity(name = "card_bookmark")
 @Getter
-@IdClass(CardWeakSoundId.class)
-public class CardWeakSound  {
+@IdClass(CardBookmarkId.class)
+public class CardBookmark {
+
     @Id
     @Column(name = "user_id")
     private Long userId;
@@ -17,10 +18,11 @@ public class CardWeakSound  {
     @Column(name = "card_id")
     private Long cardId;
 
-    public CardWeakSound() {
+    public CardBookmark() {
 
     }
-    public CardWeakSound(Long userId, Long cardId) {
+
+    public CardBookmark(Long userId, Long cardId) {
         this.userId = userId;
         this.cardId = cardId;
     }
