@@ -1,6 +1,6 @@
-package com.potato.balbambalbam.repository;
+package com.potato.balbambalbam.data.repository;
 
-import com.potato.balbambalbam.entity.Phoneme;
+import com.potato.balbambalbam.data.entity.Phoneme;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
