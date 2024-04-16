@@ -2,7 +2,6 @@ package com.potato.balbambalbam.main.cardFeedback.service;
 
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
-import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
