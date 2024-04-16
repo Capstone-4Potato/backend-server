@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.weaksoundtest.controller;
 
 import com.potato.balbambalbam.entity.UserWeakSound;
-import com.potato.balbambalbam.weaksoundtest.repository.UserWeakSoundRepository;
+import com.potato.balbambalbam.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.weaksoundtest.service.PhonemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

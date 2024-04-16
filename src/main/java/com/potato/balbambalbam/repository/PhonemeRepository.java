@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.weaksoundtest.repository;
+package com.potato.balbambalbam.repository;
 
 import com.potato.balbambalbam.entity.Phoneme;
 import org.springframework.data.jpa.repository.JpaRepository;

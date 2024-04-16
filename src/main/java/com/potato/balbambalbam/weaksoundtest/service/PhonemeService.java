@@ -2,7 +2,7 @@ package com.potato.balbambalbam.weaksoundtest.service;
 
 import com.potato.balbambalbam.entity.Phoneme;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
-import com.potato.balbambalbam.weaksoundtest.repository.PhonemeRepository;
+import com.potato.balbambalbam.repository.PhonemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
