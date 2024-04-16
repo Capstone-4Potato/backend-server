@@ -1,8 +1,9 @@
-package com.potato.balbambalbam.weaksoundtest.service;
+package com.potato.balbambalbam.weaksoundtest.dto.service;
 
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class PhonemeService {
 
     private Map<Long, Map<Long, Integer>> temporaryStorage = new HashMap<>();
 
+    @Transactional
     public void storePhonemeData(Long userId, WeakSoundTestDto dto) {
         Map<Long, Integer> phonemeCounts = temporaryStorage.getOrDefault(userId, new HashMap<>());
         Map<Long, Integer> newPhonemeCounts = new HashMap<>();
