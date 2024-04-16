@@ -1,17 +1,17 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
-import com.potato.balbambalbam.entity.Card;
-import com.potato.balbambalbam.entity.CardScore;
-import com.potato.balbambalbam.entity.Phoneme;
+import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.CardScore;
+import com.potato.balbambalbam.data.entity.Phoneme;
+import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.CardScoreRepository;
+import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
-import com.potato.balbambalbam.main.repository.CardRepository;
-import com.potato.balbambalbam.main.repository.CardScoreRepository;
-import com.potato.balbambalbam.main.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
