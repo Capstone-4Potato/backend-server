@@ -1,15 +1,16 @@
 package com.potato.balbambalbam.main.cardFeedback.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class AiFeedbackResponseDto {
     private String userText;
     private List<Integer> userMistakenIndexes;

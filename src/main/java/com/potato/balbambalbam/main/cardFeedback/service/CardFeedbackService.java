@@ -1,24 +1,27 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Phoneme;
+import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.CardScoreRepository;
+import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
-import com.potato.balbambalbam.data.repository.CardRepository;
-import com.potato.balbambalbam.data.repository.CardScoreRepository;
-import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CardFeedbackService {
     private final CardRepository cardRepository;
     private final CardScoreRepository cardScoreRepository;
@@ -26,7 +29,7 @@ public class CardFeedbackService {
     private final PhonemeRepository phonemeRepository;
     private final UpdatePhonemeService updatePhonemeService;
 
-    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId){
+    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) throws JsonProcessingException {
         //인공지능서버와 통신
         AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
@@ -44,7 +47,7 @@ public class CardFeedbackService {
         return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCards);
     }
 
-    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId){
+    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) throws JsonProcessingException {
         AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(aiFeedbackRequest, cardId);
         AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
 
@@ -52,7 +55,7 @@ public class CardFeedbackService {
     }
 
     protected AiFeedbackRequestDto createAiFeedbackRequestDto (UserFeedbackRequestDto userFeedbackRequestDto, Long cardId){
-        String pronunciation = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getPronunciation();
+        String pronunciation = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getText();
         AiFeedbackRequestDto aiFeedbackRequestDto = new AiFeedbackRequestDto();
 
         aiFeedbackRequestDto.setUserAudio(userFeedbackRequestDto.getUserAudio());
