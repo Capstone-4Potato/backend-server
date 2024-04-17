@@ -3,6 +3,7 @@ package com.potato.balbambalbam.main.cardFeedback.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
