@@ -40,7 +40,7 @@ jobs:
         with :
           host : ${{ secrets.SERVER_IP }}
           username : ${{ secrets.SERVER_USER }}
-          key : ${{ secrets.SERVER_PW }}
+          key : ${{ secrets.SERVER_KEY }}
           port : ${{ secrets.SERVER_PORT }}
           source: "build/libs/*jar"  #빌드된 JAR 위치
           target : "/spring"  #서버의 파일이 복사될 경로
