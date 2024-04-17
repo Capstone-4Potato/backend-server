@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
 import com.potato.balbambalbam.weaksoundtest.dto.service.WeakSoundTestService;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 public class WeakSoundTestController {
-
-    @Autowired
     private ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    private WeakSoundTestService weakSoundTestService;
-    @Autowired
-    private WeakSoundTestRepository weakSoundTestRepository;
-
-    @Autowired
-    public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
-                                   WeakSoundTestRepository weakSoundTestRepository){
-        this.weakSoundTestService = weakSoundTestService;
-        this.weakSoundTestRepository = weakSoundTestRepository;
-    }
+    private final WeakSoundTestService weakSoundTestService;
+    private final WeakSoundTestRepository weakSoundTestRepository;
 
     @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile

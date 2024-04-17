@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardList.dto.CardListResponse;
 import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
@@ -23,12 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import static com.potato.balbambalbam.MyConstant.TEMPORARY_USER_ID;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "CardList", description = "CardList API")
 public class CardListController {
     //TODO : user 동적으로 할당
-    public static final long TEMPORARY_USER_ID = 1L;
     private final CardListService cardListService;
     private final UpdatePhonemeService updatePhonemeService;
 

@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
 import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
@@ -24,7 +25,6 @@ import java.nio.charset.Charset;
 @Tag(name = "CardInfo", description = "CardInfo API")
 public class CardInfoController {
     //TODO : user 동적으로 할당
-    public static final long TEMPORARY_USER_ID = 1L;
     private final CardInfoService cardInfoService;
 
     @GetMapping("/cards/{cardId}")
@@ -37,7 +37,7 @@ public class CardInfoController {
             }
     )
     public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
-        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(cardId, TEMPORARY_USER_ID);
+        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(cardId, MyConstant.TEMPORARY_USER_ID);
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
