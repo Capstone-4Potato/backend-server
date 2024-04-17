@@ -54,4 +54,4 @@ jobs:
           # 재시작 스크립트
           script: |
             cd /home/***/spring/build/libs
-            nohup java -jar BalbamBalbam-Application-0.0.0.jar &
+            nohup /usr/lib/jdk-21.0.2/bin/java -jar BalbamBalbam-Application-0.0.0.jar &
