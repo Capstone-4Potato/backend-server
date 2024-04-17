@@ -1,0 +1,43 @@
+name : Deploy SpringBoot Application
+
+on :
+  push :
+    branches : ["develop"]
+  pull_request :
+    branches : ["develop"]  # 이 워크플로우는 develop branch에 push / pullrequest될 때 trigger
+
+jobs:
+  build-and-deploy:
+    runs-on : ubuntu-latest  #Github actions 러너 사용
+    steps :
+    - uses : actions/checkout@v4
+    - name : Set up JDK 21
+      uses : actions/setup-java@v4
+      with :
+        java-version : '21'
+        distribution : 'temurin'
+    - name : Build with Gradle  # Gradle로 빌드
+      run: ./gradlew build       
+
+    - name : Copy JAR to Server #JAR 파일 서버로 복사
+      uses : appleboy/scp-action@master
+      with :
+        host : ${{ SERVER_IP }}
+        username : ${{ SERVER_USER }}
+        key : ${{ SERVER_PW }}
+        port : ${{ SERVER_PORT }}
+        source: "/build/libs/*jar"  #빌드된 JAR 위치
+        target : "/spring"  #서버의 파일이 복사될 경로
+        
+    - name : Restart Spring Boot Application # 서버에서 애플리케이션 재시작
+      uses : appleboy/ssh-action@master
+      with :
+        host : ${{ SERVER_IP }}
+        username : ${{ SERVER_USER }}
+        key : ${{ SERVER_PW }}
+        port : ${{ SERVER_PORT }}
+        # 재시작 스크립트
+        script: |
+          cd /spring
+          java -jar BalbamBalbam-Application-0.0.0.jar 
+          
