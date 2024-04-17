@@ -1,6 +1,7 @@
 package com.potato.balbambalbam.main.cardFeedback.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
@@ -53,7 +54,7 @@ public class CardFeedbackController {
         }
 
         //성공 로직
-        UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, 1L, cardId);
+        UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, MyConstant.TEMPORARY_USER_ID, cardId);
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
