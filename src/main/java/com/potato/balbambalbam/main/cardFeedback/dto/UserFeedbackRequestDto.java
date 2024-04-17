@@ -8,6 +8,7 @@ import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@ToString
 public class UserFeedbackRequestDto {
     @NotBlank
     private String userAudio;
