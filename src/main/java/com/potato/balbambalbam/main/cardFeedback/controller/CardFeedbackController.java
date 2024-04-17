@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardFeedback.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
@@ -44,7 +45,7 @@ public class CardFeedbackController {
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
                                                                     @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
-                                                                    BindingResult bindingResult){
+                                                                    BindingResult bindingResult) throws JsonProcessingException {
         //요청 validation 에러
         if(bindingResult.hasErrors()){
             log.info("[ERROR]:{}", bindingResult);
