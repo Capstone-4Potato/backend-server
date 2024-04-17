@@ -50,7 +50,7 @@ jobs:
         with :
           host : ${{ secrets.SERVER_IP }}
           username : ${{ secrets.SERVER_USER }}
-          key : ${{ secrets.SERVER_PW }}
+          password : ${{ secrets.SERVER_PW }}
           port : ${{ secrets.SERVER_PORT }}
           # 재시작 스크립트
           script: |
