@@ -1,0 +1,58 @@
+name : Deploy SpringBoot Application
+
+on :
+  push :
+    branches : ["develop"]
+  pull_request :
+    branches : ["develop"]  # 이 워크플로우는 develop branch에 push / pullrequest될 때 trigger
+
+jobs:
+  build-and-deploy:
+    runs-on : ubuntu-latest  #Github actions 러너 사용
+    steps :
+      - uses : actions/checkout@v4
+      - name : Set up JDK 21
+        uses : actions/setup-java@v4
+        with :
+          java-version : '21'
+          distribution : 'temurin'
+
+      - name: Change gradlew permissions
+        run: chmod +x ./gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Set environment variables
+        run: |
+            echo "DB_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Build and Test
+        run: ./gradlew build
+        env:
+          SPRING_DATASOURCE_URL: ${{ env.DB_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ env.DB_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}
+
+      - name : Copy JAR to Server #JAR 파일 서버로 복사
+        uses : appleboy/scp-action@master
+        with :
+          host : ${{ secrets.SERVER_IP }}
+          username : ${{ secrets.SERVER_USER }}
+          key : ${{ secrets.SERVER_KEY }}
+          port : ${{ secrets.SERVER_PORT }}
+          source: "build/libs/*jar"  #빌드된 JAR 위치
+          target : "/spring"  #서버의 파일이 복사될 경로
+
+      - name : Restart Spring Boot Application # 서버에서 애플리케이션 재시작
+        uses : appleboy/ssh-action@master
+        with :
+          host : ${{ secrets.SERVER_IP }}
+          username : ${{ secrets.SERVER_USER }}
+          key : ${{ secrets.SERVER_KEY }}
+          port : ${{ secrets.SERVER_PORT }}
+          # 재시작 스크립트
+          script: |
+            cd /spring
+            java -jar BalbamBalbam-Application-0.0.0.jar 

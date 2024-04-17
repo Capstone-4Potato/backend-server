@@ -2,9 +2,11 @@ package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "user_weaksound")
 @Getter
+@Setter
 public class UserWeakSound {
 
     @Id
@@ -17,4 +19,10 @@ public class UserWeakSound {
 
     public UserWeakSound() {
     }
+
+    public UserWeakSound(Long userId, Long userPhoneme){
+        this.userId = userId;
+        this.userPhoneme = userPhoneme;
+    }
+
 }
