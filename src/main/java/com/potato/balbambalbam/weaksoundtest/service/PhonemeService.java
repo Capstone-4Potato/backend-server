@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.weaksoundtest.dto.service;
+package com.potato.balbambalbam.weaksoundtest.service;
 
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
