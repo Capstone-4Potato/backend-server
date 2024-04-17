@@ -24,7 +24,7 @@ public class WeakSoundTestService {
     private WeakSoundTestRepository weakSoundTestRepository;
 
     public WeakSoundTestService(WebClient.Builder webClientBuilder,
-                                   @Value("${ai.service.url}") String aiServiceUrl){
+                                @Value("${ai.service.url}") String aiServiceUrl){
         this.webClient = webClientBuilder.baseUrl(aiServiceUrl).build();
         this.objectMapper = objectMapper;
     }
