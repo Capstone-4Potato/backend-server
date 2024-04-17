@@ -16,13 +16,24 @@ jobs:
         with :
           java-version : '21'
           distribution : 'temurin'
-      - name: Grant execute permission for Gradlew
+
+      - name: Change gradlew permissions
         run: chmod +x ./gradlew
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Set environment variables
+        run: |
+            echo "DB_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Build and Test
+        run: ./gradlew build
         env:
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.2-13/x64
-          JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.2-13/x64
+          SPRING_DATASOURCE_URL: ${{ env.DB_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ env.DB_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}
 
       - name : Copy JAR to Server #JAR 파일 서버로 복사
         uses : appleboy/scp-action@master
