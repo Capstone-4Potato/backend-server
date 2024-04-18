@@ -1,9 +1,11 @@
-package com.potato.balbambalbam.weaksoundtest.dto.service;
+package com.potato.balbambalbam.weaksoundtest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -14,7 +16,6 @@ import java.util.Map;
 
 @Service
 public class WeakSoundTestService {
-
     private WebClient webClient;
     @Autowired
     private ObjectMapper objectMapper;
@@ -24,7 +25,7 @@ public class WeakSoundTestService {
     private WeakSoundTestRepository weakSoundTestRepository;
 
     public WeakSoundTestService(WebClient.Builder webClientBuilder,
-                                   @Value("${ai.service.url}") String aiServiceUrl){
+                                @Value("${ai.service.url}") String aiServiceUrl){
         this.webClient = webClientBuilder.baseUrl(aiServiceUrl).build();
         this.objectMapper = objectMapper;
     }
@@ -32,7 +33,7 @@ public class WeakSoundTestService {
     public WeakSoundTestDto sendToAi(Long userId, Map<String, Object> dataToSend) throws JsonProcessingException {
         String testRequestJson = objectMapper.writeValueAsString(dataToSend); // dataToSend -> testRequestJson <Json>
         String testResponseJson = webClient.post()
-                .uri("/ai/test")
+                .uri(MyConstant.AI_URL + "/ai/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testRequestJson)
                 .retrieve()
@@ -42,5 +43,4 @@ public class WeakSoundTestService {
         phonemeService.storePhonemeData(userId, weakSoundTestDto);
         return weakSoundTestDto;
     }
-
 }

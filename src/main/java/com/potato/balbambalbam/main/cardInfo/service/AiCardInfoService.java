@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,10 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Slf4j
 public class AiCardInfoService {
-    public static final String TEMPORARY_URI = "/아직안정해짐";
     WebClient webClient = WebClient.builder().build();
     public String getTtsVoice(VoiceRequestDto voiceRequestDto) {
         String wavFile = webClient.post()
-                .uri(TEMPORARY_URI)
+                .uri(MyConstant.AI_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(voiceRequestDto), VoiceRequestDto.class)
                 .retrieve()//요청
