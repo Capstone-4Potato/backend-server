@@ -53,6 +53,5 @@ jobs:
           port : ${{ secrets.SERVER_PORT }}
           # 재시작 스크립트
           script: |
-            kill $(lsof -t -i:8080)
             nohup /usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar & disown
             exit 0
