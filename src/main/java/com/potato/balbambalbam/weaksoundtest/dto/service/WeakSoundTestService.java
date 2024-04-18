@@ -35,5 +35,4 @@ public class WeakSoundTestService {
         phonemeService.storePhonemeData(userId, weakSoundTestDto);
         return weakSoundTestDto;
     }
-
 }
