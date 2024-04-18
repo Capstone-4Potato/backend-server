@@ -2,9 +2,9 @@ name : Deploy SpringBoot Application
 
 on :
   push :
-    branches : ["develop"]
+    branches : ["main"]
   pull_request :
-    branches : ["develop"]  # 이 워크플로우는 develop branch에 push / pullrequest될 때 trigger
+    branches : ["main"]  # 이 워크플로우는 develop main에 push / pullrequest될 때 trigger
 
 jobs:
   build-and-deploy:
@@ -53,6 +53,6 @@ jobs:
           port : ${{ secrets.SERVER_PORT }}
           # 재시작 스크립트
           script: |
-            pkill -f '/usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar'
+            kill $(lsof -t -i:8080)
             nohup /usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar & disown
             exit 0
