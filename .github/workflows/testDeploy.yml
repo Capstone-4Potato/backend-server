@@ -55,3 +55,4 @@ jobs:
           script: |
             pkill -f '/usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar'
             nohup /usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar & disown
+            exit 0
