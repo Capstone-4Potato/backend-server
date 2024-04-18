@@ -42,7 +42,7 @@ public class CardInfoService {
     protected VoiceRequestDto getUserInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자가 존재하지 않습니다"));
         Integer age = user.getAge();
-        Integer gender = user.getGender();
+        Byte gender = user.getGender();
 
         return new VoiceRequestDto(age, gender);
     }

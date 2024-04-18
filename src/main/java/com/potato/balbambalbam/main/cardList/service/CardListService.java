@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardList.service;
 
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardBookmark;
 import com.potato.balbambalbam.data.entity.CardScore;
@@ -15,13 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.potato.balbambalbam.MyConstant.TEMPORARY_USER_ID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CardListService {
     //TODO: userid를 동적으로 처리하도록 변경 필요
     //TODO : service 분리 (list 제공 (getCardsByCategory)/ list update시 사용(북마크랑 취약음 update))
-    public static final long TEMPORARY_USER_ID = 1L;
     private final CategoryRepository categoryRepository;
     private final CardRepository cardRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
