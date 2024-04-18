@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.weaksoundtest.dto.service;
+package com.potato.balbambalbam.weaksoundtest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,12 +15,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class WeakSoundTestService {
+    private WebClient webClient;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private PhonemeService phonemeService;
+    @Autowired
+    private WeakSoundTestRepository weakSoundTestRepository;
 
-    private final ObjectMapper objectMapper;
-    private final PhonemeService phonemeService;
-    WebClient webClient = WebClient.builder().build();
+    public WeakSoundTestService(WebClient.Builder webClientBuilder,
+                                @Value("${ai.service.url}") String aiServiceUrl){
+        this.webClient = webClientBuilder.baseUrl(aiServiceUrl).build();
+        this.objectMapper = objectMapper;
+    }
 
     public WeakSoundTestDto sendToAi(Long userId, Map<String, Object> dataToSend) throws JsonProcessingException {
         String testRequestJson = objectMapper.writeValueAsString(dataToSend); // dataToSend -> testRequestJson <Json>
