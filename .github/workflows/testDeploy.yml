@@ -53,8 +53,5 @@ jobs:
           port : ${{ secrets.SERVER_PORT }}
           # 재시작 스크립트
           script: |
-            # Stop the currently running application
-            pkill -f 'java -jar BalbamBalbam-Application-0.0.0.jar'
-            # Start the application in the background
-            nohup /usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar > /home/***/spring/logs/app.log 2>&1 &
-            echo $! > /home/***/spring/pid.file
+            pkill -f '/usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar'
+            nohup /usr/lib/jdk-21.0.2/bin/java -jar /home/***/spring/build/libs/BalbamBalbam-Application-0.0.0.jar & disown
