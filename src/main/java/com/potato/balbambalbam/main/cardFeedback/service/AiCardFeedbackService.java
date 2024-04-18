@@ -1,6 +1,7 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 
@@ -15,11 +16,10 @@ import java.time.Duration;
 @Service
 @Slf4j
 public class AiCardFeedbackService {
-    public static final String AI_URI = "http://211.110.165.175:5000/ai/feedback";
     WebClient webClient = WebClient.builder().build();
     public AiFeedbackResponseDto postAiFeedback(AiFeedbackRequestDto aiFeedbackRequestDto) throws JsonProcessingException {
         AiFeedbackResponseDto aiFeedbackResponseDto = webClient.post()
-                .uri(AI_URI)
+                .uri(MyConstant.AI_URL + "ai/feedback")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiFeedbackRequestDto), AiFeedbackRequestDto.class)
                 .retrieve()//요청
