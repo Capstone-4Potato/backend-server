@@ -1,7 +1,7 @@
-package com.potato.balbambalbam.user.service;
+package com.potato.balbambalbam.user.signIn.service;
 
 import com.potato.balbambalbam.data.entity.User;
-import com.potato.balbambalbam.user.dto.UserDto;
+import com.potato.balbambalbam.user.signIn.dto.UserDto;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
