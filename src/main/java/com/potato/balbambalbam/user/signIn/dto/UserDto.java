@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.user.dto;
+package com.potato.balbambalbam.user.signIn.dto;
 
 import lombok.Getter;
 import lombok.Setter;
