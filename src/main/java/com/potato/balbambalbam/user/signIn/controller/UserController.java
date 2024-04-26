@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class UserController {
 
@@ -19,7 +21,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto){
+        Optional<User> existData = userRepository.findByEmail(userDto.getEmail());
+
+        if(existData.isPresent()){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("이미 존재하는 이메일입니다.");
+        }
+
         User user = new User();
         user.setName(userDto.getName());
         user.setAge(userDto.getAge());
