@@ -1,6 +1,7 @@
 package com.potato.balbambalbam.user.signIn.controller;
 
 import com.potato.balbambalbam.data.entity.User;
+import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.signIn.dto.UserDto;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.user.signIn.service.UserService;
@@ -21,33 +22,50 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto){
-        Optional<User> existData = userRepository.findByEmail(userDto.getEmail());
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
+        try {
+            Optional<User> existData = userRepository.findByEmail(userDto.getEmail());
+            if (existData.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body("이미 존재하는 이메일입니다.");
+            }
 
-        if(existData.isPresent()){
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("이미 존재하는 이메일입니다.");
+            User user = new User();
+            user.setName(userDto.getName());
+            user.setAge(userDto.getAge());
+            user.setGender(userDto.getGender());
+            user.setEmail(userDto.getEmail());
+
+            User savedUser = userService.saveUser(user);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
-
-        User user = new User();
-        user.setName(userDto.getName());
-        user.setAge(userDto.getAge());
-        user.setGender(userDto.getGender());
-        user.setEmail(userDto.getEmail());
-
-        User saveUser = userService.saveUser(user);
-        return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/users/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
-        return userService.updateUser(id, userDto);
+    @PatchMapping("/users")
+    public ResponseEntity<?> updateUser(@RequestHeader("userId") Long userId, @RequestBody UserDto userDto) {
+        try {
+            return new ResponseEntity<>(userService.updateUser(userId, userDto), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
-        return ResponseEntity.ok().build(); //200 OK
+    @DeleteMapping("/users")
+    public ResponseEntity<?> deleteUser(@RequestHeader("userId") Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
     }
 }
