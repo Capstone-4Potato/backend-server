@@ -38,7 +38,6 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 
 	//Social login 이용
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 
