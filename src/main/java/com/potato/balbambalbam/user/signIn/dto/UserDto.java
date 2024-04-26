@@ -9,5 +9,5 @@ public class UserDto {
     private String name;
     private Integer age;
     private Byte gender;
-    private String email;
+    private String socialId;
 }

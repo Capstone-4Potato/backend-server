@@ -24,18 +24,18 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         try {
-            Optional<User> existData = userRepository.findByEmail(userDto.getEmail());
+            Optional<User> existData = userRepository.findBySocialId(userDto.getSocialId());
             if (existData.isPresent()) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
-                        .body("이미 존재하는 이메일입니다.");
+                        .body("이미 존재하는 사용자 아이디입니다.");
             }
 
             User user = new User();
             user.setName(userDto.getName());
             user.setAge(userDto.getAge());
             user.setGender(userDto.getGender());
-            user.setEmail(userDto.getEmail());
+            user.setSocialId(userDto.getSocialId());
 
             User savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
