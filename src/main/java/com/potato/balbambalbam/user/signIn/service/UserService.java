@@ -24,7 +24,7 @@ public class UserService {
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (userDto.getEmail() != null) {
+        if (userDto.getSocialId() != null) {
             throw new RuntimeException("이메일 변경은 허용되지 않습니다.");
         }
         if (userDto.getName() != null) {
