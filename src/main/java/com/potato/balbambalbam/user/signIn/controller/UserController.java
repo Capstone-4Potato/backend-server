@@ -21,16 +21,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/socialId")
+    public ResponseEntity<?> checkSocialId(@RequestParam String socialId) {
+        Optional<User> userOptional = userRepository.findBySocialId(socialId);
+        if (userOptional.isPresent()) {
+            return ResponseEntity.ok("이미 존재하는 사용자 아이디입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않은 사용자 아이디입니다.");
+        }
+    }
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         try {
-            Optional<User> existData = userRepository.findBySocialId(userDto.getSocialId());
-            if (existData.isPresent()) {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body("이미 존재하는 사용자 아이디입니다.");
-            }
-
             User user = new User();
             user.setName(userDto.getName());
             user.setAge(userDto.getAge());
