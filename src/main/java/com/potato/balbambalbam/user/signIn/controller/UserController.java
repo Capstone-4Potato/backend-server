@@ -4,7 +4,7 @@ import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.signIn.dto.UserDto;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.user.signIn.jwt.JWTUtil;
+import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.user.signIn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
