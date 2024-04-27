@@ -21,6 +21,8 @@ public class User {
     private Byte gender; //(남성 : 0, 여성 : 1)
     @Column(name = "socialId", nullable = false, unique = true)
     private String socialId;
+    @Column(name = "role", nullable = false)
+    private String role;
 
     public User() {
     }
