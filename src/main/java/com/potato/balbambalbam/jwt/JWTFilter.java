@@ -1,24 +1,20 @@
 package com.potato.balbambalbam.jwt;
 
-import io.jsonwebtoken.io.DecodingException;
+import com.potato.balbambalbam.data.entity.User;
+import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
 public class JWTFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(JWTFilter.class);
     private final JWTUtil jwtUtil;
 
     public JWTFilter(JWTUtil jwtUtil) {
@@ -29,54 +25,37 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-        if (path.startsWith("/users")) {
+        //request에서 Authorization 헤더 찾음
+        String authorization= request.getHeader("Authorization");
+
+        //Authorization 헤더 검증
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            System.out.println("token null");
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = request.getHeader("Authorization");
+        String token = authorization.split(" ")[1];
 
-        if (token == null) {
-            log.info("Authorization token이 존재하지 않습니다.");
+        //토큰 소멸 시간 검증
+        if (jwtUtil.isExpired(token)) {
+            System.out.println("token expired");
             filterChain.doFilter(request, response);
             return;
         }
 
-        token = token.trim();
+        String socialId = jwtUtil.getSocialId(token);
+        String role = jwtUtil.getRole(token);
 
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        } else {
-            log.info("JWT token의 형식이 맞지 않습니다.");
-            filterChain.doFilter(request, response);
-            return;
-        }
+        User user = new User();
+        user.setSocialId(socialId);
+        user.setRole(role);
 
-        try {
-            if (jwtUtil.isExpired(token)) {
-                log.info("토큰이 만료되었습니다.");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("토큰이 만료되었습니다.");
-                return;
-            }
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
-            String socialId = jwtUtil.getSocialId(token);
-            if (socialId == null) {
-                log.info("소셜 아이디가 없습니다.");
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().write("소셜 아이디가 없습니다.");
-                return;
-            }
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
 
-            Authentication authToken = new UsernamePasswordAuthenticationToken(socialId, null);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        } catch (DecodingException e) {
-            log.error("Error decoding JWT: {}", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Error decoding JWT: " + e.getMessage());
-            return;
-        }
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }

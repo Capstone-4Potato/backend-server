@@ -1,13 +1,15 @@
-package com.potato.balbambalbam.user.signIn.dto;
+package com.potato.balbambalbam.user.join.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class UserDto {
+@Getter
+public class JoinDTO {
+
     private String name;
+    private String socialId;
     private Integer age;
     private Byte gender;
-    private String socialId;
+
 }
