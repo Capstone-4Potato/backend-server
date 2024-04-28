@@ -24,9 +24,9 @@ public class CardInfoService {
     private final CardBookmarkRepository cardBookmarkRepository;
     private final AiCardInfoService aiCardInfoService;
 
-    public CardInfoResponseDto getCardInfo(Long cardId, Long userId) {
+    public CardInfoResponseDto getCardInfo(Long userId, Long cardId) {
         //음성 생성
-        AiTtsRequestDto aiTtsRequestDto = getUserInfo(userId);
+        AiTtsRequestDto aiTtsRequestDto = getAiTtsRequestDto(userId, cardId);
         String wavToString = aiCardInfoService.getTtsVoice(aiTtsRequestDto);
         if(wavToString.equals("TimeoutException")){
             throw new AiConnectionException("음성 생성에 실패하였습니다");
@@ -34,17 +34,19 @@ public class CardInfoService {
 //        String wavToString = "테스트입니다";
 
         //카드 정보 생성
-        Card card = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
-        boolean isBookmark = cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId);
+
         return new CardInfoResponseDto(wavToString);
     }
 
-    protected AiTtsRequestDto getUserInfo(Long userId){
+    protected AiTtsRequestDto getAiTtsRequestDto(Long userId, Long cardId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자가 존재하지 않습니다"));
         Integer age = user.getAge();
         Byte gender = user.getGender();
 
-        return new AiTtsRequestDto(age, gender);
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
+        String text = card.getText();
+
+        return new AiTtsRequestDto(age, gender, text);
     }
 
 }

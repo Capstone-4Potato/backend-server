@@ -24,7 +24,7 @@ public class UserController {
         user.setName(userDto.getName());
         user.setAge(userDto.getAge());
         user.setGender(userDto.getGender());
-        user.setEmail(userDto.getEmail());
+        user.setSocialId(userDto.getEmail());
 
         User saveUser = userService.saveUser(user);
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
