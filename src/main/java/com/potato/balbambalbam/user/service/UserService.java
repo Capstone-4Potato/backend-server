@@ -1,8 +1,8 @@
 package com.potato.balbambalbam.user.service;
 
 import com.potato.balbambalbam.data.entity.User;
-import com.potato.balbambalbam.user.dto.UserDto;
 import com.potato.balbambalbam.data.repository.UserRepository;
+import com.potato.balbambalbam.user.dto.UserDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

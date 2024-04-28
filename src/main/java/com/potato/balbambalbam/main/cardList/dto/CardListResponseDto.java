@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "카드 리스트 Response")
-public class CardListResponse<T> {
+public class CardListResponseDto<T> {
     private T cardList;
     private int count;
 
-    public CardListResponse(T cardList, int count) {
+    public CardListResponseDto(T cardList, int count) {
         this.cardList = cardList;
         this.count = count;
     }

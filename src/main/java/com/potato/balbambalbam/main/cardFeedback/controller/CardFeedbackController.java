@@ -2,10 +2,10 @@ package com.potato.balbambalbam.main.cardFeedback.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.MyConstant;
+import com.potato.balbambalbam.main.ExceptionDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
-import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +32,6 @@ import java.nio.charset.Charset;
 @Slf4j
 @Tag(name = "CardFeedback", description = "CardFeedback API")
 public class CardFeedbackController {
-
     private final CardFeedbackService cardFeedbackService;
 
     @PostMapping("/cards/{cardId}")
@@ -45,8 +44,8 @@ public class CardFeedbackController {
             }
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
-                                                                    @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
-                                                                    BindingResult bindingResult) throws JsonProcessingException {
+                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
+                                                   BindingResult bindingResult) throws JsonProcessingException {
         //요청 validation 에러
         if(bindingResult.hasErrors()){
             log.info("[ERROR]:{}", bindingResult);
@@ -61,6 +60,5 @@ public class CardFeedbackController {
         headers.setContentType(mediaType);
 
         return ResponseEntity.ok().headers(headers).body(userFeedbackResponseDto);
-
     }
 }

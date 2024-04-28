@@ -18,11 +18,11 @@ public class User {
     @Column(name = "age", nullable = false)
     private Integer age;
     @Column(name = "gender", nullable = false)
-    private Byte gender; // 0 : 여성, 1 : 남성
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-    @Column(name = "voice", nullable = false)
-    private Integer voice;
+    private Byte gender; //(남성 : 0, 여성 : 1)
+    @Column(name = "social_id", nullable = false, unique = true)
+    private String socialId;
+    @Column(name = "role", nullable = false)
+    private String role;
 
     public User() {
     }

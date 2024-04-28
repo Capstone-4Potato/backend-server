@@ -1,8 +1,8 @@
 package com.potato.balbambalbam.user.controller;
 
 import com.potato.balbambalbam.data.entity.User;
-import com.potato.balbambalbam.user.dto.UserDto;
 import com.potato.balbambalbam.data.repository.UserRepository;
+import com.potato.balbambalbam.user.dto.UserDto;
 import com.potato.balbambalbam.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class UserController {
         user.setName(userDto.getName());
         user.setAge(userDto.getAge());
         user.setGender(userDto.getGender());
-        user.setEmail(userDto.getEmail());
+        user.setSocialId(userDto.getEmail());
 
         User saveUser = userService.saveUser(user);
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
