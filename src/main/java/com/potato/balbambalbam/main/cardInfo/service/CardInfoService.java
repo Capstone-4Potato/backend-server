@@ -36,7 +36,7 @@ public class CardInfoService {
         //카드 정보 생성
         Card card = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
         boolean isBookmark = cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId);
-        return new CardInfoResponseDto(cardId, card.getText(), card.getPronunciation(), isBookmark, wavToString);
+        return new CardInfoResponseDto(wavToString);
     }
 
     protected VoiceRequestDto getUserInfo(Long userId){
