@@ -1,8 +1,7 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.MyConstant;
-import com.potato.balbambalbam.main.cardList.dto.CardListResponse;
-import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
+import com.potato.balbambalbam.main.ExceptionDto;
+import com.potato.balbambalbam.main.cardList.dto.CardListResponseDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.service.CardListService;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
@@ -40,9 +39,9 @@ public class CardListController {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
-    public ResponseEntity<CardListResponse<List<ResponseCardDto>>> getCardList(@RequestParam("category") String category, @RequestParam("subcategory") String subcategory){
+    public ResponseEntity<CardListResponseDto<List<ResponseCardDto>>> getCardList(@RequestParam("category") String category, @RequestParam("subcategory") String subcategory){
         List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subcategory);
-        CardListResponse<List<ResponseCardDto>> response = new CardListResponse<>(cardDtoList, cardDtoList.size());
+        CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
         //header : json, utf-8 인코딩
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
 import com.potato.balbambalbam.MyConstant;
+import com.potato.balbambalbam.main.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
-import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
