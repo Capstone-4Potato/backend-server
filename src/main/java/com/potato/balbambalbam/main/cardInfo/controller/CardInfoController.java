@@ -37,7 +37,7 @@ public class CardInfoController {
             }
     )
     public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
-        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(cardId, MyConstant.TEMPORARY_USER_ID);
+        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));

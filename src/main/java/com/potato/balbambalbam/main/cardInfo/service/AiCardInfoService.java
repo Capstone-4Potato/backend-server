@@ -20,8 +20,10 @@ import java.time.Duration;
 public class AiCardInfoService {
     WebClient webClient = WebClient.builder().build();
     public String getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {
+        log.info("[request] : {}", aiTtsRequestDto);
+
         String wavFile = webClient.post()
-                .uri(MyConstant.AI_URL)
+                .uri(MyConstant.AI_URL + "/ai/voice")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiTtsRequestDto), AiTtsRequestDto.class)
                 .retrieve()//요청
