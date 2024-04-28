@@ -18,7 +18,7 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AiCardInfoService {
+public class AiTtsService {
     WebClient webClient = WebClient.builder().build();
     public AiTtsResponseDto getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {
         AiTtsResponseDto aiTtsResponseDto = webClient.post()
