@@ -6,6 +6,7 @@ import com.potato.balbambalbam.data.repository.CardBookmarkRepository;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
+import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
@@ -27,15 +28,11 @@ public class CardInfoService {
     public CardInfoResponseDto getCardInfo(Long userId, Long cardId) {
         //음성 생성
         AiTtsRequestDto aiTtsRequestDto = getAiTtsRequestDto(userId, cardId);
-        String wavToString = aiCardInfoService.getTtsVoice(aiTtsRequestDto);
-        if(wavToString.equals("TimeoutException")){
-            throw new AiConnectionException("음성 생성에 실패하였습니다");
-        }
-//        String wavToString = "테스트입니다";
+        AiTtsResponseDto aiTtsResponseDto = aiCardInfoService.getTtsVoice(aiTtsRequestDto);
 
-        //카드 정보 생성
+        String correctAudio = aiTtsResponseDto.getCorrectAudio();
 
-        return new CardInfoResponseDto(wavToString);
+        return new CardInfoResponseDto(correctAudio);
     }
 
     protected AiTtsRequestDto getAiTtsRequestDto(Long userId, Long cardId){
