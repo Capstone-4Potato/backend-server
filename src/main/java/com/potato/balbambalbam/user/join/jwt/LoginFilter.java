@@ -35,6 +35,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (socialId == null) {
             throw new AuthenticationServiceException("socialId is required");
         }
+        System.out.println(socialId);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(socialId, "");
 
         return authenticationManager.authenticate(authRequest);
@@ -52,11 +53,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(socialId, role, 24 * 60 * 60 * 1000L);
+        String token = jwtUtil.createJwt(socialId, role, 7 * 24 * 60 * 60 * 1000L);
 
         response.addHeader("Authorization", "Bearer " + token);
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
-        response.getWriter().write("{\"로그인이 완료되었습니다.\"}");
+        response.getWriter().write("{\"message\": \"로그인이 완료되었습니다.\", \"status\": " + HttpServletResponse.SC_OK + "}");
         response.getWriter().flush();
     }
 
@@ -66,10 +67,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         if (failed instanceof UsernameNotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write("{\"존재하지 않은 사용자 아이디입니다.\"}");
+            response.getWriter().write("{\"message\": \"존재하지 않은 사용자 아이디입니다.\", \"status\": " + HttpServletResponse.SC_NOT_FOUND + "}");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"서버 오류가 발생했습니다.\"}");
+            response.getWriter().write("{\"message\": \"서버 오류가 발생했습니다.\", \"status\": " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR + "}");
         }
         response.getWriter().flush();
     }

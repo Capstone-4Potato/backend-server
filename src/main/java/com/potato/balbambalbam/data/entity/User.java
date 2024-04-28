@@ -19,7 +19,7 @@ public class User {
     private Integer age;
     @Column(name = "gender", nullable = false)
     private Byte gender; //(남성 : 0, 여성 : 1)
-    @Column(name = "socialId", nullable = false, unique = true)
+    @Column(name = "social_id", nullable = false, unique = true)
     private String socialId;
     @Column(name = "role", nullable = false)
     private String role;
