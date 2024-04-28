@@ -2,11 +2,10 @@ package com.potato.balbambalbam.weaksoundtest.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
-
-import lombok.RequiredArgsConstructor;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
+import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.weaksoundtest.service.WeakSoundTestService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

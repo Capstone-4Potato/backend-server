@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardBookmark;
 import com.potato.balbambalbam.data.entity.CardScore;

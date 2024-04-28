@@ -2,7 +2,6 @@ package com.potato.balbambalbam.main;
 
 import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
-import com.potato.balbambalbam.main.cardList.dto.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
 import lombok.extern.slf4j.Slf4j;
