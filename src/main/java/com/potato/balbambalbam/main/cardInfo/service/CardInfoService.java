@@ -6,7 +6,7 @@ import com.potato.balbambalbam.data.repository.CardBookmarkRepository;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
-import com.potato.balbambalbam.main.cardInfo.dto.VoiceRequestDto;
+import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
@@ -26,8 +26,8 @@ public class CardInfoService {
 
     public CardInfoResponseDto getCardInfo(Long cardId, Long userId) {
         //음성 생성
-        VoiceRequestDto voiceRequestDto = getUserInfo(userId);
-        String wavToString = aiCardInfoService.getTtsVoice(voiceRequestDto);
+        AiTtsRequestDto aiTtsRequestDto = getUserInfo(userId);
+        String wavToString = aiCardInfoService.getTtsVoice(aiTtsRequestDto);
         if(wavToString.equals("TimeoutException")){
             throw new AiConnectionException("음성 생성에 실패하였습니다");
         }
@@ -39,12 +39,12 @@ public class CardInfoService {
         return new CardInfoResponseDto(wavToString);
     }
 
-    protected VoiceRequestDto getUserInfo(Long userId){
+    protected AiTtsRequestDto getUserInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자가 존재하지 않습니다"));
         Integer age = user.getAge();
         Byte gender = user.getGender();
 
-        return new VoiceRequestDto(age, gender);
+        return new AiTtsRequestDto(age, gender);
     }
 
 }
