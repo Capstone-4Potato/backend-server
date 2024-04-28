@@ -8,7 +8,6 @@ import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
-import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +22,12 @@ public class CardInfoService {
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
-    private final AiCardInfoService aiCardInfoService;
+    private final AiTtsService aiTtsService;
 
     public CardInfoResponseDto getCardInfo(Long userId, Long cardId) {
         //음성 생성
         AiTtsRequestDto aiTtsRequestDto = getAiTtsRequestDto(userId, cardId);
-        AiTtsResponseDto aiTtsResponseDto = aiCardInfoService.getTtsVoice(aiTtsRequestDto);
+        AiTtsResponseDto aiTtsResponseDto = aiTtsService.getTtsVoice(aiTtsRequestDto);
 
         String correctAudio = aiTtsResponseDto.getCorrectAudio();
 
