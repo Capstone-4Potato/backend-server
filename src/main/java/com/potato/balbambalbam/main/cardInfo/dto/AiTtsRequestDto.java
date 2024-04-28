@@ -6,11 +6,11 @@ import lombok.ToString;
 
 @Getter @Setter
 @ToString
-public class VoiceRequestDto {
+public class AiTtsRequestDto {
     public Integer age;
     public Byte gender;  //0 : 여자 , 1 : 남자
 
-    public VoiceRequestDto(Integer age, Byte gender) {
+    public AiTtsRequestDto(Integer age, Byte gender) {
         this.age = age;
         this.gender = gender;
     }

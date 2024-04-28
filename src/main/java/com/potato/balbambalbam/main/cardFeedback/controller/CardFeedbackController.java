@@ -20,10 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
 
@@ -32,7 +29,6 @@ import java.nio.charset.Charset;
 @Slf4j
 @Tag(name = "CardFeedback", description = "CardFeedback API")
 public class CardFeedbackController {
-
     private final CardFeedbackService cardFeedbackService;
 
     @PostMapping("/cards/{cardId}")
@@ -45,8 +41,8 @@ public class CardFeedbackController {
             }
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
-                                                                    @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
-                                                                    BindingResult bindingResult) throws JsonProcessingException {
+                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
+                                                   BindingResult bindingResult) throws JsonProcessingException {
         //요청 validation 에러
         if(bindingResult.hasErrors()){
             log.info("[ERROR]:{}", bindingResult);
@@ -61,6 +57,5 @@ public class CardFeedbackController {
         headers.setContentType(mediaType);
 
         return ResponseEntity.ok().headers(headers).body(userFeedbackResponseDto);
-
     }
 }
