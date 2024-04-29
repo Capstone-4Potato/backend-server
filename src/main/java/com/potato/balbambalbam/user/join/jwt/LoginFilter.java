@@ -3,7 +3,6 @@ package com.potato.balbambalbam.user.join.jwt;
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
-import com.potato.balbambalbam.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -32,7 +32,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
-        setFilterProcessesUrl("/login/social");
     }
 
     @Override
@@ -41,7 +40,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (socialId == null) {
             throw new AuthenticationServiceException("socialId가 없습니다.");
         }
-        System.out.println(socialId);
+        System.out.println("social id : " + socialId);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(socialId, "");
 
         return authenticationManager.authenticate(authRequest);
@@ -70,9 +69,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
 
-        response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
-        response.getWriter().write("{\"message\": \"로그인이 완료되었습니다.\", \"status\": " + HttpServletResponse.SC_OK + "}");
-        response.getWriter().flush();
+        response.setContentType("text/plain; charset=UTF-8");
+        PrintWriter writer = response.getWriter();
+        writer.print("로그인이 완료되었습니다.");
     }
 
     @SneakyThrows
@@ -80,11 +79,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         if (failed instanceof UsernameNotFoundException) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write("{\"message\": \"존재하지 않은 사용자 아이디입니다.\", \"status\": " + HttpServletResponse.SC_NOT_FOUND + "}");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
+
+            response.setContentType("text/plain; charset=UTF-8");
+            PrintWriter writer = response.getWriter();
+            writer.print("존재하지 않은 사용자 아이디입니다.");
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"message\": \"서버 오류가 발생했습니다.\", \"status\": " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR + "}");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
+
+            response.setContentType("text/plain; charset=UTF-8");
+            PrintWriter writer = response.getWriter();
+            writer.print("서버 오류가 발생했습니다.");
         }
         response.getWriter().flush();
     }
