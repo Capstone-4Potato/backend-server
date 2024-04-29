@@ -1,5 +1,7 @@
 package com.potato.balbambalbam.user.join.jwt;
 
+import com.potato.balbambalbam.data.entity.Refresh;
+import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import com.potato.balbambalbam.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
@@ -17,16 +19,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.refreshRepository = refreshRepository;
         setFilterProcessesUrl("/login/social");
     }
 
@@ -34,7 +39,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String socialId = request.getParameter("socialId");
         if (socialId == null) {
-            throw new AuthenticationServiceException("socialId is required");
+            throw new AuthenticationServiceException("socialId가 없습니다.");
         }
         System.out.println(socialId);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(socialId, "");
@@ -51,15 +56,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-
         String role = auth.getAuthority();
 
+        //토큰 생성
         String access = jwtUtil.createJwt("access", socialId, role, 600000L);
         System.out.println("access : " + access);
         String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
         System.out.println("refresh : " + refresh);
 
-        response.addHeader("access", access);
+        //refresh 토큰 저장
+        addRefreshEntity(socialId, refresh, 86400000L);
+
+        response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
 
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
@@ -89,5 +97,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         cookie.setPath("/");
 
         return cookie;
+    }
+
+    private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        Refresh refreshEntity = new Refresh();
+        refreshEntity.setSocialId(socialId);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
+
+        refreshRepository.save(refreshEntity);
     }
 }

@@ -1,6 +1,8 @@
 package com.potato.balbambalbam.user.join.service;
 
+import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.entity.User;
+import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
@@ -8,21 +10,22 @@ import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class JoinService {
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
+    private final RefreshRepository refreshRepository;
 
-    public JoinService(UserRepository userRepository, JWTUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public JoinService(UserRepository userRepository, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
 
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
-        this. authenticationManager = authenticationManager;
+        this. refreshRepository = refreshRepository;
     }
 
     public String joinProcess(JoinDTO joinDTO, HttpServletResponse response) {
@@ -51,7 +54,11 @@ public class JoinService {
         String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L);
         System.out.println("refresh : " + refresh);
 
+        //refresh 토큰 저장
+        addRefreshEntity(socialId, refresh, 86400000L);
+
         response.addCookie(createCookie("refresh", refresh));
+
         return access;
     }
     private Cookie createCookie(String key, String value) {
@@ -61,6 +68,18 @@ public class JoinService {
         cookie.setHttpOnly(true);
 
         return cookie;
+    }
+
+    private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        Refresh refreshEntity = new Refresh();
+        refreshEntity.setSocialId(socialId);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
+
+        refreshRepository.save(refreshEntity);
     }
 
     @Transactional

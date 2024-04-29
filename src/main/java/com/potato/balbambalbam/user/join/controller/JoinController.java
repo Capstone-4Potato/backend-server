@@ -6,7 +6,6 @@ import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,7 @@ public class JoinController {
             System.out.println(joinDto.getSocialId());
 
             String access = joinService.joinProcess(joinDto, response);
-            response.addHeader("access", access);
+            response.setHeader("access", access);
 
             return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다.");
         } catch (Exception e) {
