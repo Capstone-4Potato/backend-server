@@ -17,6 +17,7 @@ import java.time.Duration;
 public class AiCardFeedbackService {
     WebClient webClient = WebClient.builder().build();
     public AiFeedbackResponseDto postAiFeedback(AiFeedbackRequestDto aiFeedbackRequestDto) throws JsonProcessingException {
+
         AiFeedbackResponseDto aiFeedbackResponseDto = webClient.post()
                 .uri(MyConstant.AI_URL + "ai/feedback")
                 .contentType(MediaType.APPLICATION_JSON)
