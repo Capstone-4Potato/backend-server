@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.jwt;
+package com.potato.balbambalbam.user.join.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

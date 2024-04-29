@@ -2,7 +2,7 @@ package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.jwt.JWTUtil;
+import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

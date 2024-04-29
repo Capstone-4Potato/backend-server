@@ -4,7 +4,7 @@ import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.jwt.JWTUtil;
+import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import jakarta.servlet.http.Cookie;
