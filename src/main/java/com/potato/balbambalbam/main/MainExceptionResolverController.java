@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.exception;
+package com.potato.balbambalbam.main;
 
 import com.potato.balbambalbam.main.exception.*;
 import lombok.extern.slf4j.Slf4j;
