@@ -28,7 +28,7 @@ public class CardInfoController {
     private final CardInfoService cardInfoService;
 
     @GetMapping("/cards/{cardId}")
-    @Operation(summary = "card info 제공", description = "카드 id, 카드 text, 발음 text, 맞춤 음성 제공")
+    @Operation(summary = "card tts 제공", description = "맞춤 음성 제공")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "OK : 카드 정보, 음성 제공 성공"),
@@ -38,6 +38,25 @@ public class CardInfoController {
     )
     public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
+        headers.setContentType(mediaType);
+
+        return ResponseEntity.ok().headers(headers).body(cardInfoResponseDto);
+    }
+
+    @GetMapping("/cards/custom/{cardId}")
+    @Operation(summary = "custom card tts 제공", description = "맞춤 음성 제공")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK : 카드 정보, 음성 제공 성공"),
+                    @ApiResponse(responseCode = "400", description = "ERROR : 카드 또는 회원 조회 실패", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            }
+    )
+    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId) {
+        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
