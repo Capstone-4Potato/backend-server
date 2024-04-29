@@ -1,9 +1,6 @@
 package com.potato.balbambalbam.main.cardList.service;
 
-import com.potato.balbambalbam.data.entity.Card;
-import com.potato.balbambalbam.data.entity.CardBookmark;
-import com.potato.balbambalbam.data.entity.CardScore;
-import com.potato.balbambalbam.data.entity.Category;
+import com.potato.balbambalbam.data.entity.*;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.exception.CardNotFoundException;
@@ -28,6 +25,7 @@ public class CardListService {
     private final CardBookmarkRepository cardBookmarkRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardScoreRepository cardScoreRepository;
+    private final CustomCardRepository customCardRepository;
     private final UserWeakSoundRepository userWeakSoundRepository;
 
     /**
@@ -39,6 +37,16 @@ public class CardListService {
     public List<ResponseCardDto> getCardsByCategory(String category, String subcategory){
         Long requestCategory = getSubCategoryId(category, subcategory);
         List<ResponseCardDto> cardDtoList = createCardDtoListForCategory(requestCategory);
+
+        return cardDtoList;
+    }
+
+    public List<ResponseCardDto> getCustomCards(Long userId){
+        List<CustomCard> customCardList = customCardRepository.findAllByUserId(userId);
+        List<ResponseCardDto> cardDtoList = new ArrayList<>();
+
+        customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
+                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
 
         return cardDtoList;
     }
@@ -103,6 +111,20 @@ public class CardListService {
         }else{
             CardBookmark cardBookmark = new CardBookmark(userId, cardId);
             cardBookmarkRepository.save(cardBookmark);
+            return cardId + "번 카드 북마크 추가";
+        }
+    }
+
+    public String toggleCustomCardBookmark(Long cardId){
+        CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
+
+        if(customCardRepository.existsById(cardId)){
+            customCard.setBookmarked(false);
+            customCardRepository.save(customCard);
+            return cardId + "번 카드 북마크 제거";
+        }else{
+            customCard.setBookmarked(true);
+            customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 추가";
         }
     }
