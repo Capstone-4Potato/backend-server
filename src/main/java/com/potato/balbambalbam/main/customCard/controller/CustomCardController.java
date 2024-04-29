@@ -27,7 +27,7 @@ public class CustomCardController {
         if(!isDeleted){
             throw new CardDeleteException(cardId + " : 카드 삭제 실패하였습니다");
         }
-        
+
         return ResponseEntity.ok("문장 삭제 완료");
     }
 }

@@ -41,7 +41,7 @@ public class CustomCardService {
     protected boolean canGenerateSentence(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다"));
 
-        if(customCardRepository.findAllByUserId(userId).size() >= 5){
+        if(customCardRepository.findAllByUserId(userId).size() >= 10){
             return false;
         }
 

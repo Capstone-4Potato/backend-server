@@ -21,4 +21,9 @@ public class CustomCard {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "highest_score")
+    private Integer highestScore;
+    @Column(name = "bookmark")
+    private boolean isBookmarked;
+
 }
