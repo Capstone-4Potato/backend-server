@@ -24,7 +24,7 @@ public class MainExceptionResolverController {
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({TimeoutException.class})
+    @ExceptionHandler({TimeoutException.class, CardDeleteException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }

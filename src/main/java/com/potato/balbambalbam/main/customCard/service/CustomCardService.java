@@ -5,6 +5,7 @@ import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.exception.CardCapacityExceededException;
+import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,18 @@ public class CustomCardService {
         }
 
         return createCustomCard(text, userId).getId();
+    }
+
+    public boolean deleteCustomCard(Long cardId){
+        CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다"));
+
+        customCardRepository.delete(customCard);
+
+        if(customCardRepository.findById(cardId).isPresent()){
+            return false;
+        }
+
+        return true;
     }
 
     protected boolean canGenerateSentence(Long userId){
