@@ -39,11 +39,7 @@ public class CardInfoController {
     public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
-        HttpHeaders headers = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        headers.setContentType(mediaType);
-
-        return ResponseEntity.ok().headers(headers).body(cardInfoResponseDto);
+        return ResponseEntity.ok().body(cardInfoResponseDto);
     }
 
     @GetMapping("/cards/custom/{cardId}")
@@ -58,10 +54,6 @@ public class CardInfoController {
     public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId) {
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
-        HttpHeaders headers = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        headers.setContentType(mediaType);
-
-        return ResponseEntity.ok().headers(headers).body(cardInfoResponseDto);
+        return ResponseEntity.ok().body(cardInfoResponseDto);
     }
 }

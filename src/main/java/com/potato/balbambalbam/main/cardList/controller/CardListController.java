@@ -44,12 +44,7 @@ public class CardListController {
         List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subcategory);
         CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
-        //header : json, utf-8 인코딩
-        HttpHeaders httpHeaders = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        httpHeaders.setContentType(mediaType);
-
-        return ResponseEntity.ok().headers(httpHeaders).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping ("/cards/custom")
@@ -62,12 +57,7 @@ public class CardListController {
         List<ResponseCardDto> cardDtoList = cardListService.getCustomCards(TEMPORARY_USER_ID);
         CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
-        //header : json, utf-8 인코딩
-        HttpHeaders httpHeaders = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        httpHeaders.setContentType(mediaType);
-
-        return ResponseEntity.ok().headers(httpHeaders).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/cards/bookmark/{cardId}")
