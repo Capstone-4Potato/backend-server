@@ -2,6 +2,7 @@ package com.potato.balbambalbam.jwt;
 
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -25,36 +27,44 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        //request에서 Authorization 헤더 찾음
-        String authorization= request.getHeader("Authorization");
+        String accessToken = request.getHeader("access");
 
-        //Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            System.out.println("token null");
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorization.split(" ")[1];
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
 
-        //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
-            System.out.println("token expired");
-            filterChain.doFilter(request, response);
+            PrintWriter writer = response.getWriter();
+            writer.print("access 토큰이 만료되었습니다.");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401
             return;
         }
 
-        String socialId = jwtUtil.getSocialId(token);
-        String role = jwtUtil.getRole(token);
+        String category = jwtUtil.getCategory(accessToken);
+
+        if (!category.equals("access")) {
+
+            PrintWriter writer = response.getWriter();
+            writer.print("access 토큰이 아닙니다.");
+
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
+            return;
+        }
+
+        String socialId = jwtUtil.getSocialId(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
         User user = new User();
         user.setSocialId(socialId);
         user.setRole(role);
-
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
