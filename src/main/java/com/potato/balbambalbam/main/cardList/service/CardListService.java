@@ -119,11 +119,11 @@ public class CardListService {
         CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
 
         if(customCardRepository.existsById(cardId)){
-            customCard.setBookmarked(false);
+            customCard.setIsBookmarked(false);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 제거";
         }else{
-            customCard.setBookmarked(true);
+            customCard.setIsBookmarked(true);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 추가";
         }
