@@ -39,6 +39,7 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
 
+            response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
             writer.print("access 토큰이 만료되었습니다.");
 
@@ -50,6 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         if (!category.equals("access")) {
 
+            response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
             writer.print("access 토큰이 아닙니다.");
 

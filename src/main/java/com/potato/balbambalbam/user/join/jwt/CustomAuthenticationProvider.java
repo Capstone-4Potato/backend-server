@@ -11,11 +11,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SocialIdAuthenticationProvider implements AuthenticationProvider {
+public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
 
-    public SocialIdAuthenticationProvider(UserRepository userRepository) {
+    public CustomAuthenticationProvider(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
