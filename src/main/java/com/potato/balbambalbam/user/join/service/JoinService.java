@@ -5,7 +5,10 @@ import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,14 +16,16 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public JoinService(UserRepository userRepository, JWTUtil jwtUtil) {
+    public JoinService(UserRepository userRepository, JWTUtil jwtUtil, AuthenticationManager authenticationManager) {
 
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this. authenticationManager = authenticationManager;
     }
 
-    public String joinProcess(JoinDTO joinDTO) {
+    public String joinProcess(JoinDTO joinDTO, HttpServletResponse response) {
 
         String name = joinDTO.getName();
         String socialId = joinDTO.getSocialId();
@@ -39,11 +44,23 @@ public class JoinService {
         data.setAge(age);
         data.setGender(gender);
         data.setRole("ROLE_ADMIN");
-
-        String token = jwtUtil.createJwt(socialId, data.getRole(), 7 * 24 * 60 * 60 * 1000L);
         userRepository.save(data);
 
-        return token;
+        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 600000L);
+        System.out.println("access : " + access);
+        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L);
+        System.out.println("refresh : " + refresh);
+
+        response.addCookie(createCookie("refresh", refresh));
+        return access;
+    }
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 
     @Transactional

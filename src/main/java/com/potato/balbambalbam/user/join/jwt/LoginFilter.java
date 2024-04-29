@@ -3,6 +3,7 @@ package com.potato.balbambalbam.user.join.jwt;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import com.potato.balbambalbam.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -53,14 +54,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(socialId, role, 7 * 24 * 60 * 60 * 1000L);
-        System.out.println("Token " + token);
+        String access = jwtUtil.createJwt("access", socialId, role, 600000L);
+        System.out.println("access : " + access);
+        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
+        System.out.println("refresh : " + refresh);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("access", access);
+        response.addCookie(createCookie("refresh", refresh));
+
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         response.getWriter().write("{\"message\": \"로그인이 완료되었습니다.\", \"status\": " + HttpServletResponse.SC_OK + "}");
         response.getWriter().flush();
-        System.out.println(token);
     }
 
     @SneakyThrows
@@ -75,5 +79,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             response.getWriter().write("{\"message\": \"서버 오류가 발생했습니다.\", \"status\": " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR + "}");
         }
         response.getWriter().flush();
+    }
+
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        return cookie;
     }
 }
