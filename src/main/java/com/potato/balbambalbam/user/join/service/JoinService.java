@@ -2,6 +2,7 @@ package com.potato.balbambalbam.user.join.service;
 
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.UserRepository;
+import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import jakarta.transaction.Transactional;
@@ -11,13 +12,15 @@ import org.springframework.stereotype.Service;
 public class JoinService {
 
     private final UserRepository userRepository;
+    private final JWTUtil jwtUtil;
 
-    public JoinService(UserRepository userRepository) {
+    public JoinService(UserRepository userRepository, JWTUtil jwtUtil) {
 
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
-    public void joinProcess(JoinDTO joinDTO) {
+    public String joinProcess(JoinDTO joinDTO) {
 
         String name = joinDTO.getName();
         String socialId = joinDTO.getSocialId();
@@ -25,9 +28,8 @@ public class JoinService {
         Byte gender = joinDTO.getGender();
 
         Boolean isExist = userRepository.existsBySocialId(socialId);
-
         if (isExist) {
-            return;
+            return null;
         }
 
         User data = new User();
@@ -38,7 +40,10 @@ public class JoinService {
         data.setGender(gender);
         data.setRole("ROLE_ADMIN");
 
+        String token = jwtUtil.createJwt(socialId, data.getRole(), 7 * 24 * 60 * 60 * 1000L);
         userRepository.save(data);
+
+        return token;
     }
 
     @Transactional

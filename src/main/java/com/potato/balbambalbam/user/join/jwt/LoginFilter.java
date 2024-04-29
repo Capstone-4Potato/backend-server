@@ -54,11 +54,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(socialId, role, 7 * 24 * 60 * 60 * 1000L);
+        System.out.println("Token " + token);
 
         response.addHeader("Authorization", "Bearer " + token);
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         response.getWriter().write("{\"message\": \"로그인이 완료되었습니다.\", \"status\": " + HttpServletResponse.SC_OK + "}");
         response.getWriter().flush();
+        System.out.println(token);
     }
 
     @SneakyThrows

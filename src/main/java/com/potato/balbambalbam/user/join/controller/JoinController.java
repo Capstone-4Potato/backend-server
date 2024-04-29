@@ -5,6 +5,7 @@ import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,13 +27,22 @@ public class JoinController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody JoinDTO joinDto) {
+    public ResponseEntity<?> createUser(@RequestBody JoinDTO joinDto, HttpServletResponse response) {
         try {
             if (joinDto.getName() == null || joinDto.getAge() == null || joinDto.getGender() == null || joinDto.getSocialId() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력 데이터가 충분하지 않습니다.");
             }
-            joinService.joinProcess(joinDto);
-            return ResponseEntity.ok().body(String.format("회원가입이 완료되었습니다."));
+            System.out.println(joinDto.getName());
+            System.out.println(joinDto.getAge());
+            System.out.println(joinDto.getGender());
+            System.out.println(joinDto.getSocialId());
+
+            String token = joinService.joinProcess(joinDto);
+
+            response.addHeader("Authorization", "Bearer " + token);
+            System.out.println("Token " + token);
+
+            return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
