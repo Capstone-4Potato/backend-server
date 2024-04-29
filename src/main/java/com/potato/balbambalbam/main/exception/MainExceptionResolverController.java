@@ -1,9 +1,6 @@
-package com.potato.balbambalbam.main;
+package com.potato.balbambalbam.main.exception;
 
-import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
-import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
-import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
+import com.potato.balbambalbam.main.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

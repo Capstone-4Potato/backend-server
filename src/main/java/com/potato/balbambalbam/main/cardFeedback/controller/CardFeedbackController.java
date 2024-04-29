@@ -1,8 +1,8 @@
 package com.potato.balbambalbam.main.cardFeedback.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.potato.balbambalbam.MyConstant;
-import com.potato.balbambalbam.main.ExceptionDto;
+import com.potato.balbambalbam.main.MyConstant;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;

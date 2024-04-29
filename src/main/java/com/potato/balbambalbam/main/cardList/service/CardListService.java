@@ -6,8 +6,8 @@ import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
-import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
+import com.potato.balbambalbam.main.exception.CardNotFoundException;
+import com.potato.balbambalbam.main.exception.CategoryNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.potato.balbambalbam.MyConstant.TEMPORARY_USER_ID;
+import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.main.ExceptionDto;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.dto.CardListResponseDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.service.CardListService;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import static com.potato.balbambalbam.MyConstant.TEMPORARY_USER_ID;
+import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
 
 @RestController
 @RequiredArgsConstructor

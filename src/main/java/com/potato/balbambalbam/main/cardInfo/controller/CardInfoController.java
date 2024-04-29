@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
-import com.potato.balbambalbam.MyConstant;
-import com.potato.balbambalbam.main.ExceptionDto;
+import com.potato.balbambalbam.main.MyConstant;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
 import io.swagger.v3.oas.annotations.Operation;
