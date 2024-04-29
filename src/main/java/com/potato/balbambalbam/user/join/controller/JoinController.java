@@ -1,13 +1,12 @@
 package com.potato.balbambalbam.user.join.controller;
 
-import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
-import com.potato.balbambalbam.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class JoinController {
 
     private final JoinService joinService;
-    private final UserRepository userRepository;
-    private final JWTUtil jwtUtil;
-
-    public JoinController(JoinService joinService, UserRepository userRepository, JWTUtil jwtUtil) {
+    public JoinController(JoinService joinService) {
 
         this.joinService = joinService;
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/users")
@@ -37,10 +31,8 @@ public class JoinController {
             System.out.println(joinDto.getGender());
             System.out.println(joinDto.getSocialId());
 
-            String token = joinService.joinProcess(joinDto);
-
-            response.addHeader("Authorization", "Bearer " + token);
-            System.out.println("Token " + token);
+            String access = joinService.joinProcess(joinDto, response);
+            response.addHeader("access", access);
 
             return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다.");
         } catch (Exception e) {

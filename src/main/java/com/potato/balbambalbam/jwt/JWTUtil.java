@@ -19,6 +19,11 @@ public class JWTUtil {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
+    public String getCategory(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+    }
+
     public String getSocialId(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("socialId", String.class);
@@ -35,9 +40,10 @@ public class JWTUtil {
     }
 
 
-    public String createJwt(String socialId, String role, Long expiredMs) {
+    public String createJwt(String category, String socialId, String role, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("category", category)
                 .claim("socialId", socialId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
