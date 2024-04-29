@@ -19,7 +19,7 @@ public class MainExceptionResolverController {
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class, CardCapacityExceededException.class})
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler (Exception ex){
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
     }

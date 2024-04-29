@@ -2,10 +2,12 @@ package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class CustomCard {
 
     @Id
@@ -18,4 +20,5 @@ public class CustomCard {
     private String pronunciation;
     @Column(name = "user_id")
     private Long userId;
+
 }
