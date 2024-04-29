@@ -2,6 +2,7 @@ package com.potato.balbambalbam.main.cardInfo.service;
 
 import com.potato.balbambalbam.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
+import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -17,21 +18,18 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AiCardInfoService {
+public class AiTtsService {
     WebClient webClient = WebClient.builder().build();
-    public String getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {
-        log.info("[request] : {}", aiTtsRequestDto);
-
-        String wavFile = webClient.post()
+    public AiTtsResponseDto getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {
+        AiTtsResponseDto aiTtsResponseDto = webClient.post()
                 .uri(MyConstant.AI_URL + "/ai/voice")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiTtsRequestDto), AiTtsRequestDto.class)
                 .retrieve()//요청
-                .bodyToMono(String.class)
+                .bodyToMono(AiTtsResponseDto.class)
                 .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
-                .onErrorReturn("TimeoutException")    //에러 대신 TimeoutException return
                 .block();
 
-        return wavFile;
+        return aiTtsResponseDto;
     }
 }
