@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
-import com.potato.balbambalbam.MyConstant;
+import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import lombok.RequiredArgsConstructor;
