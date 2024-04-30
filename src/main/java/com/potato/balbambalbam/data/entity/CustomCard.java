@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "custom_card")
 @Getter @Setter
 @NoArgsConstructor
 public class CustomCard {
