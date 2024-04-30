@@ -13,6 +13,7 @@ import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import com.potato.balbambalbam.main.exception.CardNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class CardFeedbackService {
     private final CardRepository cardRepository;
@@ -65,7 +67,7 @@ public class CardFeedbackService {
         return aiFeedbackRequestDto;
     }
 
-    protected void updateScoreIfLarger(Long userId, Long cardId, Integer userScore){
+    public void updateScoreIfLarger(Long userId, Long cardId, Integer userScore){
          Optional<CardScore> optionalCardScore = cardScoreRepository.findByCardIdAndUserId(cardId, userId);
 
         if(optionalCardScore.isPresent()){
