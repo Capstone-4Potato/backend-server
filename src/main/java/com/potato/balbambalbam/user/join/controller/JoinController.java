@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.user.join.controller;
 
-import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
+import com.potato.balbambalbam.main.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;

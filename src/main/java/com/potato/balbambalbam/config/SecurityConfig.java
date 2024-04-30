@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.config;
 
 import com.potato.balbambalbam.data.repository.RefreshRepository;
+import com.potato.balbambalbam.user.join.jwt.CustomLogoutFilter;
 import com.potato.balbambalbam.user.join.jwt.JWTFilter;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
-import com.potato.balbambalbam.user.join.jwt.CustomLogoutFilter;
 import com.potato.balbambalbam.user.join.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

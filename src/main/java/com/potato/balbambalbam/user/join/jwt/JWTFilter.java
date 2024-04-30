@@ -2,7 +2,6 @@ package com.potato.balbambalbam.user.join.jwt;
 
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
-import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
