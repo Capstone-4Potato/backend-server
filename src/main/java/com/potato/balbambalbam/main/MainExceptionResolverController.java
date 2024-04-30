@@ -1,9 +1,6 @@
 package com.potato.balbambalbam.main;
 
-import com.potato.balbambalbam.main.cardInfo.exception.AiConnectionException;
-import com.potato.balbambalbam.main.cardInfo.exception.UserNotFoundException;
-import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.cardList.exception.CategoryNotFoundException;
+import com.potato.balbambalbam.main.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +19,12 @@ public class MainExceptionResolverController {
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class, CardGenerationFailException.class})
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler (Exception ex){
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({TimeoutException.class})
+    @ExceptionHandler({TimeoutException.class, CardDeleteException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
