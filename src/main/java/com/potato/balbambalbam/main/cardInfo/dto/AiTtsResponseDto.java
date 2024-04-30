@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class CardInfoResponseDto {
-    private String ttsAudio;
+public class AiTtsResponseDto {
+    private String correctAudio;
+
+
 }

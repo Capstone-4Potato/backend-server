@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "발밤발밤 API 명세서",
-                version = "demo"
+                version = "develop"
         )
 )
 @Configuration
