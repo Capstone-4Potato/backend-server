@@ -11,7 +11,7 @@ import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
-import com.potato.balbambalbam.main.cardList.exception.CardNotFoundException;
+import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
