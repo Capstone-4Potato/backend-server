@@ -42,6 +42,7 @@ public class CardFeedbackController {
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
                                                    @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
                                                    BindingResult bindingResult) throws JsonProcessingException {
+        log.info("[Feedback 요청]");
         //요청 validation 에러
         if(bindingResult.hasErrors()){
             log.info("[ERROR]:{}", bindingResult);
