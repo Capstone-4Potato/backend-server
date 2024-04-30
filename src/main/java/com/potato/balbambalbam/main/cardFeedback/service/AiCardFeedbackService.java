@@ -18,14 +18,18 @@ public class AiCardFeedbackService {
     WebClient webClient = WebClient.builder().build();
     public AiFeedbackResponseDto postAiFeedback(AiFeedbackRequestDto aiFeedbackRequestDto) throws JsonProcessingException {
 
+        log.info("[AI Request Dto] : {}" , aiFeedbackRequestDto.getPronunciation());
+
         AiFeedbackResponseDto aiFeedbackResponseDto = webClient.post()
-                .uri(MyConstant.AI_URL + "ai/feedback")
+                .uri(MyConstant.AI_URL + "/ai/feedback")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiFeedbackRequestDto), AiFeedbackRequestDto.class)
                 .retrieve()//요청
                 .bodyToMono(AiFeedbackResponseDto.class)
                 .timeout(Duration.ofSeconds(10)) //10초 안에 응답 오지 않으면 TimeoutException 발생
                 .block();
+
+        log.info("[AI Response Dto] : {}" , aiFeedbackResponseDto.getUserText());
 
         return aiFeedbackResponseDto;
     }

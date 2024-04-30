@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.nio.charset.Charset;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "CardInfo", description = "CardInfo API")
 public class CardInfoController {
     //TODO : user 동적으로 할당
@@ -36,9 +39,10 @@ public class CardInfoController {
                     @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
-        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
+    public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
+        log.info("[음성 요청]");
 
+        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
         return ResponseEntity.ok().body(cardInfoResponseDto);
     }
 
@@ -51,7 +55,7 @@ public class CardInfoController {
                     @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId) {
+    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
         return ResponseEntity.ok().body(cardInfoResponseDto);

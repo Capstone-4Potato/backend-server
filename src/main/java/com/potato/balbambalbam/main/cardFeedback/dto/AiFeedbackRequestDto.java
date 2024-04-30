@@ -2,12 +2,10 @@ package com.potato.balbambalbam.main.cardFeedback.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
