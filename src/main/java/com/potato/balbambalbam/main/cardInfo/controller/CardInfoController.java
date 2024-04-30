@@ -2,9 +2,9 @@ package com.potato.balbambalbam.main.cardInfo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.main.MyConstant;
-import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,14 +13,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.nio.charset.Charset;
 
 @Controller
 @RequiredArgsConstructor
