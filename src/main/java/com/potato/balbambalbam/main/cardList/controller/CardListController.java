@@ -1,6 +1,7 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.main.ExceptionDto;
+import com.potato.balbambalbam.main.MyConstant;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.dto.CardListResponseDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.service.CardListService;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import static com.potato.balbambalbam.MyConstant.TEMPORARY_USER_ID;
+import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,12 +44,20 @@ public class CardListController {
         List<ResponseCardDto> cardDtoList = cardListService.getCardsByCategory(category, subcategory);
         CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
-        //header : json, utf-8 인코딩
-        HttpHeaders httpHeaders = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        httpHeaders.setContentType(mediaType);
+        return ResponseEntity.ok().body(response);
+    }
 
-        return ResponseEntity.ok().headers(httpHeaders).body(response);
+    @GetMapping ("/cards/custom")
+    @Operation(summary = "Custom CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+    })
+    public ResponseEntity<CardListResponseDto<List<ResponseCardDto>>> getCustomCardList(@RequestParam("category") String category, @RequestParam("subcategory") String subcategory){
+        List<ResponseCardDto> cardDtoList = cardListService.getCustomCards(TEMPORARY_USER_ID);
+        CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
+
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/cards/bookmark/{cardId}")
@@ -59,6 +68,17 @@ public class CardListController {
     })
     public ResponseEntity updateCardBookmark(@PathVariable("cardId") Integer cardId){
         String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), TEMPORARY_USER_ID);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @GetMapping("/cards/custom/bookmark/{cardId}")
+    @Operation(summary = "Custom Card Bookmark 갱신", description = "해당 카드의 북마크 on / off")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK : 북마크 UPDATE(있으면 삭제 없으면 추가)", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카드", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+    })
+    public ResponseEntity updateCustomCardBookmark(@PathVariable("cardId") Integer cardId){
+        String message = cardListService.toggleCustomCardBookmark(Long.valueOf(cardId));
         return ResponseEntity.ok().body(message);
     }
 

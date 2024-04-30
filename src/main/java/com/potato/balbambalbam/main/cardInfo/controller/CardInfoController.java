@@ -1,7 +1,8 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
-import com.potato.balbambalbam.MyConstant;
-import com.potato.balbambalbam.main.ExceptionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.potato.balbambalbam.main.MyConstant;
+import com.potato.balbambalbam.main.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,14 @@ import java.nio.charset.Charset;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "CardInfo", description = "CardInfo API")
 public class CardInfoController {
     //TODO : user 동적으로 할당
     private final CardInfoService cardInfoService;
 
     @GetMapping("/cards/{cardId}")
-    @Operation(summary = "card info 제공", description = "카드 id, 카드 text, 발음 text, 맞춤 음성 제공")
+    @Operation(summary = "card tts 제공", description = "맞춤 음성 제공")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "OK : 카드 정보, 음성 제공 성공"),
@@ -36,13 +39,25 @@ public class CardInfoController {
                     @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<CardInfoResponseDto> postCardInfo(@PathVariable("cardId") Long cardId) {
+    public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
+        log.info("[음성 요청]");
+
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
+        return ResponseEntity.ok().body(cardInfoResponseDto);
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
-        headers.setContentType(mediaType);
+    @GetMapping("/cards/custom/{cardId}")
+    @Operation(summary = "custom card tts 제공", description = "맞춤 음성 제공")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK : 카드 정보, 음성 제공 성공"),
+                    @ApiResponse(responseCode = "400", description = "ERROR : 카드 또는 회원 조회 실패", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            }
+    )
+    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
+        CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
 
-        return ResponseEntity.ok().headers(headers).body(cardInfoResponseDto);
+        return ResponseEntity.ok().body(cardInfoResponseDto);
     }
 }
