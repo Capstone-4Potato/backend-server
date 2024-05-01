@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "CustomCard 생성 & 삭제", description = "CustomCard API")
-public class CustomCardUnValidationException {
+public class CustomCardController {
 
     private final CustomCardService customCardService;
     @PostMapping("/cards/custom")
