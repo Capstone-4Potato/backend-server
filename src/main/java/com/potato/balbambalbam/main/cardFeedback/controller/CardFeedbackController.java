@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "CardFeedback", description = "CardFeedback API")
+@Tag(name = "CardFeedback API", description = "음성 녹음 시 serAudio, userScore, recommendCard, waveform 피드백 제공한다.")
 public class CardFeedbackController {
     private final CardFeedbackService cardFeedbackService;
 

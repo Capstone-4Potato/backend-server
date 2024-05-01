@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "CardInfo", description = "CardInfo API")
+@Tag(name = "CardInfo API", description = "card에 해당하는 tts를 제공한다.")
 public class CardInfoController {
     //TODO : user 동적으로 할당
     private final CardInfoService cardInfoService;

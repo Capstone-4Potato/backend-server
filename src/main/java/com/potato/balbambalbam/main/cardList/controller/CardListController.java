@@ -27,7 +27,7 @@ import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "CardList", description = "CardList API")
+@Tag(name = "CardList API", description = "카테고리에 따른 카드리스트를 제공하고, 북마크를 toggle한다")
 public class CardListController {
     //TODO : user 동적으로 할당
     private final CardListService cardListService;
