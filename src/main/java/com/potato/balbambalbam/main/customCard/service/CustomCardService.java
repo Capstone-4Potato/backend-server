@@ -4,6 +4,7 @@ import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
+import com.potato.balbambalbam.main.customCard.dto.CustomCardResponseDto;
 import com.potato.balbambalbam.main.exception.CardGenerationFailException;
 import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.exception.UserNotFoundException;
@@ -22,12 +23,23 @@ public class CustomCardService {
     private final UserRepository userRepository;
     private final AiPronunciationService aiPronunciationService;
 
-    public Long createCustomCardIfPossible (String text, Long userId) throws CardGenerationFailException {
+    public CustomCardResponseDto createCustomCardIfPossible (String text, Long userId) throws CardGenerationFailException {
         if(!canGenerateSentence(userId, text)){
             throw new CardGenerationFailException("카드를 생성할 수 없습니다");
         }
 
-        return createCustomCard(text, userId).getId();
+        CustomCard customCard = createCustomCard(text, userId);
+
+        return createCustomCardResponse(customCard);
+    }
+
+    protected CustomCardResponseDto createCustomCardResponse (CustomCard customCard){
+        CustomCardResponseDto customCardResponse = new CustomCardResponseDto();
+        customCardResponse.setId(customCard.getId());
+        customCardResponse.setText(customCard.getText());
+        customCardResponse.setPronunciation(customCard.getPronunciation());
+
+        return customCardResponse;
     }
 
     public boolean deleteCustomCard(Long cardId){
@@ -62,7 +74,7 @@ public class CustomCardService {
         return true;
     }
 
-    protected CustomCard createCustomCard (String text, Long userId){
+    public CustomCard createCustomCard (String text, Long userId){
         CustomCard customCard = new CustomCard();
         customCard.setText(text);
         String pronunciation = aiPronunciationService.getPronunciation(text);
