@@ -36,8 +36,6 @@ public class CardInfoController {
             }
     )
     public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
-        log.info("[음성 요청]");
-
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
         return ResponseEntity.ok().body(cardInfoResponseDto);
     }

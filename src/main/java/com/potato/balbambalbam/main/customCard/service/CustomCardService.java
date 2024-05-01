@@ -7,12 +7,14 @@ import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.main.exception.CardGenerationFailException;
 import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.exception.UserNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CustomCardService {
 
