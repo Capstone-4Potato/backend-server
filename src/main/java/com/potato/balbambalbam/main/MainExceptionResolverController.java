@@ -40,7 +40,7 @@ public class MainExceptionResolverController {
         String className = extractClassName(ex.getClass().toString());
         String exMessage = ex.getMessage();
 
-        log.info("[ERROR] ["+ className + "]:" + exMessage);
+        //log.info("[ERROR] ["+ className + "]:" + exMessage);
 
         return ResponseEntity.status(httpStatus).body(new ExceptionDto(className, exMessage));
     }
