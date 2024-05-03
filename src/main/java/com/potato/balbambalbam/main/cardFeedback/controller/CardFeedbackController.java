@@ -40,17 +40,10 @@ public class CardFeedbackController {
             }
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
-                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
-                                                   BindingResult bindingResult) throws JsonProcessingException {
-        log.info("[Feedback 요청]");
-        //요청 validation 에러
-        if(bindingResult.hasErrors()){
-            log.info("[ERROR]:{}", bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
-        }
-
+                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto) throws JsonProcessingException {
         //성공 로직
         UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, MyConstant.TEMPORARY_USER_ID, cardId);
+        log.info("[UserFeedbackResponseDto] : {}", userFeedbackResponseDto);
 
         return ResponseEntity.ok().body(userFeedbackResponseDto);
     }
