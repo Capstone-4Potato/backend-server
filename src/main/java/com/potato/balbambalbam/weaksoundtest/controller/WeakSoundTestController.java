@@ -2,8 +2,11 @@ package com.potato.balbambalbam.weaksoundtest.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.balbambalbam.data.entity.UserWeakSound;
+import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
+import com.potato.balbambalbam.weaksoundtest.service.PhonemeService;
 import com.potato.balbambalbam.weaksoundtest.service.WeakSoundTestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +24,17 @@ public class WeakSoundTestController {
 
     private final WeakSoundTestService weakSoundTestService;
     private final WeakSoundTestRepository weakSoundTestRepository;
+    private final PhonemeService phonemeService;
+    private final UserWeakSoundRepository userWeakSoundRepository;
 
-    public WeakSoundTestController(WeakSoundTestService weakSoundTestService, WeakSoundTestRepository weakSoundTestRepository){
+    public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
+                                   WeakSoundTestRepository weakSoundTestRepository,
+                                   PhonemeService phonemeService,
+                                   UserWeakSoundRepository userWeakSoundRepository){
         this.weakSoundTestService = weakSoundTestService;
         this.weakSoundTestRepository = weakSoundTestRepository;
+        this.phonemeService = phonemeService;
+        this.userWeakSoundRepository = userWeakSoundRepository;
     }
 
     @PostMapping("/test/{cardId}")
@@ -56,5 +66,36 @@ public class WeakSoundTestController {
                     }
                 })
                 .orElseGet(()-> ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id를 가진 테스트 카드가 없습니다.")); //404
+    }
+
+    @PostMapping("/test/finalize")
+    public ResponseEntity<?> finalizeAnalysis(@RequestHeader(value = "userId", required = false) Long userId) {
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
+        }
+
+        Map<Long, Integer> topPhonemes = null;
+
+        try {
+            topPhonemes = phonemeService.getTopPhonemes(userId);
+
+            if (topPhonemes != null && !topPhonemes.isEmpty()) {
+                System.out.println(userId + ":");
+                topPhonemes.forEach((phonemeId, count) -> {
+                    System.out.println("Phoneme ID : " + phonemeId + ", Count : " + count);
+                    UserWeakSound userWeakSound = new UserWeakSound(userId, phonemeId);
+                    userWeakSoundRepository.save(userWeakSound);
+                });
+            } else {
+                System.out.println("user id " + userId + " 의 취약음 테스트 결과가 없습니다.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("취약음 테스트 결과가 없습니다."); //404
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
+        } finally {
+            phonemeService.clearTemporaryData(userId);
+            System.out.println("user id " + userId + " 의 임시 저장소를 삭제했습니다.");
+        }
+        return ResponseEntity.ok(topPhonemes); //200
     }
 }
