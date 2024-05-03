@@ -44,6 +44,8 @@ public class CardFeedbackService {
 
         if(categoryId >= 15 && categoryId <= 31){
             recommendCards = getRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
+        }else{
+            recommendCards.put(-1L, "-1");
         }
 
         return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCards);
@@ -87,7 +89,7 @@ public class CardFeedbackService {
         Map<Long, String> recommendCards = new HashMap<>();
         //틀린거 4개이상 => 필요없음 걍 다시 도전해보세요!
         if(recommendPhonemes.size() + recommendLastPhonemes.size() > 3){
-            recommendCards.put(-1L, null);
+            recommendCards.put(-1L, "-1");
             return recommendCards;
         }
 

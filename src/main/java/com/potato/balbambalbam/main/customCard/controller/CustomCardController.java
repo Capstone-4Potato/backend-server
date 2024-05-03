@@ -5,7 +5,6 @@ import com.potato.balbambalbam.main.customCard.dto.CustomCardRequestDto;
 import com.potato.balbambalbam.main.customCard.dto.CustomCardResponseDto;
 import com.potato.balbambalbam.main.customCard.service.CustomCardService;
 import com.potato.balbambalbam.main.exception.CardDeleteException;
-import com.potato.balbambalbam.main.exception.CardGenerationFailException;
 import com.potato.balbambalbam.main.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +29,7 @@ public class CustomCardController {
             @ApiResponse(responseCode = "200", description = "OK : 카드 생성 완료", content = @Content(schema = @Schema(implementation = CustomCardResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "ERROR : 카드를 생성 불가(10개 이상 or 한국어 X, 35자 이상)", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
-    public ResponseEntity<CustomCardResponseDto> postCustomCard(@RequestBody CustomCardRequestDto customCardRequestDto) throws CardGenerationFailException {
+    public ResponseEntity<CustomCardResponseDto> postCustomCard(@Validated @RequestBody CustomCardRequestDto customCardRequestDto) {
         CustomCardResponseDto customCardResponse = customCardService.createCustomCardIfPossible(customCardRequestDto.getText(), MyConstant.TEMPORARY_USER_ID);
 
         return ResponseEntity.ok().body(customCardResponse);
