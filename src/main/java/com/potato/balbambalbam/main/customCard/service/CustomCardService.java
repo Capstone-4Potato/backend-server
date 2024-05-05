@@ -9,9 +9,11 @@ import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class CustomCardService {
@@ -56,6 +58,8 @@ public class CustomCardService {
         String pronunciation = aiPronunciationService.getPronunciation(text).getPronunciation();
         customCard.setPronunciation(pronunciation);
         customCard.setUserId(userId);
+
+        log.info("[pronunciation] : {}", pronunciation);
 
         return customCardRepository.save(customCard);
     }
