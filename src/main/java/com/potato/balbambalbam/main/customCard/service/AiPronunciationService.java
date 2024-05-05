@@ -20,7 +20,7 @@ public class AiPronunciationService {
 
         AiPronunciationRequestDto aiPronunciationRequestDto = new AiPronunciationRequestDto(text);
 
-        AiPronunciationResponseDto pronunciaiton = webClient.post()
+        AiPronunciationResponseDto responseDto = webClient.post()
                 .uri(MyConstant.AI_URL + "/ai/pronunciation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiPronunciationRequestDto), AiPronunciationRequestDto.class)
@@ -29,6 +29,6 @@ public class AiPronunciationService {
                 .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
                 .block();
 
-        return pronunciaiton;
+        return responseDto;
     }
 }
