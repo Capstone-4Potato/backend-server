@@ -3,9 +3,11 @@ package com.potato.balbambalbam.main.cardFeedback.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
+import com.potato.balbambalbam.data.entity.Category;
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.CardScoreRepository;
+import com.potato.balbambalbam.data.repository.CategoryRepository;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
@@ -30,6 +32,7 @@ public class CardFeedbackService {
     private final AiCardFeedbackService aiCardFeedbackService;
     private final PhonemeRepository phonemeRepository;
     private final UpdatePhonemeService updatePhonemeService;
+    private final CategoryRepository categoryRepository;
 
     public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) throws JsonProcessingException {
         //인공지능서버와 통신
@@ -39,16 +42,9 @@ public class CardFeedbackService {
         updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
 
         //학습카드 추천
-        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
-        Map<Long, String> recommendCards = new HashMap<>();
+        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, cardId);
 
-        if(categoryId >= 15 && categoryId <= 31){
-            recommendCards = getRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
-        }else{
-            recommendCards.put(-1L, "-1");
-        }
-
-        return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCards);
+        return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCard);
     }
 
     protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) throws JsonProcessingException {
@@ -83,14 +79,37 @@ public class CardFeedbackService {
         }
     }
 
+    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long cardId){
+        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
+        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
 
+        //1. 100점인 경우 (음절, 단어, 문장)
+        if(aiFeedbackResponseDto.getUserAccuracy() == 100){
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("perfect");
+            recommendCard.put(-100L, recommendCardInfo);
+            return recommendCard;
+        }
 
-    protected Map<Long, String> getRecommendCards(List<String> recommendPhonemes, List<String> recommendLastPhonemes){
-        Map<Long, String> recommendCards = new HashMap<>();
-        //틀린거 4개이상 => 필요없음 걍 다시 도전해보세요!
+        //2. 음절 문장인데 100점이 아닌 경우
+        if(categoryId >= 15 && categoryId <= 31) {
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
+            recommendCard.put(-1L, recommendCardInfo);
+            return recommendCard;
+        }
+
+        //3. 단어인 경우
+        return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
+
+    }
+
+    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> getWordRecommendCards(List<String> recommendPhonemes, List<String> recommendLastPhonemes){
+        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
+
+        //틀린 음소가 4개 이상인 경우
         if(recommendPhonemes.size() + recommendLastPhonemes.size() > 3){
-            recommendCards.put(-1L, "-1");
-            return recommendCards;
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("try again");
+            recommendCard.put(-4L, recommendCardInfo);
+            return recommendCard;
         }
 
         //틀린 음소가 3개 이하일 경우
@@ -105,17 +124,25 @@ public class CardFeedbackService {
                 hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
             }
             Card foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
-            recommendCards.put(foundCard.getId(), hangul);
+            //카테고리 찾기
+            Long categoryId = foundCard.getCategoryId();
+            Category categoryData = categoryRepository.findById(categoryId).get();
+            Category subCategoryData = categoryRepository.findById(categoryData.getParentId()).get();
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(hangul, categoryData.getName(), subCategoryData.getName());
+            recommendCard.put(foundCard.getId(), recommendCardInfo);
         });
 
         //종성
         recommendLastPhonemes.forEach(phoneme -> {
             Long categoryId = getCategoryId(phoneme);
-            Card recommendCard = cardRepository.findAllByCategoryId(categoryId).get(0);
-            recommendCards.put(recommendCard.getId(), recommendCard.getText());
+            Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
+            Category categoryData = categoryRepository.findById(categoryId).get();
+            Category subCategoryData = categoryRepository.findById(categoryData.getParentId()).get();
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(card.getText(), categoryData.getName(), subCategoryData.getName());
+            recommendCard.put(card.getId(), recommendCardInfo);
         });
 
-        return recommendCards;
+        return recommendCard;
     }
 
     //종성 카테고리 아이디 찾기
@@ -139,10 +166,9 @@ public class CardFeedbackService {
         return null;
     }
 
-    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, String> recommendCards){
+    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
         //사용자 오디오 데이터 생성
         UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());
-
         //waveform 데이터 생성
         UserFeedbackResponseDto.Waveform waveform = new UserFeedbackResponseDto.Waveform(aiFeedback.getUserWaveform(), aiFeedback.getUserAudioDuration(), aiFeedback.getCorrectWaveform(), aiFeedback.getCorrectAudioDuration());
 
@@ -150,7 +176,7 @@ public class CardFeedbackService {
         UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
         userFeedbackResponseDto.setUserAudio(userAudio);
         userFeedbackResponseDto.setUserScore(aiFeedback.getUserAccuracy());
-        userFeedbackResponseDto.setRecommendCard(recommendCards);
+        userFeedbackResponseDto.setRecommendCard(recommendCard);
         userFeedbackResponseDto.setWaveform(waveform);
 
         return userFeedbackResponseDto;
