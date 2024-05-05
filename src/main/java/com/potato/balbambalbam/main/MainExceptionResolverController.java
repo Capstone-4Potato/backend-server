@@ -25,47 +25,42 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         String className = extractClassName(ex.getClass().toString());
 
-        return ResponseEntity.status(statusCode).body("[ERROR] : " + className + "\n message" + ex.getMessage());
-
+        ExceptionDto exceptionDto = new ExceptionDto(statusCode.value(), className, ex.getMessage());
+        return new ResponseEntity<>(exceptionDto, headers, statusCode);
     }
 
-    //    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ExceptionDto> validatedExceptionHandler(MethodArgumentNotValidException ex){
-//        String className = extractClassName(ex.getClass().toString());
-//        String defaultMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-//
-//        log.info("[ERROR] ["+ className + "]:" + defaultMessage);
-//
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDto(className, defaultMessage));
-//    }
-//    @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class})
-//    public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
-//        return exceptionHandler(ex, HttpStatus.NOT_FOUND);
-//    }
-//
-//    @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class, HttpMessageNotReadableException.class})
-//    public ResponseEntity<ExceptionDto> badRequestExceptionHandler (Exception ex){
-//        return exceptionHandler(ex, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @ExceptionHandler({TimeoutException.class, CardDeleteException.class})
-//    public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
-//        return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//
-//    /**
-//     * 에러 메서드 처리
-//     * @param ex
-//     * @param httpStatus
-//     * @return
-//     */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String className = extractClassName(ex.getClass().toString());
+        String defaultMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+        ExceptionDto exceptionDto = new ExceptionDto(status.value(), className, defaultMessage);
+        return new ResponseEntity<>(exceptionDto, headers, status);
+    }
+
+    @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class})
+    public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
+        return exceptionHandler(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({TimeoutException.class, CardDeleteException.class})
+    public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
+        return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * 에러 메서드 처리
+     * @param ex
+     * @param httpStatus
+     * @return
+     */
     protected ResponseEntity<ExceptionDto> exceptionHandler(Exception ex, HttpStatusCode httpStatus){
         String className = extractClassName(ex.getClass().toString());
         String exMessage = ex.getMessage();
 
         log.info("[ERROR] ["+ className + "]:" + exMessage);
 
-        return ResponseEntity.status(httpStatus).body(new ExceptionDto(className, exMessage));
+        return ResponseEntity.status(httpStatus).body(new ExceptionDto(httpStatus.value(), className, exMessage));
     }
 
     protected String extractClassName(String fullClassName){
