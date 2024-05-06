@@ -47,6 +47,13 @@ public class CardFeedbackService {
         return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCard);
     }
 
+    /**
+     * Ai 통신
+     * @param aiFeedbackRequest
+     * @param cardId
+     * @return
+     * @throws JsonProcessingException
+     */
     protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) throws JsonProcessingException {
         AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(aiFeedbackRequest, cardId);
         AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
@@ -65,6 +72,12 @@ public class CardFeedbackService {
         return aiFeedbackRequestDto;
     }
 
+    /**
+     * 사용자 최고 점수 업데이트
+     * @param userId
+     * @param cardId
+     * @param userScore
+     */
     public void updateScoreIfLarger(Long userId, Long cardId, Integer userScore){
          Optional<CardScore> optionalCardScore = cardScoreRepository.findByCardIdAndUserId(cardId, userId);
 
@@ -79,6 +92,12 @@ public class CardFeedbackService {
         }
     }
 
+    /**
+     * 추천학습 카드 생성
+     * @param aiFeedbackResponseDto
+     * @param cardId
+     * @return
+     */
     protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long cardId){
         Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
         Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
@@ -91,13 +110,13 @@ public class CardFeedbackService {
         }
 
         //2. 음절 문장인데 100점이 아닌 경우
-        if(categoryId >= 15 && categoryId <= 31) {
+        if(categoryId < 15 || categoryId > 31) {
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
             recommendCard.put(-1L, recommendCardInfo);
             return recommendCard;
         }
 
-        //3. 단어인 경우
+        //3. 단어 + 100점이 아닌 경우
         return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
 
     }
@@ -112,34 +131,46 @@ public class CardFeedbackService {
             return recommendCard;
         }
 
+        for (String recommendPhoneme : recommendPhonemes) {
+            log.info(recommendPhoneme);
+        }
+        for (String recommendLastPhoneme : recommendLastPhonemes) {
+            log.info(recommendLastPhoneme);
+        }
+
         //틀린 음소가 3개 이하일 경우
         recommendPhonemes.forEach(phoneme -> {
             Phoneme foundPhoneme = phonemeRepository.findPhonemeByTextOrderById(phoneme).get(0);
-            List<Long> phonemesList = new ArrayList<>();
+            log.info(foundPhoneme.getText());
             String hangul = "";
+            String text = "";
             if(foundPhoneme.getType() == 0){    //초성
                 hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
-
+                text = "초성" + phoneme;
             }else if(foundPhoneme.getType() == 1){  //중성
                 hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
+                text = "중성" + phoneme;
             }
-            Card foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
+            log.info(text);
+            Card foundCard = cardRepository.findByTextOrderById(hangul).getLast();
             //카테고리 찾기
             Long categoryId = foundCard.getCategoryId();
-            Category categoryData = categoryRepository.findById(categoryId).get();
-            Category subCategoryData = categoryRepository.findById(categoryData.getParentId()).get();
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(hangul, categoryData.getName(), subCategoryData.getName());
+            Category subCategoryData = categoryRepository.findById(categoryId).get();
+            Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(text, categoryData.getName(), subCategoryData.getName());
             recommendCard.put(foundCard.getId(), recommendCardInfo);
         });
 
         //종성
         recommendLastPhonemes.forEach(phoneme -> {
-            Long categoryId = getCategoryId(phoneme);
-            Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
-            Category categoryData = categoryRepository.findById(categoryId).get();
-            Category subCategoryData = categoryRepository.findById(categoryData.getParentId()).get();
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(card.getText(), categoryData.getName(), subCategoryData.getName());
-            recommendCard.put(card.getId(), recommendCardInfo);
+            if (!(phoneme.trim().length() == 0)){
+                Long categoryId = getCategoryId(phoneme);
+                Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
+                Category subCategoryData = categoryRepository.findById(categoryId).get();
+                Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
+                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("종성" + phoneme, categoryData.getName(), subCategoryData.getName());
+                recommendCard.put(card.getId(), recommendCardInfo);
+            }
         });
 
         return recommendCard;
@@ -166,6 +197,12 @@ public class CardFeedbackService {
         return null;
     }
 
+    /**
+     * userFeedBackResponseDto 생성
+     * @param aiFeedback
+     * @param recommendCard
+     * @return
+     */
     protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
         //사용자 오디오 데이터 생성
         UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());

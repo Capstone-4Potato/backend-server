@@ -44,6 +44,7 @@ public class UserFeedbackResponseDto {
         }
     }
     @Getter @Setter
+    @ToString
     public static class RecommendCardInfo{
 
         private String text;
