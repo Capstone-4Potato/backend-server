@@ -131,28 +131,21 @@ public class CardFeedbackService {
             return recommendCard;
         }
 
-        for (String recommendPhoneme : recommendPhonemes) {
-            log.info(recommendPhoneme);
-        }
-        for (String recommendLastPhoneme : recommendLastPhonemes) {
-            log.info(recommendLastPhoneme);
-        }
-
         //틀린 음소가 3개 이하일 경우
         recommendPhonemes.forEach(phoneme -> {
             Phoneme foundPhoneme = phonemeRepository.findPhonemeByTextOrderById(phoneme).get(0);
-            log.info(foundPhoneme.getText());
             String hangul = "";
             String text = "";
+            Card foundCard = null;
             if(foundPhoneme.getType() == 0){    //초성
                 hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
+                foundCard = cardRepository.findByTextOrderById(hangul).getLast();
                 text = "초성" + phoneme;
             }else if(foundPhoneme.getType() == 1){  //중성
                 hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
+                foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
                 text = "중성" + phoneme;
             }
-            log.info(text);
-            Card foundCard = cardRepository.findByTextOrderById(hangul).getLast();
             //카테고리 찾기
             Long categoryId = foundCard.getCategoryId();
             Category subCategoryData = categoryRepository.findById(categoryId).get();
