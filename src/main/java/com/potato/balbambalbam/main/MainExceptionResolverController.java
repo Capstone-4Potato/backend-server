@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.concurrent.TimeoutException;
@@ -43,7 +44,7 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({TimeoutException.class, CardDeleteException.class})
+    @ExceptionHandler({TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, RuntimeException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
