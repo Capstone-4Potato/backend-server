@@ -1,4 +1,5 @@
-package com.potato.balbambalbam.weaksoundtest;
+package com.potato.balbambalbam.weaksoundtest.mock;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

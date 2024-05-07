@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.user.join.controller;
 
+import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.main.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.service.JoinService;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @ResponseBody
@@ -33,9 +36,9 @@ public class JoinController {
             String access = joinService.joinProcess(joinDto, response);
             response.setHeader("access", access);
 
-            return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다."); //200
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
         }
     }
     @PatchMapping("/users")
@@ -44,11 +47,11 @@ public class JoinController {
             joinService.updateUser(userId, joinDto);
             return ResponseEntity.ok().body("회원정보 수정이 완료되었습니다.");
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); //400 이메일 변경은 허용되지 않습니다.
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
         }
     }
 
@@ -56,11 +59,23 @@ public class JoinController {
     public ResponseEntity<?> deleteUser(@RequestHeader("userId") Long userId) {
         try {
             joinService.deleteUser(userId);
-            return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다.");
+            return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getUserById(@RequestHeader("userId") Long userId) {
+        try {
+            Optional<User> user = joinService.findUserById(userId);
+            return ResponseEntity.ok().body(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
         }
     }
 }
