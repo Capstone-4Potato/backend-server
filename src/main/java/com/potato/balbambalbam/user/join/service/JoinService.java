@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class JoinService {
@@ -107,5 +108,11 @@ public class JoinService {
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
         userRepository.deleteById(userId);
+    }
+
+    public Optional<User> findUserById(Long userId){
+        User editUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        return userRepository.findById(userId);
     }
 }
