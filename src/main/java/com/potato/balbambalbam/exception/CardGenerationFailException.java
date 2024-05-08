@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.exception;
+package com.potato.balbambalbam.exception;
 
 public class CardGenerationFailException extends Exception{
 

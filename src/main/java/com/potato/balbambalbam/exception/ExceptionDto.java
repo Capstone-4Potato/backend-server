@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main.exception;
+package com.potato.balbambalbam.exception;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

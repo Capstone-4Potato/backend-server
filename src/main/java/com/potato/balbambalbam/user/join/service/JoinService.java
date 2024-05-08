@@ -4,7 +4,8 @@ import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.main.exception.UserNotFoundException;
+import com.potato.balbambalbam.exception.InvalidUserNameException;
+import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import jakarta.servlet.http.Cookie;
@@ -104,9 +105,13 @@ public class JoinService {
     }
 
     @Transactional
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId, String name){
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        if(!editUser.getName().equals(name)){
+            throw new InvalidUserNameException("닉네임이 일치하지 않습니다.");
+        }
+
         userRepository.deleteById(userId);
     }
 

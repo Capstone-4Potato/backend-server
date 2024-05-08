@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
-import com.potato.balbambalbam.main.exception.ExceptionDto;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
