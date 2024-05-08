@@ -5,7 +5,7 @@ import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
-import com.potato.balbambalbam.main.exception.ExceptionDto;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.main;
 
-import com.potato.balbambalbam.main.exception.*;
+import com.potato.balbambalbam.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

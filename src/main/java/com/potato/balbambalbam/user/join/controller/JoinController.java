@@ -1,7 +1,9 @@
 package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.User;
-import com.potato.balbambalbam.main.exception.UserNotFoundException;
+import com.potato.balbambalbam.exception.InvalidUserNameException;
+import com.potato.balbambalbam.exception.UserNotFoundException;
+import com.potato.balbambalbam.user.join.dto.DeleteUserDto;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,12 +58,16 @@ public class JoinController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<?> deleteUser(@RequestHeader("userId") Long userId) {
+    public ResponseEntity<?> deleteUser(@RequestHeader("userId") Long userId,
+                                        @RequestBody DeleteUserDto deleteUserDto) {
+        String name = deleteUserDto.getName();
         try {
-            joinService.deleteUser(userId);
+            joinService.deleteUser(userId, name);
             return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
+        } catch (InvalidUserNameException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 닉네임이 일치하지 않습니다.
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }

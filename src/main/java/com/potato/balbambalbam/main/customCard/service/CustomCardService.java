@@ -4,9 +4,9 @@ import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.main.exception.CardGenerationFailException;
-import com.potato.balbambalbam.main.exception.CardNotFoundException;
-import com.potato.balbambalbam.main.exception.UserNotFoundException;
+import com.potato.balbambalbam.exception.CardGenerationFailException;
+import com.potato.balbambalbam.exception.CardNotFoundException;
+import com.potato.balbambalbam.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
