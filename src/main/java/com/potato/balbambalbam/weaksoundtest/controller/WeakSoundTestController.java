@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.UserWeakSound;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
+import com.potato.balbambalbam.user.join.jwt.JWTUtil;
+import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.weaksoundtest.service.PhonemeService;
 import com.potato.balbambalbam.weaksoundtest.service.WeakSoundTestService;
@@ -26,22 +28,34 @@ public class WeakSoundTestController {
     private final WeakSoundTestRepository weakSoundTestRepository;
     private final PhonemeService phonemeService;
     private final UserWeakSoundRepository userWeakSoundRepository;
+    private final JoinService joinService;
+    private final JWTUtil jwtUtil;
 
     public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
                                    WeakSoundTestRepository weakSoundTestRepository,
                                    PhonemeService phonemeService,
-                                   UserWeakSoundRepository userWeakSoundRepository){
+                                   UserWeakSoundRepository userWeakSoundRepository,
+                                   JoinService joinService,
+                                   JWTUtil jwtUtil){
         this.weakSoundTestService = weakSoundTestService;
         this.weakSoundTestRepository = weakSoundTestRepository;
         this.phonemeService = phonemeService;
         this.userWeakSoundRepository = userWeakSoundRepository;
+        this.joinService = joinService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    private Long extractUserIdFromToken(String access) {
+        String socialId = jwtUtil.getSocialId(access);
+        return joinService.findUserBySocialId(socialId).getId();
     }
 
     @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile
             (@PathVariable("cardId") Long id,
-             @RequestHeader(value = "userId", required = false) Long userId,
+             @RequestHeader("access") String access,
              @RequestParam("userAudio")MultipartFile userAudio) throws JsonProcessingException {
+        Long userId = extractUserIdFromToken(access);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
         }
@@ -69,7 +83,8 @@ public class WeakSoundTestController {
     }
 
     @PostMapping("/test/finalize")
-    public ResponseEntity<?> finalizeAnalysis(@RequestHeader(value = "userId", required = false) Long userId) {
+    public ResponseEntity<?> finalizeAnalysis(@RequestHeader("access") String access) {
+        Long userId = extractUserIdFromToken(access);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
         }
