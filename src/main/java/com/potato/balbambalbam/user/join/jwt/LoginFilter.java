@@ -58,9 +58,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", socialId, role, 6000000L);
+        String access = jwtUtil.createJwt("access", socialId, role, 6000000L); //100분
         System.out.println("access : " + access);
-        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
+        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
         System.out.println("refresh : " + refresh);
 
         //refresh 토큰 저장
