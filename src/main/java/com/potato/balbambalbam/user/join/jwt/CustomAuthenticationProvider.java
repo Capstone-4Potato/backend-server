@@ -10,9 +10,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-
     private final UserRepository userRepository;
 
     public CustomAuthenticationProvider(UserRepository userRepository) {
@@ -22,8 +23,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String socialId = authentication.getName();
-        User user = userRepository.findBySocialId(socialId);
-        if (user == null) {
+        Optional<User> user = userRepository.findBySocialId(socialId);
+
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("No user found with socialId: " + socialId);
         }
         CustomUserDetails userDetails = new CustomUserDetails(user);

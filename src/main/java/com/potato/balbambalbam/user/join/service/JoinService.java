@@ -111,7 +111,6 @@ public class JoinService {
         if(!editUser.getName().equals(name)){
             throw new InvalidUserNameException("닉네임이 일치하지 않습니다.");
         }
-
         userRepository.deleteById(userId);
     }
 
@@ -120,4 +119,10 @@ public class JoinService {
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
         return userRepository.findById(userId);
     }
+
+    public User findUserBySocialId(String socialId) {
+        return userRepository.findBySocialId(socialId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
 }
