@@ -26,8 +26,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         Optional<User> user = userRepository.findBySocialId(socialId);
 
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("No user found with socialId: " + socialId);
+            throw new UsernameNotFoundException("socialId에 맞는 user가 없습니다.");
         }
+
         CustomUserDetails userDetails = new CustomUserDetails(user);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
