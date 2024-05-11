@@ -1,3 +1,4 @@
+/*
 package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
@@ -95,3 +96,4 @@ public class ReissueController {
         refreshRepository.save(refreshEntity);
     }
 }
+*/

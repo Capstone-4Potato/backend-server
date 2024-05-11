@@ -53,26 +53,26 @@ public class JoinService {
 
         String access = jwtUtil.createJwt("access", socialId, data.getRole(), 6000000L); //100분
         System.out.println("access : " + access);
-        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); //24시간
+        /*String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); //24시간
         System.out.println("refresh : " + refresh);
 
         //refresh 토큰 저장
         addRefreshEntity(socialId, refresh, 86400000L);
 
-        response.addCookie(createCookie("refresh", refresh));
+        response.addCookie(createCookie("refresh", refresh));*/
 
         return access;
     }
-    private Cookie createCookie(String key, String value) {
+    /*private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
         cookie.setHttpOnly(true);
 
         return cookie;
-    }
+    }*/
 
-    private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
+    /*private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
@@ -82,7 +82,7 @@ public class JoinService {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity);
-    }
+    }*/
 
     @Transactional
     public User updateUser(Long userId, JoinDTO joinDTO) {
