@@ -2,11 +2,12 @@ package com.potato.balbambalbam.main.cardList.service;
 
 import com.potato.balbambalbam.data.entity.*;
 import com.potato.balbambalbam.data.repository.*;
-import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
+import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CardListService {
     //TODO: userid를 동적으로 처리하도록 변경 필요
     //TODO : service 분리 (list 제공 (getCardsByCategory)/ list update시 사용(북마크랑 취약음 update))
@@ -73,6 +75,7 @@ public class CardListService {
     protected List<ResponseCardDto> createCardDtoListForCategory(Long id){
         List<Card> cardList = cardRepository.findAllByCategoryId(id);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
+
         cardList.stream().forEach(card -> cardDtoList.add(convertCardToDto(card)));
 
         return cardDtoList;
@@ -85,6 +88,7 @@ public class CardListService {
      */
     protected ResponseCardDto convertCardToDto(Card card){
         ResponseCardDto responseCardDto = new ResponseCardDto();
+
         Long cardId = card.getId();
         responseCardDto.setId(cardId);
         responseCardDto.setText(card.getText());
