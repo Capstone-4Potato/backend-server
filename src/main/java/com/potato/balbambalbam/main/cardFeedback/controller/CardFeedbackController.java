@@ -1,11 +1,11 @@
 package com.potato.balbambalbam.main.cardFeedback.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
-import com.potato.balbambalbam.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,9 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "CardFeedback", description = "CardFeedback API")
+@Tag(name = "CardFeedback API", description = "음성 녹음 시 serAudio, userScore, recommendCard, waveform 피드백 제공한다.")
 public class CardFeedbackController {
     private final CardFeedbackService cardFeedbackService;
 
@@ -40,17 +38,10 @@ public class CardFeedbackController {
             }
     )
     public ResponseEntity<Object> postUserFeedback(@PathVariable("cardId") Long cardId,
-                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
-                                                   BindingResult bindingResult) throws JsonProcessingException {
-        log.info("[Feedback 요청]");
-        //요청 validation 에러
-        if(bindingResult.hasErrors()){
-            log.info("[ERROR]:{}", bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
-        }
-
+                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto) throws JsonProcessingException {
         //성공 로직
         UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, MyConstant.TEMPORARY_USER_ID, cardId);
+        log.info("[UserFeedbackResponseDto] : {}", userFeedbackResponseDto);
 
         return ResponseEntity.ok().body(userFeedbackResponseDto);
     }

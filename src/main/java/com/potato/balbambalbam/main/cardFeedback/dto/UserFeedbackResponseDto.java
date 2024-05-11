@@ -15,7 +15,7 @@ public class UserFeedbackResponseDto {
 
     private UserAudio userAudio;
     private Integer userScore;
-    private Map<Long, String> recommendCard;
+    private Map<Long, RecommendCardInfo> recommendCard;
     private Waveform waveform;
     @Getter @Setter
      public static class UserAudio{
@@ -41,6 +41,26 @@ public class UserFeedbackResponseDto {
             this.userAudioDuration = userAudioDuration;
             this.correctWaveform = correctWaveform;
             this.correctAudioDuration = correctAudioDuration;
+        }
+    }
+    @Getter @Setter
+    @ToString
+    public static class RecommendCardInfo{
+
+        private String text;
+        private String category;
+        private String subcategory;
+
+        public RecommendCardInfo(String text, String category, String subcategory) {
+            this.text = text;
+            this.category = category;
+            this.subcategory = subcategory;
+        }
+
+        public RecommendCardInfo(String text) {
+            this.text = text;
+            this.category = null;
+            this.subcategory = null;
         }
     }
 }

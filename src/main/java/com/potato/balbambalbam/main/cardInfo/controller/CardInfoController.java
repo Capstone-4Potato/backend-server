@@ -1,10 +1,10 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
-import com.potato.balbambalbam.exception.ExceptionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "CardInfo", description = "CardInfo API")
+@Tag(name = "CardInfo API", description = "card에 해당하는 tts를 제공한다.")
 public class CardInfoController {
     //TODO : user 동적으로 할당
     private final CardInfoService cardInfoService;
@@ -36,8 +36,6 @@ public class CardInfoController {
             }
     )
     public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId) throws JsonProcessingException {
-        log.info("[음성 요청]");
-
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(MyConstant.TEMPORARY_USER_ID, cardId);
         return ResponseEntity.ok().body(cardInfoResponseDto);
     }

@@ -4,15 +4,17 @@ import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.exception.CardGenerationFailException;
 import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
+import com.potato.balbambalbam.main.customCard.dto.CustomCardResponseDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
-
 @Service
+@Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class CustomCardService {
 
@@ -20,12 +22,21 @@ public class CustomCardService {
     private final UserRepository userRepository;
     private final AiPronunciationService aiPronunciationService;
 
-    public Long createCustomCardIfPossible (String text, Long userId) throws CardGenerationFailException {
-        if(!canGenerateSentence(userId, text)){
-            throw new CardGenerationFailException("카드를 생성할 수 없습니다");
-        }
+    public CustomCardResponseDto createCustomCardIfPossible (String text, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다"));
 
-        return createCustomCard(text, userId).getId();
+        CustomCard customCard = createCustomCard(text, userId);
+
+        return createCustomCardResponse(customCard);
+    }
+
+    protected CustomCardResponseDto createCustomCardResponse (CustomCard customCard){
+        CustomCardResponseDto customCardResponse = new CustomCardResponseDto();
+        customCardResponse.setId(customCard.getId());
+        customCardResponse.setText(customCard.getText());
+        customCardResponse.setPronunciation(customCard.getPronunciation());
+
+        return customCardResponse;
     }
 
     public boolean deleteCustomCard(Long cardId){
@@ -40,32 +51,15 @@ public class CustomCardService {
         return true;
     }
 
-    protected boolean canGenerateSentence(Long userId, String text){
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다"));
 
-        //기존 커스텀 문장 10개 이상이면 생성 불가
-        if(customCardRepository.findAllByUserId(userId).size() >= 10){
-            return false;
-        }
-        //문장에 영어가 있으면 생성 불가
-        if(!Pattern.matches("^[ㄱ-ㅎ가-힣]*$", text)){
-            return false;
-        }
-
-        //문장이 35자 이상이면 생성 불가
-        if(text.length() >= 35){
-            return false;
-        }
-
-        return true;
-    }
-
-    protected CustomCard createCustomCard (String text, Long userId){
+    public CustomCard createCustomCard (String text, Long userId){
         CustomCard customCard = new CustomCard();
         customCard.setText(text);
-        String pronunciation = aiPronunciationService.getPronunciation(text);
+        String pronunciation = aiPronunciationService.getPronunciation(text).getPronunciation();
         customCard.setPronunciation(pronunciation);
         customCard.setUserId(userId);
+
+        log.info("[pronunciation] : {}", pronunciation);
 
         return customCardRepository.save(customCard);
     }
