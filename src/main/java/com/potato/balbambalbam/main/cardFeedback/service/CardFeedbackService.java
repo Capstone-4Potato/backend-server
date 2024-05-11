@@ -27,6 +27,7 @@ import java.util.*;
 @Transactional
 @Slf4j
 public class CardFeedbackService {
+
     private final CardRepository cardRepository;
     private final CardScoreRepository cardScoreRepository;
     private final AiCardFeedbackService aiCardFeedbackService;
@@ -140,11 +141,11 @@ public class CardFeedbackService {
             if(foundPhoneme.getType() == 0){    //초성
                 hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
                 foundCard = cardRepository.findByTextOrderById(hangul).getLast();
-                text = "초성" + phoneme;
+                text = "초성 " + phoneme;
             }else if(foundPhoneme.getType() == 1){  //중성
                 hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
                 foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
-                text = "중성" + phoneme;
+                text = "중성 " + phoneme;
             }
             //카테고리 찾기
             Long categoryId = foundCard.getCategoryId();
@@ -161,7 +162,7 @@ public class CardFeedbackService {
                 Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
                 Category subCategoryData = categoryRepository.findById(categoryId).get();
                 Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
-                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("종성" + phoneme, categoryData.getName(), subCategoryData.getName());
+                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("종성 " + phoneme, categoryData.getName(), subCategoryData.getName());
                 recommendCard.put(card.getId(), recommendCardInfo);
             }
         });
