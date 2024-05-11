@@ -60,14 +60,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //토큰 생성
         String access = jwtUtil.createJwt("access", socialId, role, 6000000L); //100분
         System.out.println("access : " + access);
-        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
-        System.out.println("refresh : " + refresh);
+       /* String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
+        System.out.println("refresh : " + refresh);*/
 
         //refresh 토큰 저장
-        addRefreshEntity(socialId, refresh, 86400000L);
+        /*addRefreshEntity(socialId, refresh, 86400000L);*/
 
         response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
+        /*response.addCookie(createCookie("refresh", refresh));*/
 
         response.setContentType("text/plain; charset=UTF-8");
         PrintWriter writer = response.getWriter();
@@ -80,9 +80,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         if (failed instanceof UsernameNotFoundException) {
 
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
+
             response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
-
             writer.print("존재하지 않은 사용자 아이디입니다.");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
@@ -95,7 +96,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.getWriter().flush();
     }
 
-    private Cookie createCookie(String key, String value) {
+    /*private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
@@ -103,9 +104,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         cookie.setPath("/");
 
         return cookie;
-    }
+    }*/
 
-    private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
+   /* private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
@@ -115,5 +116,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity);
-    }
+    }*/
 }

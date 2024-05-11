@@ -83,7 +83,7 @@ public class JoinController {
             Long userId = extractUserIdFromToken(access);
             joinService.deleteUser(userId, name);
 
-            String refresh = null;
+            /*String refresh = null;
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refresh")) {
@@ -94,7 +94,7 @@ public class JoinController {
             if (refresh != null) {
                 refreshRepository.deleteByRefresh(refresh);
                 deleteCookie(response, "refresh");
-            }
+            }*/
 
             return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
         } catch (UserNotFoundException e) {
@@ -106,13 +106,13 @@ public class JoinController {
         }
     }
 
-    private void deleteCookie(HttpServletResponse response, String cookieName) {
+    /*private void deleteCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0); // 만료 시간 0으로 설정하여 쿠키 삭제
         response.addCookie(cookie);
-    }
+    }*/
 
     @GetMapping("/users")
     public ResponseEntity<?> getUserById(@RequestHeader("access") String access) {
