@@ -14,9 +14,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 public class JWTFilter extends OncePerRequestFilter {
-
     private final JWTUtil jwtUtil;
 
     public JWTFilter(JWTUtil jwtUtil) {
@@ -24,8 +24,9 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = request.getHeader("access");
 
@@ -64,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
         User user = new User();
         user.setSocialId(socialId);
         user.setRole(role);
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+        CustomUserDetails customUserDetails = new CustomUserDetails(Optional.of(user));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);

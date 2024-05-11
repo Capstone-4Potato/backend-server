@@ -9,18 +9,21 @@ import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.CardScoreRepository;
 import com.potato.balbambalbam.data.repository.CategoryRepository;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
+import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
-import com.potato.balbambalbam.main.exception.CardNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

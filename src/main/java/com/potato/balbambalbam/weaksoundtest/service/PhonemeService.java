@@ -4,7 +4,6 @@ import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,13 +12,15 @@ import java.util.stream.Collectors;
 @Service
 public class PhonemeService {
 
-    @Autowired
-    private PhonemeRepository phonemeRepository;
-
+    private final PhonemeRepository phonemeRepository;
     private Map<Long, Map<Long, Integer>> temporaryStorage = new HashMap<>();
 
+    public PhonemeService (PhonemeRepository phonemeRepository){
+        this.phonemeRepository = phonemeRepository;
+    }
+
     @Transactional
-    public void storePhonemeData(Long userId, WeakSoundTestDto dto) {
+    public void storePhonemeData(Long userId, WeakSoundTestDto dto) { //임시 저장소
         Map<Long, Integer> phonemeCounts = temporaryStorage.getOrDefault(userId, new HashMap<>());
         Map<Long, Integer> newPhonemeCounts = new HashMap<>();
 

@@ -4,7 +4,8 @@ import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.main.exception.UserNotFoundException;
+import com.potato.balbambalbam.exception.InvalidUserNameException;
+import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class JoinService {
@@ -49,9 +51,9 @@ public class JoinService {
         data.setRole("ROLE_ADMIN");
         userRepository.save(data);
 
-        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 600000L);
+        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 6000000L); //100분
         System.out.println("access : " + access);
-        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L);
+        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); //24시간
         System.out.println("refresh : " + refresh);
 
         //refresh 토큰 저장
@@ -103,9 +105,24 @@ public class JoinService {
     }
 
     @Transactional
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId, String name){
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        if(!editUser.getName().equals(name)){
+            throw new InvalidUserNameException("닉네임이 일치하지 않습니다.");
+        }
         userRepository.deleteById(userId);
     }
+
+    public Optional<User> findUserById(Long userId){
+        User editUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        return userRepository.findById(userId);
+    }
+
+    public User findUserBySocialId(String socialId) {
+        return userRepository.findBySocialId(socialId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
 }

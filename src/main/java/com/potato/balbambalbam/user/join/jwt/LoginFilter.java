@@ -58,9 +58,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", socialId, role, 6000000L);
+        String access = jwtUtil.createJwt("access", socialId, role, 6000000L); //100분
         System.out.println("access : " + access);
-        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
+        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
         System.out.println("refresh : " + refresh);
 
         //refresh 토큰 저장
@@ -79,10 +79,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setContentType("application/json; charset=UTF-8"); // 명시적으로 UTF-8 인코딩 설정
         if (failed instanceof UsernameNotFoundException) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
 
             response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
+
             writer.print("존재하지 않은 사용자 아이디입니다.");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
@@ -91,6 +91,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             PrintWriter writer = response.getWriter();
             writer.print("서버 오류가 발생했습니다.");
         }
+
         response.getWriter().flush();
     }
 
