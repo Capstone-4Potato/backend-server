@@ -45,13 +45,11 @@ public class JoinController {
             if (joinDto.getName() == null || joinDto.getAge() == null || joinDto.getGender() == null || joinDto.getSocialId() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력 데이터가 충분하지 않습니다.");
             }
-            System.out.println(joinDto.getName());
-            System.out.println(joinDto.getAge());
-            System.out.println(joinDto.getGender());
-            System.out.println(joinDto.getSocialId());
 
             String access = joinService.joinProcess(joinDto, response);
             response.setHeader("access", access);
+
+            System.out.println("회원가입이 완료되었습니다.");
 
             return ResponseEntity.status(HttpStatus.OK).body("회원가입이 완료되었습니다."); //200
         } catch (Exception e) {
@@ -63,11 +61,14 @@ public class JoinController {
         try {
             Long userId = extractUserIdFromToken(access);
             Optional<User> user = joinService.updateUser(userId, joinDto);
+
+            System.out.println( userId + " : 사용자 정보가 수정되었습니다.");
+
             return ResponseEntity.ok().body(user);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); //400 이메일 변경은 허용되지 않습니다.
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); //400
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
         }
@@ -96,11 +97,13 @@ public class JoinController {
                 deleteCookie(response, "refresh");
             }*/
 
+            System.out.println( userId + " : 사용자 정보가 삭제되었습니다.");
+
             return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404
         } catch (InvalidUserNameException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 닉네임이 일치하지 않습니다.
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
@@ -119,6 +122,9 @@ public class JoinController {
         try {
             Long userId = extractUserIdFromToken(access);
             Optional<User> user = joinService.findUserById(userId);
+
+            System.out.println( userId + " : 사용자 정보를 전송했습니다.");
+
             return ResponseEntity.ok().body(user);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404
