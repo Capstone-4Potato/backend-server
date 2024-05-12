@@ -48,7 +48,7 @@ public class JoinService {
         data.setSocialId(socialId);
         data.setAge(age);
         data.setGender(gender);
-        data.setRole("ROLE_ADMIN");
+        data.setRole("ROLE_USER");
         userRepository.save(data);
 
         String access = jwtUtil.createJwt("access", socialId, data.getRole(), 6000000L); //100분
@@ -85,7 +85,7 @@ public class JoinService {
     }*/
 
     @Transactional
-    public User updateUser(Long userId, JoinDTO joinDTO) {
+    public Optional<User> updateUser(Long userId, JoinDTO joinDTO) {
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -101,7 +101,8 @@ public class JoinService {
         if (joinDTO.getGender() != null) {
             editUser.setGender(joinDTO.getGender());
         }
-        return userRepository.save(editUser);
+        userRepository.save(editUser);
+        return userRepository.findById(userId);
     }
 
     @Transactional
