@@ -51,7 +51,7 @@ public class JoinService {
         data.setRole("ROLE_USER");
         userRepository.save(data);
 
-        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 300000L); //5분
+        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 7200000L); //120분
 
         System.out.println("access 토큰이 발급되었습니다.");
 
