@@ -42,8 +42,19 @@ public class JoinController {
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody JoinDTO joinDto, HttpServletResponse response) {
         try {
+            //입력 데이터 검증
             if (joinDto.getName() == null || joinDto.getAge() == null || joinDto.getGender() == null || joinDto.getSocialId() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력 데이터가 충분하지 않습니다.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력 데이터가 충분하지 않습니다."); //400
+            }
+
+            // 이름 검증
+            if (joinDto.getName().length() < 3 || joinDto.getName().length() > 8 || joinDto.getName().contains(" ")) {
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("이름은 3~8자 이내여야 하며 공백을 포함할 수 없습니다."); // 422
+            }
+
+            // 나이 검증
+            if (joinDto.getAge() < 1 || joinDto.getAge() > 100) {
+                return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("나이는 1~100 사이여야 합니다."); // 412
             }
 
             String access = joinService.joinProcess(joinDto, response);
@@ -60,8 +71,18 @@ public class JoinController {
     public ResponseEntity<?> updateUser(@RequestHeader("access") String access, @RequestBody JoinDTO joinDto) {
         try {
             Long userId = extractUserIdFromToken(access);
-            Optional<User> user = joinService.updateUser(userId, joinDto);
 
+            // 이름 검증
+            if (joinDto.getName().length() < 3 || joinDto.getName().length() > 8 || joinDto.getName().contains(" ")) {
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("이름은 3~8자 이내여야 하며 공백을 포함할 수 없습니다."); // 422
+            }
+
+            // 나이 검증
+            if (joinDto.getAge() < 1 || joinDto.getAge() > 100) {
+                return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("나이는 1~100 사이여야 합니다."); // 412
+            }
+
+            Optional<User> user = joinService.updateUser(userId, joinDto);
             System.out.println( userId + " : 사용자 정보가 수정되었습니다.");
 
             return ResponseEntity.ok().body(user);
