@@ -62,8 +62,8 @@ public class JoinController {
     public ResponseEntity<?> updateUser(@RequestHeader("access") String access, @RequestBody JoinDTO joinDto) {
         try {
             Long userId = extractUserIdFromToken(access);
-            joinService.updateUser(userId, joinDto);
-            return ResponseEntity.ok().body("회원정보 수정이 완료되었습니다.");
+            Optional<User> user = joinService.updateUser(userId, joinDto);
+            return ResponseEntity.ok().body(user);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //404 사용자를 찾을 수 없습니다.
         } catch (RuntimeException e) {
