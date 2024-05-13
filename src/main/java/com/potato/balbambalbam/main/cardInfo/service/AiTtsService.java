@@ -23,7 +23,7 @@ import java.time.Duration;
 public class AiTtsService {
     WebClient webClient = WebClient.builder().build();
     ObjectMapper objectMapper = new ObjectMapper();
-    public AiTtsResponseDto getTtsVoice(AiTtsRequestDto aiTtsRequestDto) throws JsonProcessingException {
+    public AiTtsResponseDto getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {
 
         AiTtsResponseDto aiTtsResponseDto = webClient.post()
                 .uri(MyConstant.AI_URL + "/ai/voice")
