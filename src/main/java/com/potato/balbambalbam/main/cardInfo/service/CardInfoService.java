@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "CustomCard 생성 & 삭제", description = "CustomCard를 생성하거나 삭제한다")
 public class CustomCardController {
     private final CustomCardService customCardService;
-    private JoinService joinService;
+    private final JoinService joinService;
     private final JWTUtil jwtUtil;
     @PostMapping("/cards/custom")
     @Operation(summary = "customCard 생성", description = "text 해당하는 custom card를 생성한다")

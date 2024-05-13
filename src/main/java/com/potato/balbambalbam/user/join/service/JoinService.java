@@ -24,7 +24,7 @@ public class JoinService {
 
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
-        this. refreshRepository = refreshRepository;
+        this.refreshRepository = refreshRepository;
     }
 
     public String joinProcess(JoinDTO joinDTO, HttpServletResponse response) {
