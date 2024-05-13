@@ -35,12 +35,12 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return new ResponseEntity<>(exceptionDto, headers, status);
     }
 
-    @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class, InvalidParameterException.class})
+    @ExceptionHandler({IllegalArgumentException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class, InvalidParameterException.class})
     public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, RuntimeException.class, AiGenerationFailException.class})
+    @ExceptionHandler({RuntimeException.class, AiConnectionException.class, TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, AiGenerationFailException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
