@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.main;
+package com.potato.balbambalbam.exception.controller;
 
 import com.potato.balbambalbam.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +35,12 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return new ResponseEntity<>(exceptionDto, headers, status);
     }
 
-    @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class})
+    @ExceptionHandler({AiConnectionException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class, InvalidParameterException.class})
     public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, RuntimeException.class})
+    @ExceptionHandler({TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, RuntimeException.class, AiGenerationFailException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
