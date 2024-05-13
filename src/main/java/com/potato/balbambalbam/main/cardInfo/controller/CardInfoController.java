@@ -38,7 +38,7 @@ public class CardInfoController {
                     @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) throws JsonProcessingException {
+    public ResponseEntity<CardInfoResponseDto> getCardInfo(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) {
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCardInfo(userId, cardId);
         return ResponseEntity.ok().body(cardInfoResponseDto);
@@ -53,7 +53,7 @@ public class CardInfoController {
                     @ApiResponse(responseCode = "404", description = "ERROR : 카드 음성 생성 실패",  content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) throws JsonProcessingException {
+    public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) {
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(userId, cardId);
         return ResponseEntity.ok().body(cardInfoResponseDto);
