@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
 import com.potato.balbambalbam.exception.InvalidParameterException;
-import com.potato.balbambalbam.exception.VoiceGenerationFailException;
+import com.potato.balbambalbam.exception.AiGenerationFailException;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class AiTtsService {
                         response-> response.bodyToMono(String.class).map(InvalidParameterException::new))
                 //에러 처리 : 음성 생성이 실패한 경우
                 .onStatus(HttpStatus.INTERNAL_SERVER_ERROR::equals,
-                        response-> response.bodyToMono(String.class).map(VoiceGenerationFailException::new))
+                        response-> response.bodyToMono(String.class).map(AiGenerationFailException::new))
                 //성공
                 .bodyToMono(AiTtsResponseDto.class)
                 //에러 처리 : 5초 안에 응답 오지 않으면 TimeoutException 발생
