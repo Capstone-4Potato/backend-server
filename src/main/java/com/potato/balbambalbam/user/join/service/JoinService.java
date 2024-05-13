@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.user.join.service;
 
-import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
@@ -8,12 +7,10 @@ import com.potato.balbambalbam.exception.InvalidUserNameException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
