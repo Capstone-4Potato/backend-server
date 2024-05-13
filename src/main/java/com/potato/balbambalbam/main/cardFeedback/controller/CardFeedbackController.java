@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "CardFeedback API", description = "음성 녹음 시 serAudio, userScore, recommendCard, waveform 피드백 제공한다.")
 public class CardFeedbackController {
     private final CardFeedbackService cardFeedbackService;
-    private JoinService joinService;
+    private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
     @PostMapping("/cards/{cardId}")

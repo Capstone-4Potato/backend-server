@@ -1,10 +1,10 @@
 package com.potato.balbambalbam.main.customCard.service;
 
-import com.potato.balbambalbam.main.MyConstant;
 import com.potato.balbambalbam.main.customCard.dto.AiPronunciationRequestDto;
 import com.potato.balbambalbam.main.customCard.dto.AiPronunciationResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,12 +16,14 @@ import java.time.Duration;
 @Service
 public class AiPronunciationService {
     WebClient webClient = WebClient.builder().build();
+    @Value("${ai.service.url}")
+    private String AI_URL;
     public AiPronunciationResponseDto getPronunciation(String text) {
 
         AiPronunciationRequestDto aiPronunciationRequestDto = new AiPronunciationRequestDto(text);
 
         AiPronunciationResponseDto responseDto = webClient.post()
-                .uri(MyConstant.AI_URL + "/ai/pronunciation")
+                .uri(AI_URL + "/ai/pronunciation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(aiPronunciationRequestDto), AiPronunciationRequestDto.class)
                 .retrieve()//요청

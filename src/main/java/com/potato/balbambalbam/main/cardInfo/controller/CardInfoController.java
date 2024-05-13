@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardInfo.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.main.cardInfo.service.CardInfoService;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @Tag(name = "CardInfo API", description = "card에 해당하는 tts를 제공한다.")
 public class CardInfoController {
     private final CardInfoService cardInfoService;
-    private JoinService joinService;
+    private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
     @GetMapping("/cards/{cardId}")

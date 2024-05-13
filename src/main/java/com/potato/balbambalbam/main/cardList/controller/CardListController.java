@@ -25,7 +25,7 @@ import java.util.List;
 public class CardListController {
     private final CardListService cardListService;
     private final UpdatePhonemeService updatePhonemeService;
-    private JoinService joinService;
+    private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
     @GetMapping ("/cards")
