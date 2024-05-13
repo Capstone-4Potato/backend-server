@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;
@@ -26,11 +25,11 @@ public class CardInfoService {
     private final AiTtsService aiTtsService;
     private final CustomCardRepository customCardRepository;
 
-    public CardInfoResponseDto getCardInfo(Long userId, Long cardId) throws JsonProcessingException {
+    public CardInfoResponseDto getCardInfo(Long userId, Long cardId) {
         return createCardVoice(getAiTtsRequestDto(userId, getCardText(cardId)));
     }
 
-    public CardInfoResponseDto getCustomCardInfo(Long userId, Long cardId) throws JsonProcessingException {
+    public CardInfoResponseDto getCustomCardInfo(Long userId, Long cardId) {
         return createCardVoice(getAiTtsRequestDto(userId, getCustomCardText(cardId)));
 
     }
@@ -65,7 +64,7 @@ public class CardInfoService {
     /**
      * 프론트로 전달해줄 cardInfoResponseDto 생성
      */
-    protected CardInfoResponseDto createCardVoice (AiTtsRequestDto aiTtsRequestDto) throws JsonProcessingException {
+    protected CardInfoResponseDto createCardVoice (AiTtsRequestDto aiTtsRequestDto) {
         AiTtsResponseDto aiTtsResponseDto = aiTtsService.getTtsVoice(aiTtsRequestDto);
 
         String correctAudio = aiTtsResponseDto.getCorrectAudio();
