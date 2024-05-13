@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.potato.balbambalbam.main.MyConstant.TEMPORARY_USER_ID;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,9 +34,9 @@ public class CardListService {
      * @param subcategory
      * @return cardDtoList
      */
-    public List<ResponseCardDto> getCardsByCategory(String category, String subcategory){
+    public List<ResponseCardDto> getCardsByCategory(String category, String subcategory, Long userId){
         Long requestCategory = getSubCategoryId(category, subcategory);
-        List<ResponseCardDto> cardDtoList = createCardDtoListForCategory(requestCategory);
+        List<ResponseCardDto> cardDtoList = createCardDtoListForCategory(requestCategory, userId);
 
         return cardDtoList;
     }
@@ -72,11 +70,11 @@ public class CardListService {
      * @param id
      * @return cardDtoList
      */
-    protected List<ResponseCardDto> createCardDtoListForCategory(Long id){
-        List<Card> cardList = cardRepository.findAllByCategoryId(id);
+    protected List<ResponseCardDto> createCardDtoListForCategory(Long categoryId, Long userId){
+        List<Card> cardList = cardRepository.findAllByCategoryId(categoryId);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
-        cardList.stream().forEach(card -> cardDtoList.add(convertCardToDto(card)));
+        cardList.stream().forEach(card -> cardDtoList.add(convertCardToDto(card, userId)));
 
         return cardDtoList;
     }
@@ -86,16 +84,16 @@ public class CardListService {
      * @param card
      * @return
      */
-    protected ResponseCardDto convertCardToDto(Card card){
+    protected ResponseCardDto convertCardToDto(Card card, Long userId){
         ResponseCardDto responseCardDto = new ResponseCardDto();
 
         Long cardId = card.getId();
         responseCardDto.setId(cardId);
         responseCardDto.setText(card.getText());
 
-        responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, TEMPORARY_USER_ID).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
-        responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
-        responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, TEMPORARY_USER_ID));
+        responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
+        responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
+        responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setPronunciation(cardRepository.findById(cardId).map(Card::getPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
 
         return responseCardDto;
