@@ -21,7 +21,7 @@ public class AiCardFeedbackService {
     WebClient webClient = WebClient.builder().build();
     @Value("${ai.service.url}")
     private String AI_URL;
-    public AiFeedbackResponseDto postAiFeedback(AiFeedbackRequestDto aiFeedbackRequestDto) throws JsonProcessingException {
+    public AiFeedbackResponseDto postAiFeedback(AiFeedbackRequestDto aiFeedbackRequestDto)  {
 
         AiFeedbackResponseDto aiFeedbackResponseDto = webClient.post()
                 .uri(AI_URL + "/ai/feedback")
