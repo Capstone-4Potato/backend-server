@@ -14,7 +14,6 @@ public interface PhonemeRepository extends JpaRepository<Phoneme, Long> {
 
     Optional<Phoneme> findPhonemeByTypeAndText(Long type, String text);
     List<Phoneme> findPhonemeByTextOrderById(String text);
-  
     @Query("select p from phoneme p where p.type in :types and p.text = :text")
     List<Phoneme> findByTypeAndText(@Param("types") List<Long> types, @Param("text") String text);
 
