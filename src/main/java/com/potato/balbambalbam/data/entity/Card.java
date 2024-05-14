@@ -43,4 +43,8 @@ public class Card {
     public void setPhonemesMap(List<Long> phonemesMap) {
         this.phonemesMap = phonemesMap;
     }
+
+    public void setEngPronunciation(String engPronunciation) {
+        this.engPronunciation = engPronunciation;
+    }
 }
