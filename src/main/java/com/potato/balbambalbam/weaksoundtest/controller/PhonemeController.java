@@ -6,6 +6,7 @@ import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
+import com.potato.balbambalbam.weaksoundtest.dto.UserWeakSoundDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class PhonemeController {
@@ -49,7 +51,31 @@ public class PhonemeController {
             if (weakPhonemes == null || weakPhonemes.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("취약음이 없습니다."); //404
             }
-            return ResponseEntity.ok(weakPhonemes);
+
+            List<UserWeakSoundDto> weakPhonemeDtos = weakPhonemes.stream().map(weakPhoneme -> {
+                Phoneme phoneme = phonemeRepository.findById(weakPhoneme.getUserPhoneme()).orElse(null);
+                String phonemeType = null;
+                String phonemeText = null;
+                if (phoneme != null) {
+                    switch (phoneme.getType().intValue()) {
+                        case 0:
+                            phonemeType = "초성";
+                            break;
+                        case 1:
+                            phonemeType = "중성";
+                            break;
+                        case 2:
+                            phonemeType = "종성";
+                            break;
+                        default:
+                            phonemeType = "알 수 없음";
+                    }
+                    phonemeText = phonemeType + " " + phoneme.getText();
+                }
+                return new UserWeakSoundDto(weakPhoneme.getId(), weakPhoneme.getUserId(), phonemeText);
+            }).collect(Collectors.toList());
+
+            return ResponseEntity.ok(weakPhonemeDtos);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
         }
