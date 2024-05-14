@@ -43,6 +43,8 @@ public class JWTFilter extends OncePerRequestFilter {
             PrintWriter writer = response.getWriter();
             writer.print("access 토큰이 만료되었습니다.");
 
+            System.out.println("access 토큰이 만료되었습니다.");
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401
             return;
         }

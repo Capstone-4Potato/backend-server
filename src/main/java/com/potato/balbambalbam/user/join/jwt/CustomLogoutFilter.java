@@ -113,6 +113,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         PrintWriter writer = response.getWriter();
         writer.print("로그아웃이 완료되었습니다.");
 
+        System.out.println("로그아웃이 완료되었습니다.");
+
         /*response.addCookie(cookie);*/
         response.setStatus(HttpServletResponse.SC_OK); //200
     }
