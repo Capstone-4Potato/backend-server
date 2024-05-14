@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AiPronunciationResponseDto {
-    private String pronunciation;
+public class AiKorPronunciationResponseDto {
+    private String korPronunciation;
 
 }

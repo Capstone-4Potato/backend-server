@@ -2,6 +2,7 @@ package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -20,6 +21,9 @@ public class Card {
     private String text;
     @Column(name = "pronunciation", nullable = false)
     private String pronunciation;
+
+    @Column(name = "eng_pronunciation")
+    private String engPronunciation;
     @Column(name = "phonemes")
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Long> phonemesMap;
