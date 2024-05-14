@@ -37,7 +37,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (socialId == null) {
             throw new AuthenticationServiceException("socialId가 없습니다.");
         }
-        System.out.println("social id : " + socialId);
+        /*System.out.println("social id : " + socialId);*/
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(socialId, "");
 
         return authenticationManager.authenticate(authRequest);
@@ -55,8 +55,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", socialId, role, 6000000L); //100분
-        System.out.println("access : " + access);
+        String access = jwtUtil.createJwt("access", socialId, role, 7200000L); //2시간
+
+        System.out.println("access 토큰이 발급되었습니다.");
+
        /* String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
         System.out.println("refresh : " + refresh);*/
 
@@ -69,6 +71,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("text/plain; charset=UTF-8");
         PrintWriter writer = response.getWriter();
         writer.print("로그인이 완료되었습니다.");
+
+        System.out.println("로그인이 완료되었습니다.");
     }
 
     @SneakyThrows
@@ -82,6 +86,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
             writer.print("존재하지 않은 사용자 아이디입니다.");
+
+            System.out.println("로그인에 실패하였습니다.");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
 
