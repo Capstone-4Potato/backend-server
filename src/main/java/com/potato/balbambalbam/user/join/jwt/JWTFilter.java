@@ -1,6 +1,8 @@
 package com.potato.balbambalbam.user.join.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.User;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -18,9 +20,11 @@ import java.util.Optional;
 
 public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -38,26 +42,14 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-
-            response.setContentType("text/plain; charset=UTF-8");
-            PrintWriter writer = response.getWriter();
-            writer.print("access 토큰이 만료되었습니다.");
-
-            System.out.println("access 토큰이 만료되었습니다.");
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401
+            sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "ExpiredJwtException", "토큰이 만료되었습니다.");
             return;
         }
 
         String category = jwtUtil.getCategory(accessToken);
 
         if (!category.equals("access")) {
-
-            response.setContentType("text/plain; charset=UTF-8");
-            PrintWriter writer = response.getWriter();
-            writer.print("access 토큰이 아닙니다.");
-
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
+            sendError(response, HttpServletResponse.SC_BAD_REQUEST, "InvalidTokenException", "access 토큰이 아닙니다.");
             return;
         }
 
@@ -73,5 +65,13 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
+    private void sendError(HttpServletResponse response, int statusCode, String exceptionName, String message) throws IOException {
+        ExceptionDto exceptionDto = new ExceptionDto(statusCode, exceptionName, message);
+        response.setStatus(statusCode);
+        response.setContentType("application/json; charset=UTF-8");
+        PrintWriter writer = response.getWriter();
+        writer.print(objectMapper.writeValueAsString(exceptionDto));
+        writer.flush();
     }
 }
