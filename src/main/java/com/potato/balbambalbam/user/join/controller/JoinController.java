@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -39,7 +40,8 @@ public class JoinController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody JoinDTO joinDto, HttpServletResponse response) {
+    public ResponseEntity<?> createUser(
+            @Validated @RequestBody JoinDTO joinDto, HttpServletResponse response) {
         try {
             //입력 데이터 검증
             if (joinDto.getName() == null || joinDto.getAge() == null || joinDto.getGender() == null || joinDto.getSocialId() == null) {
