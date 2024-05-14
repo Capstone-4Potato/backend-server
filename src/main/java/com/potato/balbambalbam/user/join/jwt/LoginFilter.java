@@ -40,7 +40,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (socialId == null) {
             throw new AuthenticationServiceException("socialId가 없습니다.");
         }
-        System.out.println("social id : " + socialId);
+        /*System.out.println("social id : " + socialId);*/
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(socialId, "");
 
         return authenticationManager.authenticate(authRequest);
