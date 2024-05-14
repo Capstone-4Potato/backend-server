@@ -35,17 +35,23 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return new ResponseEntity<>(exceptionDto, headers, status);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, UserNotFoundException.class, CategoryNotFoundException.class, CardNotFoundException.class, InvalidParameterException.class})
+    @ExceptionHandler({IllegalArgumentException.class, UserNotFoundException.class,
+            CategoryNotFoundException.class, CardNotFoundException.class,
+            InvalidParameterException.class, ResponseNotFoundException.class})
     public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.NOT_FOUND); //404
     }
 
-    @ExceptionHandler({RuntimeException.class, AiConnectionException.class, TimeoutException.class, CardDeleteException.class, WebClientResponseException.InternalServerError.class, AiGenerationFailException.class})
+    @ExceptionHandler({RuntimeException.class, AiConnectionException.class,
+            TimeoutException.class, CardDeleteException.class,
+            WebClientResponseException.InternalServerError.class,
+            AiGenerationFailException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR); //500
     }
 
-    @ExceptionHandler({SocialIdChangeException.class, InvalidUserNameException.class})
+    @ExceptionHandler({SocialIdChangeException.class, InvalidUserNameException.class,
+            ParameterNotFoundException.class})
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler(Exception ex) {
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST); //400
     }
