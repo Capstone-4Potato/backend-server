@@ -52,15 +52,16 @@ public class CustomCardService {
     }
 
 
-    public CustomCard createCustomCard (String text, Long userId){
+    protected CustomCard createCustomCard (String text, Long userId){
         CustomCard customCard = new CustomCard();
         customCard.setText(text);
-        String pronunciation = aiPronunciationService.getPronunciation(text).getPronunciation();
-        customCard.setPronunciation(pronunciation);
+        String korPronunciation = aiPronunciationService.getKorPronunciation(text).getKorPronunciation();
+        String engPronunciation = aiPronunciationService.getEngPronunciation(text).getEngPronunciation();
+        customCard.setPronunciation(korPronunciation);
         customCard.setUserId(userId);
+        customCard.setIsBookmarked(false);
 
-        log.info("[pronunciation] : {}", pronunciation);
-
+        log.info("[CustomCard] : kor:{}, eng:{}", korPronunciation, engPronunciation);
         return customCardRepository.save(customCard);
     }
 
