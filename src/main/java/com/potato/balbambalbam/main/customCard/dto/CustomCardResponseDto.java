@@ -12,4 +12,5 @@ public class CustomCardResponseDto {
     private Long id;
     private String text;
     private String pronunciation;
+    private String engPronunciation;
 }
