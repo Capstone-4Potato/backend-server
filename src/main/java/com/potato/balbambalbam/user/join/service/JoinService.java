@@ -9,6 +9,8 @@ import com.potato.balbambalbam.user.join.dto.JoinDTO;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -45,11 +47,13 @@ public class JoinService {
         data.setSocialId(socialId);
         data.setAge(age);
         data.setGender(gender);
-        data.setRole("ROLE_ADMIN");
+        data.setRole("ROLE_USER");
         userRepository.save(data);
 
-        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 6000000L); //100분
-        System.out.println("access : " + access);
+        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 7200000L); //120분
+
+        System.out.println("access 토큰이 발급되었습니다.");
+
         /*String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); //24시간
         System.out.println("refresh : " + refresh);
 
@@ -82,7 +86,7 @@ public class JoinService {
     }*/
 
     @Transactional
-    public User updateUser(Long userId, JoinDTO joinDTO) {
+    public Optional<User> updateUser(Long userId, JoinDTO joinDTO) {
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -98,7 +102,9 @@ public class JoinService {
         if (joinDTO.getGender() != null) {
             editUser.setGender(joinDTO.getGender());
         }
-        return userRepository.save(editUser);
+
+        userRepository.save(editUser);
+        return userRepository.findById(userId);
     }
 
     @Transactional

@@ -44,7 +44,6 @@ public class PhonemeController {
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
         }
-
         try {
             List<UserWeakSound> weakPhonemes = userWeakSoundRepository.findAllByUserId(userId);
             if (weakPhonemes == null || weakPhonemes.isEmpty()) {

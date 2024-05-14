@@ -2,7 +2,9 @@ package com.potato.balbambalbam.weaksoundtest.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.entity.UserWeakSound;
+import com.potato.balbambalbam.data.entity.WeakSoundTest;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,6 +51,12 @@ public class WeakSoundTestController {
     private Long extractUserIdFromToken(String access) {
         String socialId = jwtUtil.getSocialId(access);
         return joinService.findUserBySocialId(socialId).getId();
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> getWeakSoundTest() {
+        List<WeakSoundTest> weakSoundTestList = weakSoundTestRepository.findAll();
+        return ResponseEntity.ok(weakSoundTestList); //200
     }
 
     @PostMapping("/test/{cardId}")
