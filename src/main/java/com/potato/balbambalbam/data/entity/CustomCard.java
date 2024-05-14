@@ -18,6 +18,8 @@ public class CustomCard {
     private String text;
     @Column(name = "pronunciation")
     private String pronunciation;
+    @Column(name = "eng_pronunciation")
+    private String engPronunciation;
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "highest_score")

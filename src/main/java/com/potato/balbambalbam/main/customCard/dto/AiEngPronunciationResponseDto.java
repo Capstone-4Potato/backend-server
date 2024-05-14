@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomCardResponseDto {
-    private Long id;
-    private String text;
-    private String pronunciation;
-    private String engPronunciation;
+public class AiEngPronunciationResponseDto {
+    String engPronunciation;
 }
