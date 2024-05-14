@@ -48,7 +48,7 @@ public class LearningController {
         int wordCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 15 && card.getCategoryId() <= 24).count();
         int sentenceCount = (int) allCards.stream()
-                .filter(card -> card.getCategoryId() >= 25 && card.getCategoryId() <= 33).count();
+                .filter(card -> card.getCategoryId() >= 25 && card.getCategoryId() <= 35).count();
 
         System.out.println("syllableCount : " + syllableCount);
         System.out.println("wordCount : " + wordCount);
@@ -61,7 +61,7 @@ public class LearningController {
                 syllableScoreCount++;
             } else if (card.getCategoryId() >= 15 && card.getCategoryId() <= 24) {
                 wordScoreCount++;
-            } else if (card.getCategoryId() >= 25 && card.getCategoryId() <= 33) {
+            } else if (card.getCategoryId() >= 25 && card.getCategoryId() <= 35) {
                 sentenceScoreCount++;
             }
         }
