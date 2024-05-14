@@ -6,13 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserWeakSoundDto {
-    private Long id;
-    private Long userId;
+    private int rank;
     private String phonemeText;
 
-    public UserWeakSoundDto(Long id, Long userID, String phonemeText){
-        this.id = id;
-        this.userId = userID;
+    public UserWeakSoundDto(int rank, String phonemeText){
+        this.rank = rank;
         this.phonemeText = phonemeText;
     }
 }
