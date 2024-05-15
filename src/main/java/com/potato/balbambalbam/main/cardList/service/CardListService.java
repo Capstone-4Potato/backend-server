@@ -46,7 +46,7 @@ public class CardListService {
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
         customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
-                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
+                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
 
         return cardDtoList;
     }
@@ -95,6 +95,7 @@ public class CardListService {
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setPronunciation(cardRepository.findById(cardId).map(Card::getPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
+        responseCardDto.setEngPronunciation(cardRepository.findById(cardId).map(Card::getEngPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
 
         return responseCardDto;
     }
