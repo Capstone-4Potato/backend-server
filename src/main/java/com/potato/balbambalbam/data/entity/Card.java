@@ -21,7 +21,6 @@ public class Card {
     private String text;
     @Column(name = "pronunciation", nullable = false)
     private String pronunciation;
-
     @Column(name = "eng_pronunciation")
     private String engPronunciation;
     @Column(name = "phonemes")

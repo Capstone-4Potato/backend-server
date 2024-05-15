@@ -13,6 +13,7 @@ public class ResponseCardDto {
     private Long id;
     private String text;
     private String pronunciation;
+    private String engPronunciation;
     private boolean isBookmark;
     private boolean isWeakCard;
     private int cardScore;

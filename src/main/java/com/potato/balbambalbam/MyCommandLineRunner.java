@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * SpringApplication.run() 되기 전에 딱 한번 실행되는 class
  * 1. Card 테이블의 phoneme column update
+ * 2. Card 테이블의 eng Pronunciation update
  */
 @Component
 @RequiredArgsConstructor
