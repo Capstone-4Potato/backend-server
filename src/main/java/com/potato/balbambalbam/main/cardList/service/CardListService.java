@@ -94,8 +94,10 @@ public class CardListService {
         responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
-        responseCardDto.setPronunciation(cardRepository.findById(cardId).map(Card::getPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
-        responseCardDto.setEngPronunciation(cardRepository.findById(cardId).map(Card::getEngPronunciation).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다")));
+        responseCardDto.setPronunciation(card.getPronunciation());
+        responseCardDto.setEngPronunciation(card.getEngPronunciation());
+
+        log.info(card.getEngPronunciation());
 
         return responseCardDto;
     }
