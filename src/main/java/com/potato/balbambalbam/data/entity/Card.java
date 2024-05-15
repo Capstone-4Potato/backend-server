@@ -29,13 +29,11 @@ public class Card {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    public Card(String text, String pronunciation, List<Long> phonemesMap, Long categoryId){
+    public Card(String text, String pronunciation, Long categoryId){
         this.text = text;
         this.pronunciation = pronunciation;
-        this.phonemesMap = phonemesMap;
         this.categoryId = categoryId;
     }
-
     public Card() {
 
     }
