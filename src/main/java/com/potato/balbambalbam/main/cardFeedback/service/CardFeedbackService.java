@@ -38,11 +38,11 @@ public class CardFeedbackService {
     private final UpdatePhonemeService updatePhonemeService;
     private final CategoryRepository categoryRepository;
 
-    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) throws JsonProcessingException {
+    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) {
         //인공지능서버와 통신
         AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
-        //app 피드백 생성
+        //점수 업데이트
         updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
 
         //학습카드 추천
@@ -58,7 +58,7 @@ public class CardFeedbackService {
      * @return
      * @throws JsonProcessingException
      */
-    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) throws JsonProcessingException {
+    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) {
         AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(aiFeedbackRequest, cardId);
         AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
 

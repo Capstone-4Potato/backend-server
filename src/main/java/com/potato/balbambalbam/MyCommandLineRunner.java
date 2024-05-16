@@ -21,8 +21,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
     private final UpdateImageService updateImageService;
     @Override
     public void run(String... args) throws Exception {
-        updatePhonemeService.updateCardPhonemeColumn();
-        updateEngPronunciationService.updateEngPronunciation();
-        updateImageService.saveImage();
+//        updatePhonemeService.updateCardPhonemeColumn();
+//        updateEngPronunciationService.updateEngPronunciation();
+//        updateImageService.saveImage();
     }
 }
