@@ -91,6 +91,9 @@ public class WeakSoundTestController {
 
                         WeakSoundTestDto testResponse = weakSoundTestService.sendToAi(userId, dataToSend);
                         String testResponseJson = objectMapper.writeValueAsString(testResponse);
+
+                        System.out.println(testResponseJson);
+
                         return ResponseEntity.ok(testResponseJson);
                     } catch (IOException e){
                         throw new RuntimeException("서버 오류가 발생했습니다."); //500

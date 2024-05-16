@@ -41,6 +41,7 @@ public class JoinController {
     }
 
     // 회원정보 받기
+    @PostMapping("/users")
     public ResponseEntity<?> createUser(@Validated @RequestBody JoinDto joinDto, HttpServletResponse response) {
 
         String access = joinService.joinProcess(joinDto, response);
