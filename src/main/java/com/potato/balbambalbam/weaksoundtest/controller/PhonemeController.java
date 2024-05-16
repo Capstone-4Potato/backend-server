@@ -2,8 +2,10 @@ package com.potato.balbambalbam.weaksoundtest.controller;
 
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.entity.UserWeakSound;
+import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
+import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
@@ -26,20 +28,43 @@ public class PhonemeController {
     private final PhonemeRepository phonemeRepository;
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
+    private final WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy;
 
     public PhonemeController (UserWeakSoundRepository userWeakSoundRepository,
                               PhonemeRepository phonemeRepository,
                               JoinService joinService,
-                              JWTUtil jwtUtil){
+                              JWTUtil jwtUtil,
+                              WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy){
         this.userWeakSoundRepository = userWeakSoundRepository;
         this.phonemeRepository = phonemeRepository;
         this.joinService = joinService;
         this.jwtUtil = jwtUtil;
+        this.weakSoundTestSatusRepositoy = weakSoundTestSatusRepositoy;
     }
 
     private Long extractUserIdFromToken(String access) {
         String socialId = jwtUtil.getSocialId(access);
         return joinService.findUserBySocialId(socialId).getId();
+    }
+
+    @GetMapping("/test/status")
+    public ResponseEntity<?> getTestStatusByUserId(@RequestHeader("access") String access){
+        Long userId = extractUserIdFromToken(access);
+
+        try{
+            WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
+
+            if(weakSoundTestStatus == null){
+                System.out.println("user id " + userId + " 의 취약음 테스트가 필요합니다.");
+                throw new ResponseNotFoundException("취약음 테스트가 필요합니다.");
+            }
+
+            return ResponseEntity.ok(weakSoundTestStatus.getTestStatus());
+        } catch (ResponseNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("서버 오류가 발생했습니다."); // 500
+        }
     }
 
     @GetMapping("/test/phonemes")
@@ -92,16 +117,21 @@ public class PhonemeController {
         Long userId = extractUserIdFromToken(access);
         try {
             List<UserWeakSound> userWeakSounds = userWeakSoundRepository.findAllByUserId(userId);
+
             if (userWeakSounds != null && !userWeakSounds.isEmpty()) {
                 userWeakSoundRepository.deleteAll(userWeakSounds);
             } else {
                 System.out.println("user id " + userId + " 의 취약음이 없습니다.");
                 throw new ResponseNotFoundException("취약음이 없습니다."); // 404
             }
+
         } catch (ResponseNotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("서버 오류가 발생했습니다."); // 500
+        } finally {
+            WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
+            weakSoundTestSatusRepositoy.delete(weakSoundTestStatus);
         }
         System.out.println("user id " + userId + " 의 취약음 데이터가 삭제되었습니다.");
         return ResponseEntity.ok("사용자의 취약음 데이터가 삭제되었습니다."); //200
