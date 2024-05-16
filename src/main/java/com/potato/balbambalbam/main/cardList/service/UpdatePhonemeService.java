@@ -4,6 +4,7 @@ import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class UpdatePhonemeService {
     private static final String[] JONGSUNG = {
             "", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
     };
-
+    @Transactional
     public void updateCardPhonemeColumn(){
         List<Card> cardList = cardRepository.findAll();
 

@@ -43,7 +43,6 @@ public class CardFeedbackController {
 
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
         UserFeedbackResponseDto userFeedbackResponseDto = cardFeedbackService.postUserFeedback(userFeedbackRequestDto, userId, cardId);
-        log.info("[UserFeedbackResponseDto] : {}", userFeedbackResponseDto);
 
         return ResponseEntity.ok().body(userFeedbackResponseDto);
     }
