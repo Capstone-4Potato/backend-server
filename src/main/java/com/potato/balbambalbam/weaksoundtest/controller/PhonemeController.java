@@ -62,16 +62,16 @@ public class PhonemeController {
                         if (phoneme != null) {
                             switch (phoneme.getType().intValue()) {
                                 case 0:
-                                    phonemeType = "초성";
+                                    phonemeType = "Initial consonant";
                                     break;
                                 case 1:
-                                    phonemeType = "중성";
+                                    phonemeType = "Medial vowel";
                                     break;
                                 case 2:
-                                    phonemeType = "종성";
+                                    phonemeType = "Final consonant";
                                     break;
                                 default:
-                                    phonemeType = "알 수 없음";
+                                    phonemeType = "?";
                             }
                             phonemeText = phonemeType + " " + phoneme.getText();
                         }
