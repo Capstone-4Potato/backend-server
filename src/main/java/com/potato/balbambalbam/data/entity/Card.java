@@ -21,7 +21,6 @@ public class Card {
     private String text;
     @Column(name = "pronunciation", nullable = false)
     private String pronunciation;
-
     @Column(name = "eng_pronunciation")
     private String engPronunciation;
     @Column(name = "phonemes")
@@ -30,17 +29,19 @@ public class Card {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    public Card(String text, String pronunciation, List<Long> phonemesMap, Long categoryId){
+    public Card(String text, String pronunciation, Long categoryId){
         this.text = text;
         this.pronunciation = pronunciation;
-        this.phonemesMap = phonemesMap;
         this.categoryId = categoryId;
     }
-
     public Card() {
 
     }
     public void setPhonemesMap(List<Long> phonemesMap) {
         this.phonemesMap = phonemesMap;
+    }
+
+    public void setEngPronunciation(String engPronunciation) {
+        this.engPronunciation = engPronunciation;
     }
 }
