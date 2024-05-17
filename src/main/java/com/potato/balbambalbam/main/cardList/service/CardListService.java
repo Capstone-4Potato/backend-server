@@ -18,7 +18,6 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class CardListService {
-    //TODO: userid를 동적으로 처리하도록 변경 필요
     //TODO : service 분리 (list 제공 (getCardsByCategory)/ list update시 사용(북마크랑 취약음 update))
     private final CategoryRepository categoryRepository;
     private final CardRepository cardRepository;

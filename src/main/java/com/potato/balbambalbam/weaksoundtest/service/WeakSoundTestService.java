@@ -3,7 +3,6 @@ package com.potato.balbambalbam.weaksoundtest.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

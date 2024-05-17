@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
-import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.exception.AiGenerationFailException;
+import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import lombok.RequiredArgsConstructor;
