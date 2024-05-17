@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -66,8 +67,6 @@ public class CardListService {
 
     /**
      * 카테고리에 맞는 카드 DTO 리스트 반환
-     * @param id
-     * @return cardDtoList
      */
     protected List<ResponseCardDto> createCardDtoListForCategory(Long categoryId, Long userId){
         List<Card> cardList = cardRepository.findAllByCategoryId(categoryId);
@@ -95,8 +94,6 @@ public class CardListService {
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setPronunciation(card.getPronunciation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
-
-        log.info(card.getEngPronunciation());
 
         return responseCardDto;
     }
@@ -133,18 +130,46 @@ public class CardListService {
         }
     }
 
-    //TODO : 취약음 갱신 시 cardWeakSound Update(취약음 Test 완료 시 진행)
-//    public String updateCardWeakSound(Long userId){
-//        //UPDATE하는 부분
-//        List<Card> cardList = cardRepository.findAll();
-//
-//        cardList.forEach(card -> {
-//            List<Long> phonemes = card.getPhonemesMap();
-//            if(!Collections.disjoint(phonemes, userWeakSoundList)){
-//                cardWeakSoundRepository.save(new CardWeakSound(userId ,card.getId()));
-//            }
-//        });
-//
-//        return "카드 취약음 갱신 성공";
-//    }
+    /**
+     * 취약음 갱신 시 user weaksound table update
+     * @param userId
+     * @return
+     */
+    public String updateCardWeakSound(Long userId){
+        //card weaksound 테이블 해당 userId 행 전부 삭제
+        cardWeakSoundRepository.deleteByUserId(userId);
+
+        List<Card> cardList = getCardListWithoutSentence();
+        List<Long> phonemeList = getPhonemeList(userId);
+
+        cardList.forEach(card -> {
+            List<Long> phonemes = card.getPhonemesMap();
+            if(!Collections.disjoint(phonemes, phonemeList)){
+                cardWeakSoundRepository.save(new CardWeakSound(userId ,card.getId()));
+            }
+        });
+
+        return "카드 취약음 갱신 성공";
+    }
+
+    protected List<Card> getCardListWithoutSentence(){
+        List<Card> cardList = new ArrayList<>();
+
+        for(int i = 5; i <= 31; i++){
+            cardList.addAll(cardRepository.findAllByCategoryId(Long.valueOf(i)));
+        }
+
+        return cardList;
+    }
+
+    protected List<Long> getPhonemeList(Long userId){
+        List<UserWeakSound> userWeakSoundList = userWeakSoundRepository.findAllByUserId(userId);
+        List<Long> phonemeList = new ArrayList<>();
+
+        userWeakSoundList.forEach(userWeakSound -> {
+            phonemeList.add(userWeakSound.getUserPhoneme());
+        });
+
+        return phonemeList;
+    }
 }
