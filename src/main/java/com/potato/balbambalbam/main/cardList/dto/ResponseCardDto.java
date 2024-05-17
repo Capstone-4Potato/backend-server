@@ -17,5 +17,7 @@ public class ResponseCardDto {
     private boolean isBookmark;
     private boolean isWeakCard;
     private int cardScore;
+    private String picture;
+    private String explanation;
 
 }
