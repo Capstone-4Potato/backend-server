@@ -1,8 +1,8 @@
 package com.potato.balbambalbam.user.join.service;
 
 import com.potato.balbambalbam.data.entity.User;
-import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.data.repository.UserRepository;
+import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
+import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.InvalidUserNameException;
 import com.potato.balbambalbam.exception.SocialIdChangeException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
@@ -21,12 +21,32 @@ public class JoinService {
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final CardBookmarkRepository cardBookmarkRepository;
+    private final CardScoreRepository cardScoreRepository;
+    private final CardWeakSoundRepository cardWeakSoundRepository;
+    private final CustomCardRepository customCardRepository;
+    private final UserWeakSoundRepository userWeakSoundRepository;
+    private final WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy;
 
-    public JoinService(UserRepository userRepository, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public JoinService(UserRepository userRepository,
+                       JWTUtil jwtUtil,
+                       RefreshRepository refreshRepository,
+                       CardBookmarkRepository cardBookmarkRepository,
+                       CardScoreRepository cardScoreRepository,
+                       CardWeakSoundRepository cardWeakSoundRepository,
+                       CustomCardRepository customCardRepository,
+                       UserWeakSoundRepository userWeakSoundRepository,
+                       WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy) {
 
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
+        this.cardBookmarkRepository = cardBookmarkRepository;
+        this.cardScoreRepository = cardScoreRepository;
+        this.cardWeakSoundRepository = cardWeakSoundRepository;
+        this.customCardRepository = customCardRepository;
+        this.userWeakSoundRepository = userWeakSoundRepository;
+        this.weakSoundTestSatusRepositoy = weakSoundTestSatusRepositoy;
     }
 
     //새로운 회원정보 저장
@@ -127,7 +147,18 @@ public class JoinService {
             throw new InvalidUserNameException("닉네임이 일치하지 않습니다."); //400
         }
 
+        cardBookmarkRepository.deleteByUserId(userId);
+        cardScoreRepository.deleteByUserId(userId);
+        cardWeakSoundRepository.deleteByUserId(userId);
+
+        customCardRepository.deleteById(userId);
+        userWeakSoundRepository.deleteById(userId);
+
+        WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
+        weakSoundTestSatusRepositoy.delete(weakSoundTestStatus);
+
         userRepository.deleteById(userId);
+
     }
 
     //회원정보 검색
