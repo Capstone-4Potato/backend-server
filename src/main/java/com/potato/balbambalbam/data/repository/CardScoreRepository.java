@@ -13,4 +13,6 @@ public interface CardScoreRepository extends JpaRepository<CardScore, Long> {
     Optional<CardScore> findByCardIdAndUserId(Long cardId, Long userId);
 
     List<CardScore> findByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }
