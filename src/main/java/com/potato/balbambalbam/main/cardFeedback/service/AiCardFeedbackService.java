@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.balbambalbam.exception.AiGenerationFailException;
 import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.main.cardFeedback.dto.AiFeedbackRequestDto;

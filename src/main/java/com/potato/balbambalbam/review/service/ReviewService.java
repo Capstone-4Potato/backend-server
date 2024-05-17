@@ -5,7 +5,6 @@ import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
-import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.review.dto.CardDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

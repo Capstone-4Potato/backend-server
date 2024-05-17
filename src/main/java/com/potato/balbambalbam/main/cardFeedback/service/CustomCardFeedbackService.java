@@ -1,6 +1,5 @@
 package com.potato.balbambalbam.main.cardFeedback.service;
 
-import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.exception.CardNotFoundException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Transactional
