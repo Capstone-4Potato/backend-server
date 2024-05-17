@@ -149,11 +149,9 @@ public class JoinService {
         cardScoreRepository.deleteByUserId(userId);
         cardWeakSoundRepository.deleteByUserId(userId);
 
-        customCardRepository.deleteById(userId);
-        userWeakSoundRepository.deleteById(userId);
-
-        WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
-        weakSoundTestSatusRepositoy.delete(weakSoundTestStatus);
+        customCardRepository.deleteUserById(userId);
+        userWeakSoundRepository.deleteByUserId(userId);
+        weakSoundTestSatusRepositoy.deleteByUserId(userId);
 
         userRepository.deleteById(userId);
 
