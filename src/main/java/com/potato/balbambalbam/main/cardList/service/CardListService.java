@@ -27,6 +27,7 @@ public class CardListService {
     private final CardScoreRepository cardScoreRepository;
     private final CustomCardRepository customCardRepository;
     private final UserWeakSoundRepository userWeakSoundRepository;
+    private final PronunciationPictureRepository pronunciationPictureRepository;
 
     /**
      * controller getCardList 요청 처리
@@ -46,7 +47,9 @@ public class CardListService {
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
         customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
-                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
+                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
+                        customCard.getIsBookmarked(), false, customCard.getHighestScore(),
+                        null, null )));
 
         return cardDtoList;
     }
@@ -94,6 +97,25 @@ public class CardListService {
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setPronunciation(card.getPronunciation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
+
+        //음절이라면 사진과 설명 제공
+        if(card.getCategoryId() <= 14){
+            Long phonemeId = null;
+            //모음인 경우
+            if(card.getCategoryId() <= 7){
+                phonemeId = card.getPhonemesMap().get(1);
+            }
+            //자음인 경우
+            else{
+                phonemeId = card.getPhonemesMap().get(0);
+            }
+            PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
+            responseCardDto.setPicture(pronunciationPicture.getPicture());
+            responseCardDto.setExplanation(pronunciationPicture.getExplanation());
+        }else{
+            responseCardDto.setPicture(null);
+            responseCardDto.setExplanation(null);
+        }
 
         return responseCardDto;
     }
