@@ -43,7 +43,7 @@ public class PhonemeService {
         return temporaryStorage.getOrDefault(userId, new HashMap<>())
                 .entrySet().stream()
                 .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
-                .limit(5)
+                .limit(4)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
