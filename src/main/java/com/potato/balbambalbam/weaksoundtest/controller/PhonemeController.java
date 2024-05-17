@@ -8,7 +8,6 @@ import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.weaksoundtest.dto.UserWeakSoundDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
