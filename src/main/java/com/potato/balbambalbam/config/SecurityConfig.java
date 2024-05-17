@@ -1,5 +1,6 @@
 package com.potato.balbambalbam.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.user.join.jwt.CustomLogoutFilter;
 import com.potato.balbambalbam.user.join.jwt.JWTFilter;
@@ -24,11 +25,16 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final ObjectMapper objectMapper;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          JWTUtil jwtUtil,
+                          RefreshRepository refreshRepository,
+                          ObjectMapper objectMapper) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -56,17 +62,19 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
 
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll());
+                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
                         /*.requestMatchers("/login","/users").permitAll()
                         .anyRequest().authenticated());*/
 
+        //jwt 필터 추가
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, objectMapper), LoginFilter.class);
 
+        //로그인 필터 추가
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository,objectMapper), UsernamePasswordAuthenticationFilter.class);
 
+        //로그아웃 필터 추가
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
@@ -76,4 +84,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

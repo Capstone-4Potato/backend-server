@@ -5,8 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.entity.UserWeakSound;
 import com.potato.balbambalbam.data.entity.WeakSoundTest;
+import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
+import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
+import com.potato.balbambalbam.exception.InvalidParameterException;
+import com.potato.balbambalbam.exception.ParameterNotFoundException;
+import com.potato.balbambalbam.exception.ResponseNotFoundException;
+import com.potato.balbambalbam.exception.SocialIdChangeException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
@@ -25,27 +31,32 @@ import java.util.Map;
 
 @RestController
 public class WeakSoundTestController {
-    private ObjectMapper objectMapper = new ObjectMapper();
 
+    private final ObjectMapper objectMapper;
     private final WeakSoundTestService weakSoundTestService;
     private final WeakSoundTestRepository weakSoundTestRepository;
     private final PhonemeService phonemeService;
     private final UserWeakSoundRepository userWeakSoundRepository;
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
+    private final WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy;
 
-    public WeakSoundTestController(WeakSoundTestService weakSoundTestService,
+    public WeakSoundTestController(ObjectMapper objectMapper,
+                                   WeakSoundTestService weakSoundTestService,
                                    WeakSoundTestRepository weakSoundTestRepository,
                                    PhonemeService phonemeService,
                                    UserWeakSoundRepository userWeakSoundRepository,
                                    JoinService joinService,
-                                   JWTUtil jwtUtil){
+                                   JWTUtil jwtUtil,
+                                   WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy){
+        this.objectMapper = objectMapper;
         this.weakSoundTestService = weakSoundTestService;
         this.weakSoundTestRepository = weakSoundTestRepository;
         this.phonemeService = phonemeService;
         this.userWeakSoundRepository = userWeakSoundRepository;
         this.joinService = joinService;
         this.jwtUtil = jwtUtil;
+        this.weakSoundTestSatusRepositoy = weakSoundTestSatusRepositoy;
     }
 
     private Long extractUserIdFromToken(String access) {
@@ -64,18 +75,20 @@ public class WeakSoundTestController {
             (@PathVariable("cardId") Long id,
              @RequestHeader("access") String access,
              @RequestParam("userAudio")MultipartFile userAudio) throws JsonProcessingException {
+
         Long userId = extractUserIdFromToken(access);
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
-        }
+
         if(userAudio.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 음성 파일이 비었습니다."); //400
+            throw new ParameterNotFoundException("사용자 음성 파일이 비었습니다."); //400
         }
+
         return weakSoundTestRepository.findById(id)
                 .map(weakSoundTest -> {
                     try{
-                        byte[] userAudioBytes = userAudio.getBytes(); // userAudio<wav> -> userAudioBytes
-                        String userAudioBase64 = Base64.getEncoder().encodeToString(userAudioBytes); // userAudioBytes -> userAudioBase64
+                        // userAudio<wav> -> userAudioBytes
+                        byte[] userAudioBytes = userAudio.getBytes();
+                        // userAudioBytes -> userAudioBase64
+                        String userAudioBase64 = Base64.getEncoder().encodeToString(userAudioBytes);
 
                         Map<String, Object> dataToSend = new HashMap<>();
                         dataToSend.put("userAudio",userAudioBase64);
@@ -83,43 +96,50 @@ public class WeakSoundTestController {
 
                         WeakSoundTestDto testResponse = weakSoundTestService.sendToAi(userId, dataToSend);
                         String testResponseJson = objectMapper.writeValueAsString(testResponse);
+
+                        System.out.println(testResponseJson);
+
                         return ResponseEntity.ok(testResponseJson);
                     } catch (IOException e){
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
+                        throw new RuntimeException("서버 오류가 발생했습니다."); //500
                     }
                 })
-                .orElseGet(()-> ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id를 가진 테스트 카드가 없습니다.")); //404
+                .orElseThrow(() -> new InvalidParameterException("해당 id를 가진 테스트 카드가 없습니다.")); //404
     }
 
     @PostMapping("/test/finalize")
     public ResponseEntity<?> finalizeAnalysis(@RequestHeader("access") String access) {
         Long userId = extractUserIdFromToken(access);
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("userId 헤더가 필요합니다."); //401
-        }
-
-        Map<Long, Integer> topPhonemes = null;
+        Map<Long, Integer> topPhonemes;
 
         try {
             topPhonemes = phonemeService.getTopPhonemes(userId);
 
-            if (topPhonemes != null && !topPhonemes.isEmpty()) {
-                System.out.println(userId + ":");
-                topPhonemes.forEach((phonemeId, count) -> {
-                    System.out.println("Phoneme ID : " + phonemeId + ", Count : " + count);
-                    UserWeakSound userWeakSound = new UserWeakSound(userId, phonemeId);
-                    userWeakSoundRepository.save(userWeakSound);
-                });
-            } else {
-                System.out.println("user id " + userId + " 의 취약음 테스트 결과가 없습니다.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("취약음 테스트 결과가 없습니다."); //404
+            if (topPhonemes == null || topPhonemes.isEmpty()) {
+                System.out.println("user id " + userId + " 의 취약음이 없습니다.");
+                throw new ResponseNotFoundException("취약음이 없습니다."); // 404
             }
+
+            System.out.println(userId + ":");
+            topPhonemes.forEach((phonemeId, count) -> {
+                System.out.println("Phoneme ID : " + phonemeId + ", Count : " + count);
+                UserWeakSound userWeakSound = new UserWeakSound(userId, phonemeId);
+                userWeakSoundRepository.save(userWeakSound);
+            });
+
+        } catch (ResponseNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); //500
+            throw new RuntimeException("서버 오류가 발생했습니다."); // 500
         } finally {
+            WeakSoundTestStatus weakSoundTestStatus = new WeakSoundTestStatus(userId, true);
+            weakSoundTestSatusRepositoy.save(weakSoundTestStatus);
+            System.out.println("취약음 테스트를 완료했습니다.");
+
             phonemeService.clearTemporaryData(userId);
             System.out.println("user id " + userId + " 의 임시 저장소를 삭제했습니다.");
         }
-        return ResponseEntity.ok(topPhonemes); //200
+
+        return ResponseEntity.ok(topPhonemes); // 200
     }
 }
