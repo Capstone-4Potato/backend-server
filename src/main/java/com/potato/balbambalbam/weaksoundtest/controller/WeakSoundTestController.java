@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.UserWeakSound;
 import com.potato.balbambalbam.data.entity.WeakSoundTest;
+import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
+import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
 import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
@@ -34,6 +36,7 @@ public class WeakSoundTestController {
     private final UserWeakSoundRepository userWeakSoundRepository;
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
+    private final WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy;
 
     public WeakSoundTestController(ObjectMapper objectMapper,
                                    WeakSoundTestService weakSoundTestService,
@@ -41,7 +44,8 @@ public class WeakSoundTestController {
                                    PhonemeService phonemeService,
                                    UserWeakSoundRepository userWeakSoundRepository,
                                    JoinService joinService,
-                                   JWTUtil jwtUtil){
+                                   JWTUtil jwtUtil,
+                                   WeakSoundTestSatusRepositoy weakSoundTestSatusRepositoy){
         this.objectMapper = objectMapper;
         this.weakSoundTestService = weakSoundTestService;
         this.weakSoundTestRepository = weakSoundTestRepository;
@@ -49,6 +53,7 @@ public class WeakSoundTestController {
         this.userWeakSoundRepository = userWeakSoundRepository;
         this.joinService = joinService;
         this.jwtUtil = jwtUtil;
+        this.weakSoundTestSatusRepositoy = weakSoundTestSatusRepositoy;
     }
 
     private Long extractUserIdFromToken(String access) {
@@ -124,6 +129,10 @@ public class WeakSoundTestController {
         } catch (Exception e) {
             throw new RuntimeException("서버 오류가 발생했습니다."); // 500
         } finally {
+            WeakSoundTestStatus weakSoundTestStatus = new WeakSoundTestStatus(userId, true);
+            weakSoundTestSatusRepositoy.save(weakSoundTestStatus);
+            System.out.println("취약음 테스트를 완료했습니다.");
+
             phonemeService.clearTemporaryData(userId);
             System.out.println("user id " + userId + " 의 임시 저장소를 삭제했습니다.");
         }

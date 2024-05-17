@@ -12,4 +12,6 @@ public interface CardWeakSoundRepository extends JpaRepository<CardWeakSound, Ca
 
     boolean existsByCardIdAndUserId(Long cardId, Long userId);
     Optional<CardWeakSound> findByCardId(Long cardId);
+
+    void deleteByUserId(Long userId);
 }
