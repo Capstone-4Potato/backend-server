@@ -59,7 +59,7 @@ public class JWTUtil {
                 .before(new Date());
     }
 
-
+    //토큰 생성하기
     public String createJwt(String category, String socialId, String role, Long expiredMs) {
 
         return Jwts.builder()
