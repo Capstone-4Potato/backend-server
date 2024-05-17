@@ -137,7 +137,7 @@ public class CardListService {
      */
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
-        cardWeakSoundRepository.deleteAllByUserId(userId);
+        cardWeakSoundRepository.deleteByUserId(userId);
 
         List<Card> cardList = getCardListWithoutSentence();
         List<Long> phonemeList = getPhonemeList(userId);
