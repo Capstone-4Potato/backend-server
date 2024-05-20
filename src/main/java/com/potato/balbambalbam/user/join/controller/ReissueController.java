@@ -29,13 +29,7 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
-            }
-        }
+        String refresh = request.getHeader("refresh");
 
         if (refresh == null) {
             return new ResponseEntity<>("refresh 토큰이 없습니다.", HttpStatus.NOT_FOUND); //404
@@ -71,17 +65,9 @@ public class ReissueController {
         addRefreshEntity(socialId, newRefresh, 86400000L);
 
         response.setHeader("access", newAccess);
-        response.addCookie(createCookie("refresh", newRefresh));
+        response.setHeader("refresh", newRefresh);
 
         return new ResponseEntity<>("refresh 토근과 access 토큰이 재발급 되었습니다.",HttpStatus.OK);//200
-    }
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        cookie.setHttpOnly(true);
-
-        return cookie;
     }
 
     private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
