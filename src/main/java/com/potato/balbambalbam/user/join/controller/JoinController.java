@@ -66,31 +66,13 @@ public class JoinController {
         joinService.deleteUser(userId, name);
 
         // refresh
-            /*String refresh = null;
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refresh = cookie.getValue();
-                }
-            }
-
-            if (refresh != null) {
-                refreshRepository.deleteByRefresh(refresh);
-                deleteCookie(response, "refresh");
-            }*/
+        /*if (refresh != null && refreshRepository.existsByRefresh(refresh)) {
+            refreshRepository.deleteByRefresh(refresh);
+        }*/
 
         System.out.println( userId + " : 사용자 정보가 삭제되었습니다.");
         return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
     }
-
-    // refresh
-    /*private void deleteCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // 만료 시간 0으로 설정하여 쿠키 삭제
-        response.addCookie(cookie);
-    }*/
 
     //회원정보 출력
     @GetMapping("/users")

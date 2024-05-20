@@ -71,26 +71,15 @@ public class JoinService {
         //access 토큰 발급
         String access = jwtUtil.createJwt("access", socialId, data.getRole(), 7200000L); //120분
 
-        System.out.println("access 토큰이 발급되었습니다.");
+        // Refresh 토큰 발급
+        /*String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); // 24시간
+        addRefreshEntity(socialId, refresh, 86400000L);*/
 
-        /*String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); //24시간
-        System.out.println("refresh : " + refresh);
-
-        //refresh 토큰 저장
-        addRefreshEntity(socialId, refresh, 86400000L);
-
-        response.addCookie(createCookie("refresh", refresh));*/
+        /*response.setHeader("access", access);
+        response.setHeader("refresh", refresh);*/
 
         return access;
     }
-    /*private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }*/
 
     /*private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
 
@@ -118,16 +107,6 @@ public class JoinService {
         editUser.setName(joinDto.getName());
         editUser.setAge(joinDto.getAge());
         editUser.setGender(joinDto.getGender());
-
-        /*if (joinDto.getName() != null) {
-            editUser.setName(joinDto.getName());
-        }
-        if (joinDto.getAge() != null) {
-            editUser.setAge(joinDto.getAge());
-        }
-        if (joinDto.getGender() != null) {
-            editUser.setGender(joinDto.getGender());
-        }*/
 
         userRepository.save(editUser);
 

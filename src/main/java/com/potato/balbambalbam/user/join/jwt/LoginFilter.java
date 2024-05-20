@@ -59,16 +59,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 토큰 생성
         String access = jwtUtil.createJwt("access", socialId, role, 7200000L); // 2시간
-
-        // refresh
-        /* String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
-        System.out.println("refresh : " + refresh);*/
-
-        // refresh
-        /*addRefreshEntity(socialId, refresh, 86400000L);*/
-        /*response.addCookie(createCookie("refresh", refresh));*/
+        // String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
 
         response.setHeader("access", access);
+        //response.setHeader("refresh", refresh);
 
         response.setContentType("text/plain; charset=UTF-8");
         response.getWriter().print("로그인이 완료되었습니다.");
@@ -95,27 +89,4 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         writer.print(objectMapper.writeValueAsString(exceptionDto));
         writer.flush();
     }
-
-    // refresh
-    /*private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-
-        return cookie;
-    }*/
-
-   /* private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        Refresh refreshEntity = new Refresh();
-        refreshEntity.setSocialId(socialId);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
-
-        refreshRepository.save(refreshEntity);
-    }*/
 }
