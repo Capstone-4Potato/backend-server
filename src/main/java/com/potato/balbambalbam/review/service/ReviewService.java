@@ -3,6 +3,7 @@ package com.potato.balbambalbam.review.service;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
+import com.potato.balbambalbam.data.entity.PronunciationPicture;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
 import com.potato.balbambalbam.review.dto.CardDto;
@@ -23,6 +24,7 @@ public class ReviewService {
     private final CardScoreRepository cardScoreRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
+    private final PronunciationPictureRepository pronunciationPictureRepository;
 
     public List<CardDto> getCardsByCategory(String category, String subcategory,Long userId){
         Long requestCategory = getSubCategoryId(category, subcategory);
@@ -88,7 +90,25 @@ public class ReviewService {
         cardDto.setPronunciation(card.getPronunciation());
         cardDto.setEngPronunciation(card.getEngPronunciation());
 
-        log.info(card.getEngPronunciation());
+        //음절이라면 사진과 설명 제공
+        if(card.getCategoryId() <= 14){
+            Long phonemeId = null;
+            //모음인 경우
+            if(card.getCategoryId() <= 7){
+                phonemeId = card.getPhonemesMap().get(1);
+            }
+            //자음인 경우
+            else{
+                phonemeId = card.getPhonemesMap().get(0);
+            }
+            PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
+            cardDto.setPicture(pronunciationPicture.getPicture());
+            cardDto.setExplanation(pronunciationPicture.getExplanation());
+        }else{
+            cardDto.setPicture(null);
+            cardDto.setExplanation(null);
+        }
+
 
         return cardDto;
     }
