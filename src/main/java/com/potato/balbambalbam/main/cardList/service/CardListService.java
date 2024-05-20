@@ -162,23 +162,12 @@ public class CardListService {
      */
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
-        long startTime = System.currentTimeMillis();
         bulkRepository.deleteAllByUserId(userId);
-        //cardWeakSoundRepository.deleteByUserId(userId);
-        long stopTime = System.currentTimeMillis();
-        log.info("[deleteByUserId] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<Card> cardList = getCardListWithoutSentence();
-        stopTime = System.currentTimeMillis();
-        log.info("[getAllCardList] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<Long> phonemeList = getPhonemeList(userId);
-        stopTime = System.currentTimeMillis();
-        log.info("[getPhonemeList] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<CardWeakSound> cardWeakSoundList = new ArrayList<>();
         cardList.forEach(card -> {
             List<Long> phonemes = card.getPhonemesMap();
@@ -186,13 +175,8 @@ public class CardListService {
                 cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
             }
         });
-        stopTime = System.currentTimeMillis();
-        log.info("[updateCardWeakList] : " + (stopTime - startTime) + "ms");
-
-        startTime = System.currentTimeMillis();
         bulkRepository.saveAll(cardWeakSoundList);
-        stopTime = System.currentTimeMillis();
-        log.info("[saveAll] : " + (stopTime - startTime) + "ms");
+
         return "카드 취약음 갱신 성공";
     }
 
