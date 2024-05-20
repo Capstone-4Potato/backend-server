@@ -8,9 +8,11 @@ import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class CardListService {
     private final CustomCardRepository customCardRepository;
     private final UserWeakSoundRepository userWeakSoundRepository;
     private final PronunciationPictureRepository pronunciationPictureRepository;
+    private final BulkRepository bulkRepository;
 
     /**
      * controller getCardList 요청 처리
@@ -159,27 +162,47 @@ public class CardListService {
      */
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
-        cardWeakSoundRepository.deleteByUserId(userId);
+        long startTime = System.currentTimeMillis();
+        bulkRepository.deleteAllByUserId(userId);
+        //cardWeakSoundRepository.deleteByUserId(userId);
+        long stopTime = System.currentTimeMillis();
+        log.info("[deleteByUserId] : " + (stopTime - startTime) + "ms");
 
+        startTime = System.currentTimeMillis();
         List<Card> cardList = getCardListWithoutSentence();
-        List<Long> phonemeList = getPhonemeList(userId);
+        stopTime = System.currentTimeMillis();
+        log.info("[getAllCardList] : " + (stopTime - startTime) + "ms");
 
+        startTime = System.currentTimeMillis();
+        List<Long> phonemeList = getPhonemeList(userId);
+        stopTime = System.currentTimeMillis();
+        log.info("[getPhonemeList] : " + (stopTime - startTime) + "ms");
+
+        startTime = System.currentTimeMillis();
+        List<CardWeakSound> cardWeakSoundList = new ArrayList<>();
         cardList.forEach(card -> {
             List<Long> phonemes = card.getPhonemesMap();
             if(!Collections.disjoint(phonemes, phonemeList)){
-                cardWeakSoundRepository.save(new CardWeakSound(userId ,card.getId()));
+                cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
             }
         });
+        stopTime = System.currentTimeMillis();
+        log.info("[updateCardWeakList] : " + (stopTime - startTime) + "ms");
 
+        startTime = System.currentTimeMillis();
+        bulkRepository.saveAll(cardWeakSoundList);
+        stopTime = System.currentTimeMillis();
+        log.info("[saveAll] : " + (stopTime - startTime) + "ms");
         return "카드 취약음 갱신 성공";
     }
 
     protected List<Card> getCardListWithoutSentence(){
-        List<Card> cardList = new ArrayList<>();
-
-        for(int i = 5; i <= 31; i++){
-            cardList.addAll(cardRepository.findAllByCategoryId(Long.valueOf(i)));
-        }
+        List<Long> categoryIds = Arrays.asList(
+                5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L,
+                14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L,
+                23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L
+        );
+        List<Card> cardList = cardRepository.findByCategoryIdIn(categoryIds);
 
         return cardList;
     }
