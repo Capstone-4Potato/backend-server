@@ -23,6 +23,6 @@ public class MyCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         updatePhonemeService.updateCardPhonemeColumn();
         updateEngPronunciationService.updateEngPronunciation();
-        //updateImageService.saveImage();
+        updateImageService.saveImage();
     }
 }

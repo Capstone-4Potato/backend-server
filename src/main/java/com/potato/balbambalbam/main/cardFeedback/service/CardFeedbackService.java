@@ -48,7 +48,7 @@ public class CardFeedbackService {
         //학습카드 추천
         Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, cardId);
 
-        return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCard);
+        return setUserFeedbackResponseDto(cardId, aiFeedbackResponseDto, recommendCard);
     }
 
     /**
@@ -200,7 +200,7 @@ public class CardFeedbackService {
      * @param recommendCard
      * @return
      */
-    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
+    protected UserFeedbackResponseDto setUserFeedbackResponseDto(Long cardId, AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
         //사용자 오디오 데이터 생성
         UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());
         //waveform 데이터 생성
@@ -208,6 +208,7 @@ public class CardFeedbackService {
 
         //객체 생성 및 설정
         UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
+        userFeedbackResponseDto.setCardId(cardId);
         userFeedbackResponseDto.setUserAudio(userAudio);
         userFeedbackResponseDto.setUserScore(aiFeedback.getUserAccuracy());
         userFeedbackResponseDto.setRecommendCard(recommendCard);
