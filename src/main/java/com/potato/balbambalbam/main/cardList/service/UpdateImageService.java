@@ -27,7 +27,7 @@ public class UpdateImageService {
                 String filename = resource.getFilename();
                 String numberOnly = filename.replaceAll("[^0-9]", "");
                 PronunciationPicture pronunciationPicture = pronunciationRepository.findByPhonemeId(Long.parseLong(numberOnly)).orElseThrow(() -> new IllegalArgumentException("잘못된 이미지 이름"));
-                if(pronunciationPicture.getPicture().length() == 0){
+                if(pronunciationPicture.getPicture().length()==0){
                     byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
                     pronunciationPicture.setPicture(Base64.getEncoder().encodeToString(bytes));
                     pronunciationRepository.save(pronunciationPicture);
