@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,5 +16,4 @@ public interface CardWeakSoundRepository extends JpaRepository<CardWeakSound, Ca
     Optional<CardWeakSound> findByCardId(Long cardId);
     @Transactional
     void deleteByUserId(Long userId);
-
 }
