@@ -44,26 +44,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        /*String refresh = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refresh = cookie.getValue();
-                }
-            }
-        } else {
-            response.setContentType("text/plain; charset=UTF-8");
-            PrintWriter writer = response.getWriter();
-            writer.print("쿠키가 없습니다.");
-            return;
-        }
-
+        /*String refresh = request.getHeader("refresh");
         if (refresh == null) {
             response.setContentType("text/plain; charset=UTF-8");
             PrintWriter writer = response.getWriter();
-            writer.print("refresh 토큰이 없습니다.");
+            writer.print("refresh 헤더가 없습니다.");
 
             response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
             return;
@@ -101,19 +86,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //로그아웃 진행
-        refreshRepository.deleteByRefresh(refresh);
+        refreshRepository.deleteByRefresh(refresh);*/
 
-        //Refresh 토큰 Cookie 값 0
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");*/
+        System.out.println("로그아웃이 완료되었습니다.");
 
         response.setContentType("text/plain; charset=UTF-8");
         response.getWriter().print("로그아웃이 완료되었습니다.");
 
-        System.out.println("로그아웃이 완료되었습니다.");
-
-        /*response.addCookie(cookie);*/
         response.setStatus(HttpServletResponse.SC_OK); //200
     }
 }
