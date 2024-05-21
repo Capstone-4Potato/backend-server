@@ -45,8 +45,10 @@ public class CustomCardController {
             @ApiResponse(responseCode = "200", description = "OK : 카드 삭제 완료"),
             @ApiResponse(responseCode = "400", description = "ERROR : 카드 삭제 불가(10개 이상 or 한국어 X, 35자 이상)", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
-    public ResponseEntity deleteCustomCard(@PathVariable("cardId") Long cardId) throws CardDeleteException {
-        boolean isDeleted = customCardService.deleteCustomCard(cardId);
+    public ResponseEntity deleteCustomCard(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) throws CardDeleteException {
+        Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
+
+        boolean isDeleted = customCardService.deleteCustomCard(userId, cardId);
 
         if(!isDeleted){
             throw new CardDeleteException(cardId + " : 카드 삭제 실패하였습니다");

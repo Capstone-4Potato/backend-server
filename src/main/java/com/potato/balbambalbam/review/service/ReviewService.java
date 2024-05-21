@@ -90,26 +90,6 @@ public class ReviewService {
         cardDto.setPronunciation(card.getPronunciation());
         cardDto.setEngPronunciation(card.getEngPronunciation());
 
-        //음절이라면 사진과 설명 제공
-        if(card.getCategoryId() <= 14){
-            Long phonemeId = null;
-            //모음인 경우
-            if(card.getCategoryId() <= 7){
-                phonemeId = card.getPhonemesMap().get(1);
-            }
-            //자음인 경우
-            else{
-                phonemeId = card.getPhonemesMap().get(0);
-            }
-            PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
-            cardDto.setPicture(pronunciationPicture.getPicture());
-            cardDto.setExplanation(pronunciationPicture.getExplanation());
-        }else{
-            cardDto.setPicture(null);
-            cardDto.setExplanation(null);
-        }
-
-
         return cardDto;
     }
 }
