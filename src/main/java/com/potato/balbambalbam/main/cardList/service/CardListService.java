@@ -49,10 +49,13 @@ public class CardListService {
         List<CustomCard> customCardList = customCardRepository.findAllByUserId(userId);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
-        customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
+        customCardList.forEach(customCard -> {
+                int highestScore = (customCard.getHighestScore() == null) ? 0 : customCard.getHighestScore();
+                cardDtoList.add(new ResponseCardDto
                 (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
-                        customCard.getIsBookmarked(), false, customCard.getHighestScore(),
-                        null, null )));
+                        customCard.getIsBookmarked(), false, highestScore,
+                        null, null ));
+        });
 
         return cardDtoList;
     }
