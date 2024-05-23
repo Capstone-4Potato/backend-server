@@ -1,13 +1,15 @@
-/*
 package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
+import com.potato.balbambalbam.exception.ParameterNotFoundException;
+import com.potato.balbambalbam.exception.ResponseNotFoundException;
+import com.potato.balbambalbam.exception.TokenExpiredException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 
 @RestController
+@Slf4j
 public class ReissueController {
 
     private final JWTUtil jwtUtil;
@@ -32,33 +35,23 @@ public class ReissueController {
         String refresh = request.getHeader("refresh");
 
         if (refresh == null) {
-            return new ResponseEntity<>("refresh 토큰이 없습니다.", HttpStatus.NOT_FOUND); //404
+            throw new ResponseNotFoundException("refresh 토큰이 없습니다."); // 404
         }
 
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>("refresh 토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED); //401
-        }
-
-        String category = jwtUtil.getCategory(refresh);
-        if (!category.equals("refresh")) {
-            return new ResponseEntity<>("refresh 토큰이 아닙니다.", HttpStatus.BAD_REQUEST); //400
-        }
-
-        Boolean isExist = refreshRepository.existsByRefresh(refresh);
-        if (!isExist) {
-            return new ResponseEntity<>("refresh 토큰이 데이터베이스에 없습니다.", HttpStatus.REQUEST_TIMEOUT); //408
+            refreshRepository.deleteByRefresh(refresh);
+            log.info("refresh 토큰이 만료되었습니다.");
+            throw new TokenExpiredException("refresh 토큰이 만료되었습니다."); // 401
         }
 
         String socialId = jwtUtil.getSocialId(refresh);
         String role = jwtUtil.getRole(refresh);
 
-        String newAccess = jwtUtil.createJwt("access", socialId, role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", socialId, role, 7200000L);
         String newRefresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
 
-        System.out.println("New access : " + newAccess);
-        System.out.println("New Refresh : " + newRefresh);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshRepository.deleteByRefresh(refresh);
@@ -82,4 +75,3 @@ public class ReissueController {
         refreshRepository.save(refreshEntity);
     }
 }
-*/

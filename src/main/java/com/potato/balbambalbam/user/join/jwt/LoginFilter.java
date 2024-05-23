@@ -1,12 +1,14 @@
 package com.potato.balbambalbam.user.join.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,8 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
+@Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -28,7 +32,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RefreshRepository refreshRepository;
     private final ObjectMapper objectMapper;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository,ObjectMapper objectMapper) {
+    public LoginFilter(AuthenticationManager authenticationManager,
+                       JWTUtil jwtUtil,
+                       RefreshRepository refreshRepository,
+                       ObjectMapper objectMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
@@ -36,7 +43,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response) throws AuthenticationException {
+
         String socialId = request.getParameter("socialId");
 
         if (socialId == null) {
@@ -48,7 +57,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authentication) throws IOException {
+
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String socialId = customUserDetails.getUsername();
 
@@ -58,30 +71,46 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", socialId, role, 7200000L); // 2시간
-        // String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); //24시간
+        String access = jwtUtil.createJwt("access", socialId, role, 7200000L); // 7200000L 2시간
+        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); // 86400000L 24시간
 
         response.setHeader("access", access);
-        //response.setHeader("refresh", refresh);
+        response.setHeader("refresh", refresh);
+        addRefreshEntity(socialId, refresh, 86400000L);
 
+        log.info("로그인이 완료되었습니다.");
         response.setContentType("text/plain; charset=UTF-8");
         response.getWriter().print("로그인이 완료되었습니다.");
+    }
 
-        System.out.println("로그인이 완료되었습니다.");
+    private void addRefreshEntity(String socialId, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        Refresh refreshEntity = new Refresh();
+        refreshEntity.setSocialId(socialId);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
+
+        refreshRepository.save(refreshEntity);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+
+        log.info("로그인에 실패하였습니다.");
+
         if (failed instanceof UsernameNotFoundException) {
-            sendError(response, HttpServletResponse.SC_NOT_FOUND, "UsernameNotFoundException", "존재하지 않은 사용자 아이디입니다.");
+            sendError(response, HttpServletResponse.SC_NOT_FOUND, "UsernameNotFoundException", "존재하지 않은 사용자 아이디입니다."); // 404
         } else if (failed instanceof AuthenticationServiceException) {
-            sendError(response, HttpServletResponse.SC_NOT_FOUND, "AuthenticationServiceException", "socialId가 없습니다.");
+            sendError(response, HttpServletResponse.SC_NOT_FOUND, "AuthenticationServiceException", "socialId가 없습니다."); // 404
         } else {
-            sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "AuthenticationException", "서버 오류가 발생했습니다.");
+            sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "AuthenticationException", "서버 오류가 발생했습니다."); // 500
         }
     }
 
     private void sendError(HttpServletResponse response, int statusCode, String exceptionName, String message) throws IOException {
+
         ExceptionDto exceptionDto = new ExceptionDto(statusCode, exceptionName, message);
         response.setStatus(statusCode);
         response.setContentType("application/json; charset=UTF-8");
