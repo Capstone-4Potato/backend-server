@@ -43,7 +43,7 @@ public class CustomCardController {
     @Operation(summary = "customCard 삭제", description = "원하는 custom card를 삭제한다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드 삭제 완료"),
-            @ApiResponse(responseCode = "400", description = "ERROR : 카드 삭제 불가(10개 이상 or 한국어 X, 35자 이상)", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            @ApiResponse(responseCode = "400", description = "ERROR : 카드 삭제 불가", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
     public ResponseEntity deleteCustomCard(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) throws CardDeleteException {
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
