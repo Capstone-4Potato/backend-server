@@ -12,7 +12,7 @@ import java.util.Map;
 @Getter @Setter
 @ToString
 public class UserFeedbackResponseDto {
-
+    private Long cardId;
     private UserAudio userAudio;
     private Integer userScore;
     private Map<Long, RecommendCardInfo> recommendCard;

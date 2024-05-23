@@ -3,6 +3,7 @@ package com.potato.balbambalbam.review.service;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
+import com.potato.balbambalbam.data.entity.PronunciationPicture;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
 import com.potato.balbambalbam.review.dto.CardDto;
@@ -10,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class ReviewService {
     private final CardScoreRepository cardScoreRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
+    private final PronunciationPictureRepository pronunciationPictureRepository;
 
     public List<CardDto> getCardsByCategory(String category, String subcategory,Long userId){
         Long requestCategory = getSubCategoryId(category, subcategory);
@@ -47,6 +47,16 @@ public class ReviewService {
         cardList.stream().forEach(card -> {
             if(isReviewCard(card, userId, categoryId)){
                 cardDtoList.add(convertCardToDto(card, userId));
+            }
+        });
+
+        Collections.sort(cardDtoList, new Comparator<CardDto>() {
+            @Override
+            public int compare(CardDto o1, CardDto o2) {
+                if(o1.getCardScore()==o2.getCardScore()){
+                    return (int) (o1.getId() - o2.getId());
+                }
+                return o1.getCardScore() - o2.getCardScore();
             }
         });
 
@@ -87,8 +97,6 @@ public class ReviewService {
         cardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
         cardDto.setPronunciation(card.getPronunciation());
         cardDto.setEngPronunciation(card.getEngPronunciation());
-
-        log.info(card.getEngPronunciation());
 
         return cardDto;
     }

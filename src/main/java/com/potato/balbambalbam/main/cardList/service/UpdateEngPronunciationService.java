@@ -33,7 +33,6 @@ public class UpdateEngPronunciationService {
         if(card.getEngPronunciation() != null){
             return false;
         }
-
         return true;
     }
 }

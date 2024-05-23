@@ -8,9 +8,11 @@ import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class CardListService {
     private final CardScoreRepository cardScoreRepository;
     private final CustomCardRepository customCardRepository;
     private final UserWeakSoundRepository userWeakSoundRepository;
+    private final PronunciationPictureRepository pronunciationPictureRepository;
+    private final BulkRepository bulkRepository;
 
     /**
      * controller getCardList 요청 처리
@@ -45,8 +49,13 @@ public class CardListService {
         List<CustomCard> customCardList = customCardRepository.findAllByUserId(userId);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
-        customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
-                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
+        customCardList.forEach(customCard -> {
+                int highestScore = (customCard.getHighestScore() == null) ? 0 : customCard.getHighestScore();
+                cardDtoList.add(new ResponseCardDto
+                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
+                        customCard.getIsBookmarked(), false, highestScore,
+                        null, null ));
+        });
 
         return cardDtoList;
     }
@@ -95,6 +104,25 @@ public class CardListService {
         responseCardDto.setPronunciation(card.getPronunciation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
 
+        //음절이라면 사진과 설명 제공
+        if(card.getCategoryId() <= 14){
+            Long phonemeId = null;
+            //모음인 경우
+            if(card.getCategoryId() <= 7){
+                phonemeId = card.getPhonemesMap().get(1);
+            }
+            //자음인 경우
+            else{
+                phonemeId = card.getPhonemesMap().get(0);
+            }
+            PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
+            responseCardDto.setPicture(pronunciationPicture.getPicture());
+            responseCardDto.setExplanation(pronunciationPicture.getExplanation());
+        }else{
+            responseCardDto.setPicture(null);
+            responseCardDto.setExplanation(null);
+        }
+
         return responseCardDto;
     }
 
@@ -119,7 +147,7 @@ public class CardListService {
     public String toggleCustomCardBookmark(Long cardId){
         CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
 
-        if(customCardRepository.existsById(cardId)){
+        if(customCard.getIsBookmarked()){
             customCard.setIsBookmarked(false);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 제거";
@@ -137,27 +165,31 @@ public class CardListService {
      */
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
-        cardWeakSoundRepository.deleteByUserId(userId);
+        bulkRepository.deleteAllByUserId(userId);
 
         List<Card> cardList = getCardListWithoutSentence();
+
         List<Long> phonemeList = getPhonemeList(userId);
 
+        List<CardWeakSound> cardWeakSoundList = new ArrayList<>();
         cardList.forEach(card -> {
             List<Long> phonemes = card.getPhonemesMap();
             if(!Collections.disjoint(phonemes, phonemeList)){
-                cardWeakSoundRepository.save(new CardWeakSound(userId ,card.getId()));
+                cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
             }
         });
+        bulkRepository.saveAll(cardWeakSoundList);
 
         return "카드 취약음 갱신 성공";
     }
 
     protected List<Card> getCardListWithoutSentence(){
-        List<Card> cardList = new ArrayList<>();
-
-        for(int i = 5; i <= 31; i++){
-            cardList.addAll(cardRepository.findAllByCategoryId(Long.valueOf(i)));
-        }
+        List<Long> categoryIds = Arrays.asList(
+                5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L,
+                14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L,
+                23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L
+        );
+        List<Card> cardList = cardRepository.findByCategoryIdIn(categoryIds);
 
         return cardList;
     }

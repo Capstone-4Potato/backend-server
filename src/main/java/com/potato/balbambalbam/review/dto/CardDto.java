@@ -18,5 +18,4 @@ public class CardDto {
     private boolean isBookmark;
     private boolean isWeakCard;
     private int cardScore;
-
 }

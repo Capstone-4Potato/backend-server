@@ -1,11 +1,11 @@
 package com.potato.balbambalbam;
 
-import com.potato.balbambalbam.main.cardList.service.UpdateEngPronunciationService;
-import com.potato.balbambalbam.main.cardList.service.UpdateImageService;
-import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+        import com.potato.balbambalbam.main.cardList.service.UpdateEngPronunciationService;
+        import com.potato.balbambalbam.main.cardList.service.UpdateImageService;
+        import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
+        import lombok.RequiredArgsConstructor;
+        import org.springframework.boot.CommandLineRunner;
+        import org.springframework.stereotype.Component;
 
 /**
  * SpringApplication.run() 되기 전에 딱 한번 실행되는 class
@@ -21,8 +21,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
     private final UpdateImageService updateImageService;
     @Override
     public void run(String... args) throws Exception {
-//        updatePhonemeService.updateCardPhonemeColumn();
-//        updateEngPronunciationService.updateEngPronunciation();
-//        updateImageService.saveImage();
+        updatePhonemeService.updateCardPhonemeColumn();
+        updateEngPronunciationService.updateEngPronunciation();
+        updateImageService.saveImage();
     }
 }
