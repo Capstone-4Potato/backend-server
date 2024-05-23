@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +47,16 @@ public class ReviewService {
         cardList.stream().forEach(card -> {
             if(isReviewCard(card, userId, categoryId)){
                 cardDtoList.add(convertCardToDto(card, userId));
+            }
+        });
+
+        Collections.sort(cardDtoList, new Comparator<CardDto>() {
+            @Override
+            public int compare(CardDto o1, CardDto o2) {
+                if(o1.getCardScore()==o2.getCardScore()){
+                    return (int) (o1.getId() - o2.getId());
+                }
+                return o1.getCardScore() - o2.getCardScore();
             }
         });
 

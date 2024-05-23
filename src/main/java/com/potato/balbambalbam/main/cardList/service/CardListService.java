@@ -147,7 +147,7 @@ public class CardListService {
     public String toggleCustomCardBookmark(Long cardId){
         CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
 
-        if(customCardRepository.existsById(cardId)){
+        if(customCard.getIsBookmarked()){
             customCard.setIsBookmarked(false);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 제거";
