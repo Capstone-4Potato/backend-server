@@ -30,7 +30,7 @@ public class CardInfoService {
     }
 
     public CardInfoResponseDto getCustomCardInfo(Long userId, Long cardId) {
-        return createCardVoice(getAiTtsRequestDto(userId, getCustomCardText(cardId)));
+        return createCardVoice(getAiTtsRequestDto(userId, getCustomCardText(cardId, userId)));
 
     }
 
@@ -45,8 +45,8 @@ public class CardInfoService {
     /**
      * 커스텀 카드 text 추출
      */
-    protected String getCustomCardText (Long cardId){
-        CustomCard card = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
+    protected String getCustomCardText (Long cardId, Long userId){
+        CustomCard card = customCardRepository.findCustomCardByIdAndUserId(cardId, userId).orElseThrow(() -> new CardNotFoundException("잘못된 URL 요청입니다"));
         return card.getText();
     }
 

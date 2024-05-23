@@ -38,7 +38,7 @@ public class AiPronunciationService {
                 .onStatus(HttpStatus.INTERNAL_SERVER_ERROR::equals,
                         response-> response.bodyToMono(String.class).map(AiGenerationFailException::new))
                 .bodyToMono(AiKorPronunciationResponseDto.class)
-                .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
+                .timeout(Duration.ofSeconds(5)) //2초 안에 응답 오지 않으면 TimeoutException 발생
                 .block();
 
         return responseDto;
@@ -58,7 +58,7 @@ public class AiPronunciationService {
                 .onStatus(HttpStatus.INTERNAL_SERVER_ERROR::equals,
                         response-> response.bodyToMono(String.class).map(AiGenerationFailException::new))
                 .bodyToMono(AiEngPronunciationResponseDto.class)
-                .timeout(Duration.ofSeconds(2)) //2초 안에 응답 오지 않으면 TimeoutException 발생
+                .timeout(Duration.ofSeconds(5)) //2초 안에 응답 오지 않으면 TimeoutException 발생
                 .block();
 
         return responseDto;

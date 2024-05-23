@@ -58,9 +58,11 @@ public class CardFeedbackController {
             }
     )
     public ResponseEntity<Object> postCustomUserFeedback(@PathVariable("cardId") Long cardId,
-                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto)  {
+                                                   @Validated @RequestBody UserFeedbackRequestDto userFeedbackRequestDto,
+                                                         @RequestHeader("access") String access)  {
+        Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
 
-        UserFeedbackResponseDto userFeedbackResponseDto = customCardFeedbackService.postUserFeedback(userFeedbackRequestDto, cardId);
+        UserFeedbackResponseDto userFeedbackResponseDto = customCardFeedbackService.postUserFeedback(userFeedbackRequestDto, cardId, userId);
 
         return ResponseEntity.ok().body(userFeedbackResponseDto);
     }

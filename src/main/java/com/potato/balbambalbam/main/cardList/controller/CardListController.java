@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "CardList API", description = "카테고리에 따른 카드리스트를 제공하고, 북마크를 toggle한다")
 public class CardListController {
     private final CardListService cardListService;
@@ -43,6 +45,7 @@ public class CardListController {
         CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
         return ResponseEntity.ok().body(response);
+
     }
 
     @GetMapping ("/cards/custom")
@@ -51,9 +54,7 @@ public class CardListController {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     })
-    public ResponseEntity<CardListResponseDto<List<ResponseCardDto>>> getCustomCardList(@RequestParam("category") String category,
-                                                                                        @RequestParam("subcategory") String subcategory,
-                                                                                        @RequestHeader("access") String access){
+    public ResponseEntity<CardListResponseDto<List<ResponseCardDto>>> getCustomCardList(@RequestHeader("access") String access){
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
 
         List<ResponseCardDto> cardDtoList = cardListService.getCustomCards(userId);

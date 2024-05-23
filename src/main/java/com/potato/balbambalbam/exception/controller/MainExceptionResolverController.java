@@ -71,7 +71,7 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         String className = extractClassName(ex.getClass().toString());
         String exMessage = ex.getMessage();
 
-        log.info("[ERROR] ["+ className + "]:" + exMessage);
+        log.error("[ERROR] [{}]: {}" ,className, exMessage);
 
         return ResponseEntity.status(httpStatus).body(new ExceptionDto(httpStatus.value(), className, exMessage));
     }

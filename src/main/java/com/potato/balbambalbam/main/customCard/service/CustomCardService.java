@@ -40,8 +40,9 @@ public class CustomCardService {
         return customCardResponse;
     }
 
-    public boolean deleteCustomCard(Long cardId){
-        CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다"));
+    public boolean deleteCustomCard(Long userId, Long cardId){
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자가 존재하지 않습니다"));
+        CustomCard customCard = customCardRepository.findCustomCardByIdAndUserId(cardId, userId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다"));
 
         customCardRepository.delete(customCard);
 
@@ -59,7 +60,7 @@ public class CustomCardService {
         String korPronunciation = aiPronunciationService.getKorPronunciation(text).getKorPronunciation();
         String engPronunciation = aiPronunciationService.getEngPronunciation(text).getEngPronunciation();
         customCard.setPronunciation(korPronunciation);
-        customCard.setPronunciation(engPronunciation);
+        customCard.setEngPronunciation(engPronunciation);
         customCard.setUserId(userId);
         customCard.setIsBookmarked(false);
 
