@@ -10,6 +10,7 @@ import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.weaksoundtest.dto.UserWeakSoundDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RestController
+@Slf4j
 public class PhonemeController {
 
     private final UserWeakSoundRepository userWeakSoundRepository;
@@ -54,7 +56,6 @@ public class PhonemeController {
             WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
 
             if(weakSoundTestStatus == null){
-                System.out.println("user id " + userId + " 의 취약음 테스트가 필요합니다.");
                 throw new ResponseNotFoundException("취약음 테스트가 필요합니다.");
             }
 
@@ -73,7 +74,6 @@ public class PhonemeController {
             List<UserWeakSound> weakPhonemes = userWeakSoundRepository.findAllByUserId(userId);
 
             if (weakPhonemes == null || weakPhonemes.isEmpty()) {
-                System.out.println("user id " + userId + " 의 취약음이 없습니다.");
                 throw new ResponseNotFoundException("취약음이 없습니다."); // 404
             }
 
@@ -120,7 +120,6 @@ public class PhonemeController {
             if (userWeakSounds != null && !userWeakSounds.isEmpty()) {
                 userWeakSoundRepository.deleteAll(userWeakSounds);
             } else {
-                System.out.println("user id " + userId + " 의 취약음이 없습니다.");
                 throw new ResponseNotFoundException("취약음이 없습니다."); // 404
             }
 
@@ -132,7 +131,6 @@ public class PhonemeController {
             WeakSoundTestStatus weakSoundTestStatus = weakSoundTestSatusRepositoy.findByUserId(userId);
             weakSoundTestSatusRepositoy.delete(weakSoundTestStatus);
         }
-        System.out.println("user id " + userId + " 의 취약음 데이터가 삭제되었습니다.");
         return ResponseEntity.ok("사용자의 취약음 데이터가 삭제되었습니다."); //200
     }
 
