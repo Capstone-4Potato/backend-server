@@ -42,14 +42,7 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-            sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "ExpiredJwtException", "토큰이 만료되었습니다.");
-            return;
-        }
-
-        String category = jwtUtil.getCategory(accessToken);
-
-        if (!category.equals("access")) {
-            sendError(response, HttpServletResponse.SC_BAD_REQUEST, "InvalidTokenException", "access 토큰이 아닙니다.");
+            sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "ExpiredJwtException", "access 토큰이 만료되었습니다."); //401
             return;
         }
 
