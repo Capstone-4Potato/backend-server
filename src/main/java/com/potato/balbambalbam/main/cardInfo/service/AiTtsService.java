@@ -22,7 +22,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Slf4j
 public class AiTtsService {
-    WebClient webClient = WebClient.builder().build();
+    WebClient webClient = WebClient.builder().codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1 * 1024 * 1024)).build();
     @Value("${ai.service.url}")
     private String AI_URL;
     public AiTtsResponseDto getTtsVoice(AiTtsRequestDto aiTtsRequestDto) {

@@ -49,10 +49,13 @@ public class CardListService {
         List<CustomCard> customCardList = customCardRepository.findAllByUserId(userId);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
-        customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
+        customCardList.forEach(customCard -> {
+                int highestScore = (customCard.getHighestScore() == null) ? 0 : customCard.getHighestScore();
+                cardDtoList.add(new ResponseCardDto
                 (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
-                        customCard.getIsBookmarked(), false, customCard.getHighestScore(),
-                        null, null )));
+                        customCard.getIsBookmarked(), false, highestScore,
+                        null, null ));
+        });
 
         return cardDtoList;
     }
@@ -144,7 +147,7 @@ public class CardListService {
     public String toggleCustomCardBookmark(Long cardId){
         CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
 
-        if(customCardRepository.existsById(cardId)){
+        if(customCard.getIsBookmarked()){
             customCard.setIsBookmarked(false);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 제거";
@@ -162,23 +165,12 @@ public class CardListService {
      */
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
-        long startTime = System.currentTimeMillis();
         bulkRepository.deleteAllByUserId(userId);
-        //cardWeakSoundRepository.deleteByUserId(userId);
-        long stopTime = System.currentTimeMillis();
-        log.info("[deleteByUserId] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<Card> cardList = getCardListWithoutSentence();
-        stopTime = System.currentTimeMillis();
-        log.info("[getAllCardList] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<Long> phonemeList = getPhonemeList(userId);
-        stopTime = System.currentTimeMillis();
-        log.info("[getPhonemeList] : " + (stopTime - startTime) + "ms");
 
-        startTime = System.currentTimeMillis();
         List<CardWeakSound> cardWeakSoundList = new ArrayList<>();
         cardList.forEach(card -> {
             List<Long> phonemes = card.getPhonemesMap();
@@ -186,13 +178,8 @@ public class CardListService {
                 cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
             }
         });
-        stopTime = System.currentTimeMillis();
-        log.info("[updateCardWeakList] : " + (stopTime - startTime) + "ms");
-
-        startTime = System.currentTimeMillis();
         bulkRepository.saveAll(cardWeakSoundList);
-        stopTime = System.currentTimeMillis();
-        log.info("[saveAll] : " + (stopTime - startTime) + "ms");
+
         return "카드 취약음 갱신 성공";
     }
 
