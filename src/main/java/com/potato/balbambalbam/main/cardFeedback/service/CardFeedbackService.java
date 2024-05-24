@@ -112,7 +112,6 @@ public class CardFeedbackService {
             recommendCard.put(-100L, recommendCardInfo);
             return recommendCard;
         }
-
         //2. 음절 문장인데 100점이 아닌 경우
         if(categoryId < 15 || categoryId > 31) {
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
@@ -120,7 +119,14 @@ public class CardFeedbackService {
             return recommendCard;
         }
 
-        //3. 단어 + 100점이 아닌 경우
+        //3. 100점은 아닌데 추천학습 단어가 없는 경우(단어)
+        if(aiFeedbackResponseDto.getRecommendedPronunciations().get(0).equals("-1")){
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("drop the extra sound");
+            recommendCard.put(-7L, recommendCardInfo);
+            return recommendCard;
+        }
+
+        //4. 단어 + 100점이 아닌 경우
         return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
 
     }
