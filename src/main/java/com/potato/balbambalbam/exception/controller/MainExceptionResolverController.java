@@ -56,6 +56,11 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST); //400
     }
 
+    @ExceptionHandler({TokenExpiredException.class})
+    public ResponseEntity<ExceptionDto> unauthorizedExceptionHandler(Exception ex) {
+        return exceptionHandler(ex, HttpStatus.UNAUTHORIZED); //401
+    }
+
     /**
      * 에러 메서드 처리
      * @param ex
