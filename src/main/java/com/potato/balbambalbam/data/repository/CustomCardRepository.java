@@ -18,6 +18,6 @@ public interface CustomCardRepository extends JpaRepository<CustomCard, Long> {
 
     @Override
     boolean existsById(Long aLong);
-
     void deleteUserById(Long userId);
+    boolean existsByUserId(Long userId);
 }
