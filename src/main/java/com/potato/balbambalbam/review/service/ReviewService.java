@@ -3,7 +3,6 @@ package com.potato.balbambalbam.review.service;
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
-import com.potato.balbambalbam.data.entity.PronunciationPicture;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
 import com.potato.balbambalbam.review.dto.CardDto;
@@ -22,7 +21,6 @@ public class ReviewService {
     private final CardScoreRepository cardScoreRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
-    private final PronunciationPictureRepository pronunciationPictureRepository;
 
     public List<CardDto> getCardsByCategory(String category, String subcategory,Long userId){
         Long requestCategory = getSubCategoryId(category, subcategory);
@@ -50,14 +48,11 @@ public class ReviewService {
             }
         });
 
-        Collections.sort(cardDtoList, new Comparator<CardDto>() {
-            @Override
-            public int compare(CardDto o1, CardDto o2) {
-                if(o1.getCardScore()==o2.getCardScore()){
-                    return (int) (o1.getId() - o2.getId());
-                }
-                return o1.getCardScore() - o2.getCardScore();
+        Collections.sort(cardDtoList, (o1, o2) -> {
+            if(o1.getCardScore()==o2.getCardScore()){
+                return (int) (o1.getId() - o2.getId());
             }
+            return o1.getCardScore() - o2.getCardScore();
         });
 
         return cardDtoList;
@@ -71,15 +66,9 @@ public class ReviewService {
         }
         int highestScore = cardScore.get().getHighestScore();
 
-        //학습한 경우
-        if(categoryId <= 14 && categoryId >= 5){//음절인 경우 100점 미만은 복습카드 포함
-            if(highestScore < 100){
-                return true;
-            }
-        }else{//단어, 문장인 경우 100점 미만은 복습카드 포함
-            if(highestScore < 80){
-                return true;
-            }
+        //학습한 경우 -> 100점 아니면 모두 복습카드로 포함
+        if(highestScore < 100){
+            return true;
         }
 
         return false;
