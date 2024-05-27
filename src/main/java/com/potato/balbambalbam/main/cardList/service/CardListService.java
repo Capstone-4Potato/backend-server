@@ -21,16 +21,14 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class CardListService {
-    //TODO : service 분리 (list 제공 (getCardsByCategory)/ list update시 사용(북마크랑 취약음 update))
     private final CategoryRepository categoryRepository;
     private final CardRepository cardRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardScoreRepository cardScoreRepository;
     private final CustomCardRepository customCardRepository;
-    private final UserWeakSoundRepository userWeakSoundRepository;
     private final PronunciationPictureRepository pronunciationPictureRepository;
-    private final BulkRepository bulkRepository;
+
 
     /**
      * controller getCardList 요청 처리
@@ -156,52 +154,5 @@ public class CardListService {
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 추가";
         }
-    }
-
-    /**
-     * 취약음 갱신 시 user weaksound table update
-     * @param userId
-     * @return
-     */
-    public String updateCardWeakSound(Long userId){
-        //card weaksound 테이블 해당 userId 행 전부 삭제
-        bulkRepository.deleteAllByUserId(userId);
-
-        List<Card> cardList = getCardListWithoutSentence();
-
-        List<Long> phonemeList = getPhonemeList(userId);
-
-        List<CardWeakSound> cardWeakSoundList = new ArrayList<>();
-        cardList.forEach(card -> {
-            List<Long> phonemes = card.getPhonemesMap();
-            if(!Collections.disjoint(phonemes, phonemeList)){
-                cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
-            }
-        });
-        bulkRepository.saveAll(cardWeakSoundList);
-
-        return "카드 취약음 갱신 성공";
-    }
-
-    protected List<Card> getCardListWithoutSentence(){
-        List<Long> categoryIds = Arrays.asList(
-                5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L,
-                14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L,
-                23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L
-        );
-        List<Card> cardList = cardRepository.findByCategoryIdIn(categoryIds);
-
-        return cardList;
-    }
-
-    protected List<Long> getPhonemeList(Long userId){
-        List<UserWeakSound> userWeakSoundList = userWeakSoundRepository.findAllByUserId(userId);
-        List<Long> phonemeList = new ArrayList<>();
-
-        userWeakSoundList.forEach(userWeakSound -> {
-            phonemeList.add(userWeakSound.getUserPhoneme());
-        });
-
-        return phonemeList;
     }
 }
