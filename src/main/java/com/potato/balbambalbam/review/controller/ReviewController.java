@@ -30,7 +30,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/review")
-    @Operation(summary = "CardList 조회", description = "parameter에 맞는 카테고리의 복습 카드 리스트를 조회한다.")
+    @Operation(summary = "복습 CardList 조회", description = "parameter에 맞는 카테고리의 복습 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
