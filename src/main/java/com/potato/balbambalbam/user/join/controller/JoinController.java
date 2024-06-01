@@ -1,9 +1,6 @@
 package com.potato.balbambalbam.user.join.controller;
 
-import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.exception.InvalidUserNameException;
-import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.user.join.dto.DeleteUserDto;
 import com.potato.balbambalbam.user.join.dto.EditDto;
 import com.potato.balbambalbam.user.join.dto.JoinDto;
@@ -11,13 +8,10 @@ import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @ResponseBody
