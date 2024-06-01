@@ -6,6 +6,7 @@ import com.potato.balbambalbam.data.entity.UserWeakSound;
 import com.potato.balbambalbam.data.repository.BulkRepository;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,12 @@ public class CardWeakSoundService {
     private final BulkRepository bulkRepository;
     private final CardRepository cardRepository;
     private final UserWeakSoundRepository userWeakSoundRepository;
-
     /**
      * 취약음 갱신 시 user weaksound table update
      * @param userId
      * @return
      */
+    @Transactional
     public String updateCardWeakSound(Long userId){
         //card weaksound 테이블 해당 userId 행 전부 삭제
         bulkRepository.deleteAllByUserId(userId);

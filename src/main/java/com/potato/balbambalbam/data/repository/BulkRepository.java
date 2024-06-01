@@ -3,7 +3,6 @@ package com.potato.balbambalbam.data.repository;
 import com.potato.balbambalbam.data.entity.CardWeakSound;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,11 +15,10 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class BulkRepository {
-    @PersistenceContext
-    private final EntityManager entityManager;
     private final JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager em;
 
-    @Transactional
     public void saveAll(List<CardWeakSound> cardWeakSoundList){
         String sql = "INSERT INTO card_weaksound (user_id, card_id) VALUES (?, ?)";
 
@@ -32,17 +30,12 @@ public class BulkRepository {
                     ps.setLong(2, cardWeakSound.getCardId());
                 });
 
-        //영속성 초기화
-        entityManager.clear();
+        em.clear();
     }
 
-    @Transactional
     public void deleteAllByUserId(Long userId){
         String sql = "DELETE FROM card_weaksound WHERE user_id = ?";
 
-        int count = jdbcTemplate.update(sql, userId);
-
-        //영속성 초기화
-        entityManager.clear();
+        jdbcTemplate.update(sql, userId);
     }
 }
