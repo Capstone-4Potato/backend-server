@@ -29,7 +29,6 @@ public class CardListService {
     private final CustomCardRepository customCardRepository;
     private final PronunciationPictureRepository pronunciationPictureRepository;
 
-
     /**
      * controller getCardList 요청 처리
      * @param category
