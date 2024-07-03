@@ -57,7 +57,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         // refresh
-      /*  String refreshToken = request.getHeader("refresh");
+        /*String refreshToken = request.getHeader("refresh");
 
         if (refreshToken == null) {
             filterChain.doFilter(request, response);
@@ -69,7 +69,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (ExpiredJwtException e) {
             sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "ExpiredJwtException", "refresh 토큰이 만료되었습니다."); //401
             return;
-        }
+        }*/
 
         String access = request.getHeader("access");
         String socialID = extractSocialIdFromToken(access);
@@ -80,7 +80,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } else {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, "InvalidRefreshToken", "refresh 토큰이 데이터베이스에 없습니다."); // 400
             return;
-        }*/
+        }
 
         response.setContentType("text/plain; charset=UTF-8");
         response.getWriter().print("로그아웃이 완료되었습니다.");

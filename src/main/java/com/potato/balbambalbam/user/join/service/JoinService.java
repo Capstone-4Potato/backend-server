@@ -143,6 +143,9 @@ public class JoinService {
             weakSoundTestSatusRepositoy.deleteByUserId(userId);
         }
 
+        // Refresh 토큰 삭제
+        refreshRepository.deleteByUserId(userId);
+
         userRepository.deleteById(userId);
 
     }
