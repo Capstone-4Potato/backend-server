@@ -6,7 +6,6 @@ import com.potato.balbambalbam.user.join.dto.EditDto;
 import com.potato.balbambalbam.user.join.dto.JoinDto;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -73,12 +72,12 @@ public class JoinController {
         joinService.deleteUser(userId, name);
 
         // refresh
-        /*String socialID = extractSocialIdFromToken(access);
+        String socialID = extractSocialIdFromToken(access);
         String refresh = refreshRepository.findRefreshBySocialId(socialID);
 
         if (refresh != null && refreshRepository.existsByRefresh(refresh)) {
             refreshRepository.deleteByRefresh(refresh);
-        }*/
+        }
 
         log.info("{} : 회원 탈퇴가 완료되었습니다.", userId);
         return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
