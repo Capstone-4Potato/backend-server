@@ -77,17 +77,19 @@
 ## Stack
 
 ### Backend
-![spring Badge](https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![springBoot Badge](https://img.shields.io/badge/springBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![hibernate Badge](https://img.shields.io/badge/JPA-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
-![linux Badge](https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=white)
-![mysql Badge](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+- Language : `Java 21`
+- Framework : `Spring 6.1.5`, `SpringBoot 3.2.4`, `SpringSecurity`
+- OS : `Linux CentOS 7`, `bootJar 배포`
+- DB & Data : `MySQL 5.7.44`, `JPA`
+- ETC : `Swagger`, `OAuth`
 
 ### Front
-![flutter Badge](https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+- Dart
+- Flutter
 
 ### AI
-![pytorch Badge](https://img.shields.io/badge/pytorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+- Python
+- Pytorch
 
 &nbsp;
 
