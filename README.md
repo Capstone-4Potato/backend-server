@@ -1,6 +1,8 @@
 # BalbamBalbam - 외국인을 위한 한국어 발음 교정 시스템
 
 ![대표화면](https://github.com/Capstone-4Potato/.github/assets/108220648/61e54f7d-b165-4700-a1af-2b0d9d137cf0)
+![6 7 (1)](https://github.com/Capstone-4Potato/backend-server/assets/108220648/5c946e95-798f-4cb6-b25c-b2880357676c)
+
 
 ### 배포
 7월 Apple App Store에 출시 예정입니다.
