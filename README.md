@@ -106,5 +106,6 @@
 &nbsp;
 
 ### 시스템 구조도
-![img_6.png](image/img_6.png)
+![img.png](img.png)
+
 
