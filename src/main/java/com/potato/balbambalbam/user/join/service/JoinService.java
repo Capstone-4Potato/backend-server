@@ -67,10 +67,10 @@ public class JoinService {
         userRepository.save(data);
 
         //access 토큰 발급
-        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 7200000L); // 7200000L 120분
+        String access = jwtUtil.createJwt("access", socialId, data.getRole(), 7200000L); // 7200000L 120분, 120000L 2분
 
         // Refresh 토큰 발급
-        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); // 86400000L 24시간
+        String refresh = jwtUtil.createJwt("refresh", socialId, data.getRole(), 86400000L); // 86400000L 24시간, 300000L 5분
         addRefreshEntity(socialId, refresh, 86400000L);
 
         response.setHeader("access", access);

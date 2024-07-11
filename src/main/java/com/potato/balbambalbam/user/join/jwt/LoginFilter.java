@@ -76,6 +76,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.setHeader("access", access);
         response.setHeader("refresh", refresh);
+
+        //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
+        refreshRepository.deleteByRefresh(refresh);
         addRefreshEntity(socialId, refresh, 86400000L);
 
         log.info("로그인이 완료되었습니다.");
