@@ -42,6 +42,8 @@ public class ReissueController {
         } catch (ExpiredJwtException e) {
             refreshRepository.deleteByRefresh(refresh);
             log.info("refresh 토큰이 만료되었습니다.");
+            // Refresh 토큰 삭제
+            refreshRepository.deleteByRefresh(refresh);
             throw new TokenExpiredException("refresh 토큰이 만료되었습니다."); // 401
         }
 

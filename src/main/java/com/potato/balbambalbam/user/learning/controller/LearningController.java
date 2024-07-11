@@ -48,29 +48,29 @@ public class LearningController {
         int syllableCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 1 && card.getCategoryId() <= 14).count();
         int wordCount = (int) allCards.stream()
-                .filter(card -> card.getCategoryId() >= 15 && card.getCategoryId() <= 24).count();
+                .filter(card -> card.getCategoryId() >= 15 && card.getCategoryId() <= 31).count();
         int sentenceCount = (int) allCards.stream()
-                .filter(card -> card.getCategoryId() >= 25 && card.getCategoryId() <= 35).count();
+                .filter(card -> card.getCategoryId() >= 32 && card.getCategoryId() <= 35).count();
 
-        log.info("syllableCount : {}", syllableCount);
+        /*log.info("syllableCount : {}", syllableCount);
         log.info("wordCount : {}", wordCount);
-        log.info("sentenceCount : {}", sentenceCount);
+        log.info("sentenceCount : {}", sentenceCount);*/
 
         int syllableScoreCount = 0, wordScoreCount = 0, sentenceScoreCount = 0;
         for (CardScore score : scores) {
             Card card = cardDetails.get(score.getCardId());
             if (card.getCategoryId() >= 1 && card.getCategoryId() <= 14) {
                 syllableScoreCount++;
-            } else if (card.getCategoryId() >= 15 && card.getCategoryId() <= 24) {
+            } else if (card.getCategoryId() >= 15 && card.getCategoryId() <= 31) {
                 wordScoreCount++;
-            } else if (card.getCategoryId() >= 25 && card.getCategoryId() <= 35) {
+            } else if (card.getCategoryId() >= 32 && card.getCategoryId() <= 35) {
                 sentenceScoreCount++;
             }
         }
 
-        log.info("syllableScoreCount : {}", syllableScoreCount);
+        /*log.info("syllableScoreCount : {}", syllableScoreCount);
         log.info("wordScoreCount : {}", wordScoreCount);
-        log.info("sentenceScoreCount : {}", sentenceScoreCount);
+        log.info("sentenceScoreCount : {}", sentenceScoreCount);*/
 
         double syllableProgress = syllableCount > 0 ?
                 (double) syllableScoreCount / syllableCount * 100 : 0;
@@ -79,9 +79,9 @@ public class LearningController {
         double sentenceProgress = sentenceCount > 0 ?
                 (double) sentenceScoreCount / sentenceCount * 100 : 0;
 
-        log.info("syllableProgress : {}", syllableProgress);
+        /*log.info("syllableProgress : {}", syllableProgress);
         log.info("wordProgress : {}", wordProgress);
-        log.info("sentenceProgress : {}", sentenceProgress);
+        log.info("sentenceProgress : {}", sentenceProgress);*/
 
         return ResponseEntity.ok(Map.of(
                 "syllableProgress", syllableProgress,
