@@ -5,7 +5,7 @@
 
 
 ### 배포
-7월 Apple App Store에 출시 예정입니다.
+iOS : [앱 설치 바로가기](https://apps.apple.com/kr/app/%EB%B0%9C%EB%B0%A4%EB%B0%9C%EB%B0%A4-balbambalbam/id6505030399)
 
 &nbsp;
 ## 프로젝트
