@@ -6,7 +6,6 @@ import com.potato.balbambalbam.user.join.dto.EditDto;
 import com.potato.balbambalbam.user.join.dto.JoinDto;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

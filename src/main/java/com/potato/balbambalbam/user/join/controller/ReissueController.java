@@ -2,7 +2,6 @@ package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
