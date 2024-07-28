@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.user.join.dto.DeleteUserDto;
-import com.potato.balbambalbam.user.join.dto.EditDto;
-import com.potato.balbambalbam.user.join.dto.JoinDto;
+import com.potato.balbambalbam.user.join.jwt.dto.DeleteUserDto;
+import com.potato.balbambalbam.user.join.jwt.dto.EditDto;
+import com.potato.balbambalbam.user.join.jwt.dto.JoinDto;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -76,7 +76,7 @@ public class JoinController {
         String refresh = refreshRepository.findRefreshBySocialId(socialID);
 
         if (refresh != null && refreshRepository.existsByRefresh(refresh)) {
-            refreshRepository.deleteByRefresh(refresh);
+            refreshRepository.deleteByUserId(userId);
         }
 
         log.info("{} : 회원 탈퇴가 완료되었습니다.", userId);
