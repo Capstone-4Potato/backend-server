@@ -2,7 +2,6 @@ package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
@@ -43,6 +42,8 @@ public class ReissueController {
         } catch (ExpiredJwtException e) {
             refreshRepository.deleteByRefresh(refresh);
             log.info("refresh 토큰이 만료되었습니다.");
+            // Refresh 토큰 삭제
+            refreshRepository.deleteByRefresh(refresh);
             throw new TokenExpiredException("refresh 토큰이 만료되었습니다."); // 401
         }
 
@@ -54,7 +55,7 @@ public class ReissueController {
 
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshRepository.deleteByRefresh(refresh);
+        refreshRepository.deleteBySocialId(socialId);
         addRefreshEntity(socialId, newRefresh, 86400000L);
 
         response.setHeader("access", newAccess);
