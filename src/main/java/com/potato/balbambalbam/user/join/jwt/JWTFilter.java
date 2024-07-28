@@ -3,7 +3,7 @@ package com.potato.balbambalbam.user.join.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.exception.ExceptionDto;
-import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
+import com.potato.balbambalbam.user.join.jwt.dto.CustomUserDetails;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
