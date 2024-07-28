@@ -113,10 +113,10 @@ public class CardListService {
                 phonemeId = card.getPhonemesMap().get(0);
             }
             PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
-            responseCardDto.setPicture(pronunciationPicture.getPicture());
+            responseCardDto.setPictureUrl("/images/"+phonemeId+".png");
             responseCardDto.setExplanation(pronunciationPicture.getExplanation());
         }else{
-            responseCardDto.setPicture(null);
+            responseCardDto.setPictureUrl(null);
             responseCardDto.setExplanation(null);
         }
 
