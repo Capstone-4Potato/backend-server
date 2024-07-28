@@ -53,8 +53,10 @@ public class CardInfoController {
             }
     )
     public ResponseEntity<CardInfoResponseDto> postCustomCardInfo(@PathVariable("cardId") Long cardId, @RequestHeader("access") String access) {
+
         Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
         CardInfoResponseDto cardInfoResponseDto = cardInfoService.getCustomCardInfo(userId, cardId);
+
         return ResponseEntity.ok().body(cardInfoResponseDto);
     }
 }

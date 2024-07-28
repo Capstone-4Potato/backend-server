@@ -8,9 +8,12 @@ import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -18,15 +21,13 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class CardListService {
-    //TODO: userid를 동적으로 처리하도록 변경 필요
-    //TODO : service 분리 (list 제공 (getCardsByCategory)/ list update시 사용(북마크랑 취약음 update))
     private final CategoryRepository categoryRepository;
     private final CardRepository cardRepository;
     private final CardBookmarkRepository cardBookmarkRepository;
     private final CardWeakSoundRepository cardWeakSoundRepository;
     private final CardScoreRepository cardScoreRepository;
     private final CustomCardRepository customCardRepository;
-    private final UserWeakSoundRepository userWeakSoundRepository;
+    private final PronunciationPictureRepository pronunciationPictureRepository;
 
     /**
      * controller getCardList 요청 처리
@@ -45,8 +46,13 @@ public class CardListService {
         List<CustomCard> customCardList = customCardRepository.findAllByUserId(userId);
         List<ResponseCardDto> cardDtoList = new ArrayList<>();
 
-        customCardList.forEach(customCard -> cardDtoList.add(new ResponseCardDto
-                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(), customCard.getIsBookmarked(), false, customCard.getHighestScore())));
+        customCardList.forEach(customCard -> {
+                int highestScore = (customCard.getHighestScore() == null) ? 0 : customCard.getHighestScore();
+                cardDtoList.add(new ResponseCardDto
+                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
+                        customCard.getIsBookmarked(), false, highestScore,
+                        null, null ));
+        });
 
         return cardDtoList;
     }
@@ -67,8 +73,6 @@ public class CardListService {
 
     /**
      * 카테고리에 맞는 카드 DTO 리스트 반환
-     * @param id
-     * @return cardDtoList
      */
     protected List<ResponseCardDto> createCardDtoListForCategory(Long categoryId, Long userId){
         List<Card> cardList = cardRepository.findAllByCategoryId(categoryId);
@@ -97,7 +101,24 @@ public class CardListService {
         responseCardDto.setPronunciation(card.getPronunciation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
 
-        log.info(card.getEngPronunciation());
+        //음절이라면 사진과 설명 제공
+        if(card.getCategoryId() <= 14){
+            Long phonemeId = null;
+            //모음인 경우
+            if(card.getCategoryId() <= 7){
+                phonemeId = card.getPhonemesMap().get(1);
+            }
+            //자음인 경우
+            else{
+                phonemeId = card.getPhonemesMap().get(0);
+            }
+            PronunciationPicture pronunciationPicture = pronunciationPictureRepository.findByPhonemeId(phonemeId).orElseThrow(() -> new IllegalArgumentException("음절 설명 찾기에 실패했습니다"));
+            responseCardDto.setPicture(pronunciationPicture.getPicture());
+            responseCardDto.setExplanation(pronunciationPicture.getExplanation());
+        }else{
+            responseCardDto.setPicture(null);
+            responseCardDto.setExplanation(null);
+        }
 
         return responseCardDto;
     }
@@ -123,7 +144,7 @@ public class CardListService {
     public String toggleCustomCardBookmark(Long cardId){
         CustomCard customCard = customCardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("존재하지 않는 카드입니다."));
 
-        if(customCardRepository.existsById(cardId)){
+        if(customCard.getIsBookmarked()){
             customCard.setIsBookmarked(false);
             customCardRepository.save(customCard);
             return cardId + "번 카드 북마크 제거";
@@ -133,19 +154,4 @@ public class CardListService {
             return cardId + "번 카드 북마크 추가";
         }
     }
-
-    //TODO : 취약음 갱신 시 cardWeakSound Update(취약음 Test 완료 시 진행)
-//    public String updateCardWeakSound(Long userId){
-//        //UPDATE하는 부분
-//        List<Card> cardList = cardRepository.findAll();
-//
-//        cardList.forEach(card -> {
-//            List<Long> phonemes = card.getPhonemesMap();
-//            if(!Collections.disjoint(phonemes, userWeakSoundList)){
-//                cardWeakSoundRepository.save(new CardWeakSound(userId ,card.getId()));
-//            }
-//        });
-//
-//        return "카드 취약음 갱신 성공";
-//    }
 }

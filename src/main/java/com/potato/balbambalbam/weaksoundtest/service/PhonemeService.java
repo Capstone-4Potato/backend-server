@@ -4,12 +4,14 @@ import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.weaksoundtest.dto.WeakSoundTestDto;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PhonemeService {
 
     private final PhonemeRepository phonemeRepository;
@@ -43,7 +45,7 @@ public class PhonemeService {
         return temporaryStorage.getOrDefault(userId, new HashMap<>())
                 .entrySet().stream()
                 .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
-                .limit(5)
+                .limit(4)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 

@@ -11,5 +11,4 @@ import lombok.Setter;
 public class AiTtsResponseDto {
     private String correctAudio;
 
-
 }

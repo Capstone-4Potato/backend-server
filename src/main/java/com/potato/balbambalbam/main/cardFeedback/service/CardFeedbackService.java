@@ -38,17 +38,17 @@ public class CardFeedbackService {
     private final UpdatePhonemeService updatePhonemeService;
     private final CategoryRepository categoryRepository;
 
-    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) throws JsonProcessingException {
+    public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) {
         //인공지능서버와 통신
         AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
-        //app 피드백 생성
+        //점수 업데이트
         updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
 
         //학습카드 추천
         Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, cardId);
 
-        return setUserFeedbackResponseDto(aiFeedbackResponseDto, recommendCard);
+        return setUserFeedbackResponseDto(cardId, aiFeedbackResponseDto, recommendCard);
     }
 
     /**
@@ -58,7 +58,7 @@ public class CardFeedbackService {
      * @return
      * @throws JsonProcessingException
      */
-    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) throws JsonProcessingException {
+    protected AiFeedbackResponseDto getAiFeedbackResponseDto (UserFeedbackRequestDto aiFeedbackRequest, Long cardId) {
         AiFeedbackRequestDto aiFeedbackRequestDto = createAiFeedbackRequestDto(aiFeedbackRequest, cardId);
         AiFeedbackResponseDto aiFeedbackResponseDto = aiCardFeedbackService.postAiFeedback(aiFeedbackRequestDto);
 
@@ -112,7 +112,6 @@ public class CardFeedbackService {
             recommendCard.put(-100L, recommendCardInfo);
             return recommendCard;
         }
-
         //2. 음절 문장인데 100점이 아닌 경우
         if(categoryId < 15 || categoryId > 31) {
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
@@ -120,7 +119,14 @@ public class CardFeedbackService {
             return recommendCard;
         }
 
-        //3. 단어 + 100점이 아닌 경우
+        //3. 100점은 아닌데 추천학습 단어가 없는 경우(단어)
+        if(aiFeedbackResponseDto.getRecommendedPronunciations().get(0).equals("-1")){
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("drop the extra sound");
+            recommendCard.put(-7L, recommendCardInfo);
+            return recommendCard;
+        }
+
+        //4. 단어 + 100점이 아닌 경우
         return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
 
     }
@@ -200,7 +206,7 @@ public class CardFeedbackService {
      * @param recommendCard
      * @return
      */
-    protected UserFeedbackResponseDto setUserFeedbackResponseDto(AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
+    protected UserFeedbackResponseDto setUserFeedbackResponseDto(Long cardId, AiFeedbackResponseDto aiFeedback, Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard){
         //사용자 오디오 데이터 생성
         UserFeedbackResponseDto.UserAudio userAudio = new UserFeedbackResponseDto.UserAudio(aiFeedback.getUserText(), aiFeedback.getUserMistakenIndexes());
         //waveform 데이터 생성
@@ -208,6 +214,7 @@ public class CardFeedbackService {
 
         //객체 생성 및 설정
         UserFeedbackResponseDto userFeedbackResponseDto = new UserFeedbackResponseDto();
+        userFeedbackResponseDto.setCardId(cardId);
         userFeedbackResponseDto.setUserAudio(userAudio);
         userFeedbackResponseDto.setUserScore(aiFeedback.getUserAccuracy());
         userFeedbackResponseDto.setRecommendCard(recommendCard);
