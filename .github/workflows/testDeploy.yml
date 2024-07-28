@@ -1,10 +1,10 @@
 name : Deploy SpringBoot Application
 
 on :
-  push :
-    branches : ["main"]
-  pull_request :
-    branches : ["main"]  # 이 워크플로우는 develop main에 push / pullrequest될 때 trigger
+  # push :
+    # branches : ["main"]
+  # pull_request :
+    # branches : ["main"]  # 이 워크플로우는 develop main에 push / pullrequest될 때 trigger
 
 jobs:
   build-and-deploy:
