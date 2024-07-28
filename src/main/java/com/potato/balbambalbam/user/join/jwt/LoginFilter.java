@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ExceptionDto;
-import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
+import com.potato.balbambalbam.user.join.jwt.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -78,7 +78,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("refresh", refresh);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshRepository.deleteByRefresh(refresh);
+        refreshRepository.deleteBySocialId(socialId);
         addRefreshEntity(socialId, refresh, 86400000L);
 
         log.info("로그인이 완료되었습니다.");
