@@ -15,4 +15,5 @@ public class CardListResponseDto<T> {
         this.cardList = cardList;
         this.count = count;
     }
+
 }

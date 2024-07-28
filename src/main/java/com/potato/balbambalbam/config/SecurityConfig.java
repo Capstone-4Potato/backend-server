@@ -76,7 +76,7 @@ public class SecurityConfig {
 
         //로그아웃 필터 추가
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository,objectMapper), LogoutFilter.class);
 
         http
                 .sessionManagement((session) -> session

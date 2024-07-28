@@ -56,6 +56,11 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         return exceptionHandler(ex, HttpStatus.BAD_REQUEST); //400
     }
 
+    @ExceptionHandler({TokenExpiredException.class})
+    public ResponseEntity<ExceptionDto> unauthorizedExceptionHandler(Exception ex) {
+        return exceptionHandler(ex, HttpStatus.UNAUTHORIZED); //401
+    }
+
     /**
      * 에러 메서드 처리
      * @param ex
@@ -66,7 +71,7 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         String className = extractClassName(ex.getClass().toString());
         String exMessage = ex.getMessage();
 
-        log.info("[ERROR] ["+ className + "]:" + exMessage);
+        log.error("[ERROR] [{}]: {}" ,className, exMessage);
 
         return ResponseEntity.status(httpStatus).body(new ExceptionDto(httpStatus.value(), className, exMessage));
     }

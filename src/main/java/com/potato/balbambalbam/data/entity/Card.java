@@ -2,7 +2,6 @@ package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -44,4 +43,5 @@ public class Card {
     public void setEngPronunciation(String engPronunciation) {
         this.engPronunciation = engPronunciation;
     }
+
 }

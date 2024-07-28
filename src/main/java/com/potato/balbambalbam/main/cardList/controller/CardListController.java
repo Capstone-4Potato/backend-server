@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "CardList API", description = "카테고리에 따른 카드리스트를 제공하고, 북마크를 toggle한다")
 public class CardListController {
     private final CardListService cardListService;
-    private final UpdatePhonemeService updatePhonemeService;
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
@@ -43,23 +44,7 @@ public class CardListController {
         CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
 
         return ResponseEntity.ok().body(response);
-    }
 
-    @GetMapping ("/cards/custom")
-    @Operation(summary = "Custom CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    })
-    public ResponseEntity<CardListResponseDto<List<ResponseCardDto>>> getCustomCardList(@RequestParam("category") String category,
-                                                                                        @RequestParam("subcategory") String subcategory,
-                                                                                        @RequestHeader("access") String access){
-        Long userId = joinService.findUserBySocialId(jwtUtil.getSocialId(access)).getId();
-
-        List<ResponseCardDto> cardDtoList = cardListService.getCustomCards(userId);
-        CardListResponseDto<List<ResponseCardDto>> response = new CardListResponseDto<>(cardDtoList, cardDtoList.size());
-
-        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/cards/bookmark/{cardId}")
@@ -74,27 +59,4 @@ public class CardListController {
         String message = cardListService.toggleCardBookmark(Long.valueOf(cardId), userId);
         return ResponseEntity.ok().body(message);
     }
-
-    @GetMapping("/cards/custom/bookmark/{cardId}")
-    @Operation(summary = "Custom Card Bookmark 갱신", description = "해당 카드의 북마크 on / off")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK : 북마크 UPDATE(있으면 삭제 없으면 추가)", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카드", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    })
-    public ResponseEntity updateCustomCardBookmark(@PathVariable("cardId") Integer cardId){
-        String message = cardListService.toggleCustomCardBookmark(Long.valueOf(cardId));
-        return ResponseEntity.ok().body(message);
-    }
-
-    //TODO : 취약음 갱신 시 cardWeakSound Update Controller(취약음 Test 완료 시 진행)
-//    @PostMapping("/cards/weaksound")
-//    @Operation(summary = "Card WeakSound 갱신", description = "사용자 취약음 갱신 시 전체 카드에 대한 취약음 여부 갱신")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK : Card WeakSound Update 성공)", useReturnTypeSchema = true),
-//            @ApiResponse(responseCode = "400", description = "ERROR : Update 실패", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-//    })
-//    public ResponseEntity updateCardWeakSound(@RequestBody("updateWeaksoundList") List<String> updateWeakSounds){
-//        String message = cardListService.updateCardWeakSound(TEMPORARY_USER_ID);
-//        return ResponseEntity.ok().body(message);
-//    }
 }

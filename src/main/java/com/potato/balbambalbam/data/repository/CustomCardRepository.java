@@ -13,6 +13,11 @@ public interface CustomCardRepository extends JpaRepository<CustomCard, Long> {
     List<CustomCard> findAllByUserId(Long userId);
     @Override
     Optional<CustomCard> findById(Long cardId);
+
+    Optional<CustomCard> findCustomCardByIdAndUserId(Long cardId, Long userId);
+
     @Override
     boolean existsById(Long aLong);
+    void deleteUserById(Long userId);
+    boolean existsByUserId(Long userId);
 }

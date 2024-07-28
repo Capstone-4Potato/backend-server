@@ -5,6 +5,7 @@ import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.user.learning.service.LearningService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @ResponseBody
+@Slf4j
 public class LearningController {
 
     private final LearningService learningService;
@@ -50,9 +52,9 @@ public class LearningController {
         int sentenceCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 25 && card.getCategoryId() <= 35).count();
 
-        System.out.println("syllableCount : " + syllableCount);
-        System.out.println("wordCount : " + wordCount);
-        System.out.println("sentenceCount : " + sentenceCount);
+        log.info("syllableCount : {}", syllableCount);
+        log.info("wordCount : {}", wordCount);
+        log.info("sentenceCount : {}", sentenceCount);
 
         int syllableScoreCount = 0, wordScoreCount = 0, sentenceScoreCount = 0;
         for (CardScore score : scores) {
@@ -66,9 +68,9 @@ public class LearningController {
             }
         }
 
-        System.out.println("syllableScoreCount : " + syllableScoreCount);
-        System.out.println("wordScoreCount : " + wordScoreCount);
-        System.out.println("sentenceScoreCount : " + sentenceScoreCount);
+        log.info("syllableScoreCount : {}", syllableScoreCount);
+        log.info("wordScoreCount : {}", wordScoreCount);
+        log.info("sentenceScoreCount : {}", sentenceScoreCount);
 
         double syllableProgress = syllableCount > 0 ?
                 (double) syllableScoreCount / syllableCount * 100 : 0;
@@ -77,9 +79,9 @@ public class LearningController {
         double sentenceProgress = sentenceCount > 0 ?
                 (double) sentenceScoreCount / sentenceCount * 100 : 0;
 
-        System.out.println("syllableProgress : " + syllableProgress);
-        System.out.println("wordProgress : " + wordProgress);
-        System.out.println("sentenceProgress : " + sentenceProgress);
+        log.info("syllableProgress : {}", syllableProgress);
+        log.info("wordProgress : {}", wordProgress);
+        log.info("sentenceProgress : {}", sentenceProgress);
 
         return ResponseEntity.ok(Map.of(
                 "syllableProgress", syllableProgress,
