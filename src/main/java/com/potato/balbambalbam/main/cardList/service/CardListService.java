@@ -95,7 +95,7 @@ public class CardListService {
         responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
-        responseCardDto.setPronunciation(card.getPronunciation());
+        responseCardDto.setEngTranslation(card.getEngTranslation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
 
         //음절이라면 사진과 설명 제공
