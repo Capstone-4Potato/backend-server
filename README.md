@@ -1,4 +1,4 @@
-# BalbamBalbam - 외국인을 위한 한국어 발음 교정 시스템
+# BalbamBalbam - 외국인을 위한 한국어 발음 학습 시스템
 
 ![대표화면](https://github.com/Capstone-4Potato/.github/assets/108220648/61e54f7d-b165-4700-a1af-2b0d9d137cf0)
 
