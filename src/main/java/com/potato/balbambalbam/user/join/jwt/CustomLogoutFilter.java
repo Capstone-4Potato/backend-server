@@ -3,7 +3,6 @@ package com.potato.balbambalbam.user.join.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ExceptionDto;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

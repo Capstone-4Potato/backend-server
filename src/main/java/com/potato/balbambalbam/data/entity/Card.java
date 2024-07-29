@@ -27,6 +27,8 @@ public class Card {
     private List<Long> phonemesMap;
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
+    @Column(name = "eng_translation")
+    private String engTranslation;
 
     public Card(String text, String pronunciation, Long categoryId){
         this.text = text;
@@ -43,5 +45,7 @@ public class Card {
     public void setEngPronunciation(String engPronunciation) {
         this.engPronunciation = engPronunciation;
     }
-
+    public void setEngTranslation(String engTranslation) {
+        this.engTranslation = engTranslation;
+    }
 }

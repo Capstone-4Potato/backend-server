@@ -62,5 +62,11 @@ public class UserFeedbackResponseDto {
             this.category = null;
             this.subcategory = null;
         }
+
+        public RecommendCardInfo() {
+            this.text = null;
+            this.category = null;
+            this.subcategory = null;
+        }
     }
 }

@@ -106,14 +106,21 @@ public class CardFeedbackService {
         Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
         Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
 
-        //1. 100점인 경우 (음절, 단어, 문장)
+        //0. 음절인 경우
+        if(categoryId < 15){
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo();
+            recommendCard.put(0L, recommendCardInfo);
+            return recommendCard;
+        }
+
+        //1. 100점인 경우 (단어, 문장)
         if(aiFeedbackResponseDto.getUserAccuracy() == 100){
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("perfect");
             recommendCard.put(-100L, recommendCardInfo);
             return recommendCard;
         }
-        //2. 음절 문장인데 100점이 아닌 경우
-        if(categoryId < 15 || categoryId > 31) {
+        //2. 문장인데 100점이 아닌 경우
+        if(categoryId > 31) {
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
             recommendCard.put(-1L, recommendCardInfo);
             return recommendCard;

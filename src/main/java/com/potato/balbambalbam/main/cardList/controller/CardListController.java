@@ -4,7 +4,6 @@ import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.dto.CardListResponseDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.service.CardListService;
-import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;

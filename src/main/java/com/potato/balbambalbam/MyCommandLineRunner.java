@@ -1,6 +1,7 @@
 package com.potato.balbambalbam;
 
 import com.potato.balbambalbam.main.cardList.service.UpdateEngPronunciationService;
+import com.potato.balbambalbam.main.cardList.service.UpdateEngTranslationService;
 import com.potato.balbambalbam.main.cardList.service.UpdatePhonemeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -17,9 +18,12 @@ public class MyCommandLineRunner implements CommandLineRunner {
 
     private final UpdatePhonemeService updatePhonemeService;
     private final UpdateEngPronunciationService updateEngPronunciationService;
+
+    private final UpdateEngTranslationService updateEngTranslationService;
     @Override
     public void run(String... args) throws Exception {
         updatePhonemeService.updateCardPhonemeColumn();
         updateEngPronunciationService.updateEngPronunciation();
+        updateEngTranslationService.updateEngTranslation();
     }
 }
