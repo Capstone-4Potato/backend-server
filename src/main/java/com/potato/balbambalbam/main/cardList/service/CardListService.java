@@ -8,12 +8,9 @@ import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -98,7 +95,7 @@ public class CardListService {
         responseCardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         responseCardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
         responseCardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
-        responseCardDto.setPronunciation(card.getPronunciation());
+        responseCardDto.setEngTranslation(card.getEngTranslation());
         responseCardDto.setEngPronunciation(card.getEngPronunciation());
 
         //음절이라면 사진과 설명 제공
