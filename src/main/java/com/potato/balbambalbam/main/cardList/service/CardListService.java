@@ -46,7 +46,7 @@ public class CardListService {
         customCardList.forEach(customCard -> {
                 int highestScore = (customCard.getHighestScore() == null) ? 0 : customCard.getHighestScore();
                 cardDtoList.add(new ResponseCardDto
-                (customCard.getId(), customCard.getText(), customCard.getPronunciation(), customCard.getEngPronunciation(),
+                (customCard.getId(), customCard.getText(), customCard.getEngTranslation(), customCard.getEngPronunciation(),
                         customCard.getIsBookmarked(), false, highestScore,
                         null, null ));
         });
