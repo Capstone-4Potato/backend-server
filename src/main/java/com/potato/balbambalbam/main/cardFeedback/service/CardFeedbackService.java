@@ -182,7 +182,7 @@ public class CardFeedbackService {
                 Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
                 Category subCategoryData = categoryRepository.findById(categoryId).get();
                 Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
-                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("Initial consonant " + phoneme, categoryData.getName(), subCategoryData.getName());
+                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("final consonant " + phoneme, categoryData.getName(), subCategoryData.getName());
                 recommendCard.put(card.getId(), recommendCardInfo);
             }
         });
