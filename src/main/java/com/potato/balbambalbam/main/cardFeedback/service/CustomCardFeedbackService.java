@@ -57,8 +57,6 @@ public class CustomCardFeedbackService {
         aiFeedbackRequestDto.setCorrectAudio(userFeedbackRequestDto.getCorrectAudio());
         aiFeedbackRequestDto.setPronunciation(pronunciation);
 
-        log.info("[customcard Feedback] : {}", pronunciation);
-
         return aiFeedbackRequestDto;
     }
 

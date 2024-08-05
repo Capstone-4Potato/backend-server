@@ -37,7 +37,7 @@ public class CustomCardService {
         customCardResponse.setId(customCard.getId());
         customCardResponse.setText(customCard.getText());
         customCardResponse.setEngPronunciation(customCard.getEngPronunciation());
-        customCardResponse.setEngTranslation(aiEngTranslationService.getEngTranslation(customCard.getText()).getEngTranslation());
+        customCardResponse.setEngTranslation(customCard.getEngTranslation());
 
         return customCardResponse;
     }
@@ -63,6 +63,7 @@ public class CustomCardService {
         customCard.setEngPronunciation(engPronunciation);
         customCard.setUserId(userId);
         customCard.setIsBookmarked(false);
+        customCard.setEngTranslation(aiEngTranslationService.getEngTranslation(customCard.getText()).getEngTranslation());
 
         return customCardRepository.save(customCard);
     }

@@ -39,14 +39,18 @@ public class CardFeedbackService {
     private final CategoryRepository categoryRepository;
 
     public UserFeedbackResponseDto postUserFeedback(UserFeedbackRequestDto userFeedbackRequestDto, Long userId, Long cardId) {
+        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
         //인공지능서버와 통신
         AiFeedbackResponseDto aiFeedbackResponseDto = getAiFeedbackResponseDto(userFeedbackRequestDto, cardId);
 
         //점수 업데이트
-        updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
+        if(categoryId >= 15) {
+            updateScoreIfLarger(userId, cardId, aiFeedbackResponseDto.getUserAccuracy());
+        }
+
 
         //학습카드 추천
-        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, cardId);
+        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, categoryId);
 
         return setUserFeedbackResponseDto(cardId, aiFeedbackResponseDto, recommendCard);
     }
@@ -102,14 +106,13 @@ public class CardFeedbackService {
      * @param cardId
      * @return
      */
-    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long cardId){
-        Long categoryId = cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException("카드가 존재하지 않습니다")).getCategoryId();
+    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long categoryId){
         Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
 
         //0. 음절인 경우
         if(categoryId < 15){
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo();
-            recommendCard.put(0L, recommendCardInfo);
+            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
+            recommendCard.put(-1L, recommendCardInfo);
             return recommendCard;
         }
 
@@ -119,6 +122,7 @@ public class CardFeedbackService {
             recommendCard.put(-100L, recommendCardInfo);
             return recommendCard;
         }
+
         //2. 문장인데 100점이 아닌 경우
         if(categoryId > 31) {
             UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
