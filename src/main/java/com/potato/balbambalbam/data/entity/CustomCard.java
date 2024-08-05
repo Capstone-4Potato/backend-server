@@ -16,10 +16,10 @@ public class CustomCard {
     private Long id;
     @Column(name = "text")
     private String text;
-    @Column(name = "pronunciation")
-    private String pronunciation;
     @Column(name = "eng_pronunciation")
     private String engPronunciation;
+    @Column(name = "eng_translation")
+    private String engTranslation;
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "highest_score")

@@ -22,4 +22,6 @@ public class AiFeedbackResponseDto {
     private List<String> recommendedLastPronunciations;
     private List<String> recommendedPronunciations;
 
+
+
 }
