@@ -36,9 +36,8 @@ public class CustomCardService {
         CustomCardResponseDto customCardResponse = new CustomCardResponseDto();
         customCardResponse.setId(customCard.getId());
         customCardResponse.setText(customCard.getText());
-        customCardResponse.setPronunciation(customCard.getPronunciation());
         customCardResponse.setEngPronunciation(customCard.getEngPronunciation());
-        customCardResponse.setEngTranslation(aiEngTranslationService.getEngTranslation(customCard.getText()).getEngTranslation());
+        customCardResponse.setEngTranslation(customCard.getEngTranslation());
 
         return customCardResponse;
     }
@@ -60,12 +59,11 @@ public class CustomCardService {
     protected CustomCard createCustomCard (String text, Long userId){
         CustomCard customCard = new CustomCard();
         customCard.setText(text);
-        String korPronunciation = aiPronunciationService.getKorPronunciation(text).getKorPronunciation();
         String engPronunciation = aiPronunciationService.getEngPronunciation(text).getEngPronunciation();
-        customCard.setPronunciation(korPronunciation);
         customCard.setEngPronunciation(engPronunciation);
         customCard.setUserId(userId);
         customCard.setIsBookmarked(false);
+        customCard.setEngTranslation(aiEngTranslationService.getEngTranslation(customCard.getText()).getEngTranslation());
 
         return customCardRepository.save(customCard);
     }
