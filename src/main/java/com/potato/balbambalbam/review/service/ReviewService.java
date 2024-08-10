@@ -87,7 +87,7 @@ public class ReviewService {
         cardDto.setCardScore(cardScoreRepository.findByCardIdAndUserId(cardId, userId).map(CardScore::getHighestScore).orElse(0));  //사용자 점수가 없으면 0점
         cardDto.setWeakCard(cardWeakSoundRepository.existsByCardIdAndUserId(cardId, userId));
         cardDto.setBookmark(cardBookmarkRepository.existsByCardIdAndUserId(cardId, userId));
-        cardDto.setPronunciation(card.getPronunciation());
+        cardDto.setEngTranslation(card.getEngTranslation());
         cardDto.setEngPronunciation(card.getEngPronunciation());
 
         return cardDto;
