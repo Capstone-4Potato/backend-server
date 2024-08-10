@@ -13,7 +13,7 @@ public class CardDto {
 
     private Long id;
     private String text;
-    private String pronunciation;
+    private String engTranslation;
     private String engPronunciation;
     private boolean isBookmark;
     private boolean isWeakCard;
