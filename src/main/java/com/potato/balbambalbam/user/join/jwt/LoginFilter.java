@@ -72,14 +72,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 토큰 생성
         String access = jwtUtil.createJwt("access", socialId, role, 7200000L); // 7200000L 2시간
-        String refresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L); // 86400000L 24시간
+        String refresh = jwtUtil.createJwt("refresh", socialId, role, 864000000L); // 86400000L 24시간
 
         response.setHeader("access", access);
         response.setHeader("refresh", refresh);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshRepository.deleteBySocialId(socialId);
-        addRefreshEntity(socialId, refresh, 86400000L);
+        addRefreshEntity(socialId, refresh, 864000000L);
 
         log.info("로그인이 완료되었습니다.");
         response.setContentType("text/plain; charset=UTF-8");
