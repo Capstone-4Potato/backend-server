@@ -21,6 +21,6 @@ public class WeakSoundTest {
     @Column(name = "eng_pronunciation", nullable = false)
     private String engPronunciation;
 
-    @Column(name = "eng_translation")
+    @Column(name = "eng_translation", nullable = false)
     private String engTranslation;
 }
