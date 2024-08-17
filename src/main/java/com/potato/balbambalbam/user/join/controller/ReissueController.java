@@ -51,12 +51,12 @@ public class ReissueController {
         String role = jwtUtil.getRole(refresh);
 
         String newAccess = jwtUtil.createJwt("access", socialId, role, 7200000L);
-        String newRefresh = jwtUtil.createJwt("refresh", socialId, role, 86400000L);
+        String newRefresh = jwtUtil.createJwt("refresh", socialId, role, 864000000L);
 
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshRepository.deleteBySocialId(socialId);
-        addRefreshEntity(socialId, newRefresh, 86400000L);
+        addRefreshEntity(socialId, newRefresh, 864000000L);
 
         response.setHeader("access", newAccess);
         response.setHeader("refresh", newRefresh);
