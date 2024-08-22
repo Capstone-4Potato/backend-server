@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.user.join.jwt.dto;
+package com.potato.balbambalbam.user.join.dto;
 
 import com.potato.balbambalbam.data.entity.User;
 import org.springframework.security.core.GrantedAuthority;

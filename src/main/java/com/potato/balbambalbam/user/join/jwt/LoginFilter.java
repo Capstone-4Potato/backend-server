@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ExceptionDto;
-import com.potato.balbambalbam.user.join.jwt.dto.CustomUserDetails;
+import com.potato.balbambalbam.user.join.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

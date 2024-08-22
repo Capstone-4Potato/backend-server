@@ -4,7 +4,10 @@ import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
+import com.potato.balbambalbam.user.learning.dto.LearningResponseDto;
 import com.potato.balbambalbam.user.learning.service.LearningService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @Controller
 @ResponseBody
 @Slf4j
+@Tag(name = "LearningProgress API", description = "사용자의 학습 진척도(음절, 단어, 문장)를 백분율로 제공한다.")
 public class LearningController {
 
     private final LearningService learningService;
@@ -32,29 +36,27 @@ public class LearningController {
         this.joinService = joinService;
         this.jwtUtil = jwtUtil;
     }
-    private Long extractUserIdFromToken(String access) {
-        String socialId = jwtUtil.getSocialId(access);
-        return joinService.findUserBySocialId(socialId).getId();
+    private Long extractUserIdFromToken(String access) { // access 토큰으로부터 userId 추출하는 함수
+        String socialId = jwtUtil.getSocialId(access); 
+        return joinService.findUserBySocialId(socialId).getId(); 
     }
 
+    @Operation(summary = "사용자의 학습 진척도 조회", description = "사용자의 카테고리별 학습 진척도(%)를 제공한다.")
     @GetMapping("/learning/progress")
-    public ResponseEntity<?> getLearningProgress(@RequestHeader("access") String access){
+    public ResponseEntity<LearningResponseDto> getLearningProgress(@RequestHeader("access") String access){
         Long userId = extractUserIdFromToken(access);
 
-        List<CardScore> scores = learningService.findCardScoresByUserId(userId);
-        List<Card> allCards = learningService.findAllCards();
+        List<CardScore> scores = learningService.findCardScoresByUserId(userId); // 사용자 카드 중 점수를 받은 카드
+        List<Card> allCards = learningService.findAllCards(); // 전체 카드
         Map<Long, Card> cardDetails = allCards.stream().collect(Collectors.toMap(Card::getId, card -> card));
 
+        // 카드 카테고리 번호 유의하기!
         int syllableCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 1 && card.getCategoryId() <= 14).count();
         int wordCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 15 && card.getCategoryId() <= 31).count();
         int sentenceCount = (int) allCards.stream()
                 .filter(card -> card.getCategoryId() >= 32 && card.getCategoryId() <= 35).count();
-
-        /*log.info("syllableCount : {}", syllableCount);
-        log.info("wordCount : {}", wordCount);
-        log.info("sentenceCount : {}", sentenceCount);*/
 
         int syllableScoreCount = 0, wordScoreCount = 0, sentenceScoreCount = 0;
         for (CardScore score : scores) {
@@ -68,10 +70,6 @@ public class LearningController {
             }
         }
 
-        /*log.info("syllableScoreCount : {}", syllableScoreCount);
-        log.info("wordScoreCount : {}", wordScoreCount);
-        log.info("sentenceScoreCount : {}", sentenceScoreCount);*/
-
         double syllableProgress = syllableCount > 0 ?
                 (double) syllableScoreCount / syllableCount * 100 : 0;
         double wordProgress = wordCount > 0 ?
@@ -79,14 +77,11 @@ public class LearningController {
         double sentenceProgress = sentenceCount > 0 ?
                 (double) sentenceScoreCount / sentenceCount * 100 : 0;
 
-        /*log.info("syllableProgress : {}", syllableProgress);
-        log.info("wordProgress : {}", wordProgress);
-        log.info("sentenceProgress : {}", sentenceProgress);*/
+        LearningResponseDto response = new LearningResponseDto();
+        response.setSyllableProgress(syllableProgress);
+        response.setWordProgress(wordProgress);
+        response.setSentenceProgress(sentenceProgress);
 
-        return ResponseEntity.ok(Map.of(
-                "syllableProgress", syllableProgress,
-                "wordProgress", wordProgress,
-                "sentenceProgress", sentenceProgress
-        ));
+        return ResponseEntity.ok(response);
     }
 }
