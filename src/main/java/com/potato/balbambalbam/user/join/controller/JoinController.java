@@ -1,9 +1,9 @@
 package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.user.join.jwt.dto.DeleteUserDto;
-import com.potato.balbambalbam.user.join.jwt.dto.EditDto;
-import com.potato.balbambalbam.user.join.jwt.dto.JoinDto;
+import com.potato.balbambalbam.user.join.dto.DeleteUserDto;
+import com.potato.balbambalbam.user.join.dto.EditDto;
+import com.potato.balbambalbam.user.join.dto.JoinDto;
 import com.potato.balbambalbam.user.join.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import jakarta.servlet.http.HttpServletResponse;

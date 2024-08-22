@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.user.join.jwt.dto;
+package com.potato.balbambalbam.user.join.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

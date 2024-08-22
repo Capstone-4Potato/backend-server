@@ -26,11 +26,6 @@ public class LearningService {
         return cardScoreRepository.findByUserId(userId);
     }
 
-    public Map<Long, Card> findCardsByIds(List<Long> cardIds){
-        List<Card> cards = cardRepository.findAllById(cardIds);
-        return cards.stream().collect(Collectors.toMap(Card::getId, card -> card));
-    }
-
     public List<Card> findAllCards(){
         return cardRepository.findAll();
     }
