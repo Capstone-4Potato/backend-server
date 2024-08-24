@@ -2,6 +2,7 @@ package com.potato.balbambalbam.profile.token.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
@@ -43,28 +44,25 @@ public class ReissueController {
                     description = "토큰 재발급이 성공적으로 완료된 경우",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"refresh 토근과 access 토큰이 재발급 되었습니다.\""))
+                            examples = @ExampleObject(value = "refresh 토근과 access 토큰이 재발급 되었습니다."))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "refresh 토큰이 요청에 포함되지 않은 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"refresh 토큰이 없습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "refresh 토큰이 만료된 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"refresh 토큰이 만료되었습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류로 인해 토큰 재발급에 실패한 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @PostMapping("/reissue")

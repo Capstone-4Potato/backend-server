@@ -6,6 +6,7 @@ import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.learningInfo.weaksound.dto.UserWeakSoundResponseDto;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
@@ -63,15 +64,13 @@ public class PhonemeController {
                     responseCode = "200",
                     description = "테스트를 한 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Boolean.class),
-                            examples = @ExampleObject(value = "true"))
+                            schema = @Schema(implementation = Boolean.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "테스트를 하지 않은 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"취약음소 테스트가 필요합니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @GetMapping("/test/status")
@@ -93,22 +92,19 @@ public class PhonemeController {
                     responseCode = "200",
                     description = "사용자의 취약음소가 있는 경우",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserWeakSoundResponseDto.class)),
-                            examples = @ExampleObject(value = "[{\"rank\":1,\"phoneme\":\"Initial consonant ㄱ\"}, {\"rank\":2,\"phoneme\":\"Medial vowel ㅏ\"}]"))
+                            schema = @Schema(implementation = UserWeakSoundResponseDto.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "사용자의 취약음소가 없는 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"취약음소가 없습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류 발생",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @GetMapping("/test/phonemes")
@@ -161,22 +157,19 @@ public class PhonemeController {
                     responseCode = "200",
                     description = "사용자의 취약음소 데이터와 테스트 상태가 성공적으로 삭제된 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"사용자의 취약음소 데이터가 삭제되었습니다.\""))
+                            schema = @Schema(implementation = String.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "삭제할 취약음소 데이터가 없는 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"취약음소가 없습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류가 발생한 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @DeleteMapping("/phonemes")

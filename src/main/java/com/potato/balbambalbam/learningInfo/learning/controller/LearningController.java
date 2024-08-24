@@ -2,11 +2,17 @@ package com.potato.balbambalbam.learningInfo.learning.controller;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.learningInfo.learning.dto.LearningResponseDto;
 import com.potato.balbambalbam.learningInfo.learning.service.LearningService;
+import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +48,16 @@ public class LearningController {
     }
 
     @Operation(summary = "사용자의 학습 진척도 조회", description = "사용자의 카테고리별 학습 진척도(%)를 제공한다.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "사용자의 학습 진척도를 가지고 온 경우",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LearningResponseDto.class))
+                    )
+            }
+    )
     @GetMapping("/learning/progress")
     public ResponseEntity<LearningResponseDto> getLearningProgress(@RequestHeader("access") String access){
         Long userId = extractUserIdFromToken(access);

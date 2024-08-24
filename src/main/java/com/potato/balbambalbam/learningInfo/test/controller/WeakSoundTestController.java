@@ -8,18 +8,17 @@ import com.potato.balbambalbam.data.entity.WeakSoundTestStatus;
 import com.potato.balbambalbam.data.repository.UserWeakSoundRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
 import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
+import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
-import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestDto;
+import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestResponseDto;
 import com.potato.balbambalbam.learningInfo.weaksound.service.PhonemeService;
 import com.potato.balbambalbam.learningInfo.test.service.WeakSoundTestService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -78,15 +77,13 @@ public class WeakSoundTestController {
                     responseCode = "200",
                     description = "성공적으로 취약음소 테스트 목록을 반환한 경우",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = WeakSoundTest.class)),
-                            examples = @ExampleObject(value = "[{\"id\": 1, \"text\": \"example text\"}, {\"id\": 2, \"text\": \"another text\"}]"))
+                            schema = @Schema(implementation = WeakSoundTestResponseDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류 발생",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @GetMapping("/test")
@@ -101,29 +98,25 @@ public class WeakSoundTestController {
                     responseCode = "200",
                     description = "성공적으로 테스트 결과를 반환한 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "{\"result\": \"example result\"}"))
+                            schema = @Schema(implementation = String.class))
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "사용자 음성 파일이 비어있는 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"사용자 음성 파일이 비었습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "해당 ID를 가진 테스트 카드를 찾을 수 없는 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"해당 id를 가진 테스트 카드가 없습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류 발생",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @PostMapping("/test/{cardId}")
@@ -150,7 +143,7 @@ public class WeakSoundTestController {
                         dataToSend.put("userAudio",userAudioBase64);
                         dataToSend.put("correctText",weakSoundTest.getText());
 
-                        WeakSoundTestDto testResponse = weakSoundTestService.sendToAi(userId, dataToSend);
+                        WeakSoundTestResponseDto testResponse = weakSoundTestService.sendToAi(userId, dataToSend);
                         String testResponseJson = objectMapper.writeValueAsString(testResponse);
 
                         return ResponseEntity.ok(testResponseJson);
@@ -167,22 +160,19 @@ public class WeakSoundTestController {
                     responseCode = "200",
                     description = "성공적으로 취약음소 분석 결과를 저장한 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Map.class),
-                            examples = @ExampleObject(value = "{\"1\": 10, \"2\": 5}")) // 예: phonemeId와 count 쌍
+                            schema = @Schema(implementation = Map.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "취약음소 분석 결과가 없는 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"취약음소가 없습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류 발생",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+                            schema = @Schema(implementation = ExceptionDto.class))
             )
     })
     @PostMapping("/test/finalize")

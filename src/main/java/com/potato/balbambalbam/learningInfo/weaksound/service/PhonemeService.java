@@ -2,7 +2,7 @@ package com.potato.balbambalbam.learningInfo.weaksound.service;
 
 import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.PhonemeRepository;
-import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestDto;
+import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PhonemeService {
     }
 
     @Transactional
-    public void storePhonemeData(Long userId, WeakSoundTestDto dto) { //임시 저장소
+    public void storePhonemeData(Long userId, WeakSoundTestResponseDto dto) { //임시 저장소
         Map<Long, Integer> phonemeCounts = temporaryStorage.getOrDefault(userId, new HashMap<>());
         Map<Long, Integer> newPhonemeCounts = new HashMap<>();
 
