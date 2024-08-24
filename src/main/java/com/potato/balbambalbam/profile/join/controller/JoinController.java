@@ -119,7 +119,6 @@ public class JoinController {
 
         Long userId = extractUserIdFromToken(access);
         EditDto editUser = joinService.updateUser(userId, joinDto);
-        log.info("{} : 회원정보 수정이 완료되었습니다.", userId);
 
         return ResponseEntity.ok().body(editUser); //200
     }
@@ -172,7 +171,6 @@ public class JoinController {
             refreshRepository.deleteByUserId(userId);
         }
 
-        log.info("{} : 회원 탈퇴가 완료되었습니다.", userId);
         return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
     }
 
@@ -214,7 +212,6 @@ public class JoinController {
         Long userId = extractUserIdFromToken(access);
         EditDto editUser = joinService.findUserById(userId);
 
-        log.info("{} : 회원정보가 출력되었습니다.", userId);
         return ResponseEntity.ok().body(editUser); //200
     }
 
