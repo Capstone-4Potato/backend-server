@@ -5,7 +5,7 @@ import com.potato.balbambalbam.exception.ExceptionDto;
 import com.potato.balbambalbam.main.customCard.dto.CustomCardRequestDto;
 import com.potato.balbambalbam.main.customCard.dto.CustomCardResponseDto;
 import com.potato.balbambalbam.main.customCard.service.CustomCardService;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

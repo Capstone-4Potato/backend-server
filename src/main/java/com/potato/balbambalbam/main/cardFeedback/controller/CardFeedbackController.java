@@ -5,7 +5,7 @@ import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.main.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.main.cardFeedback.service.CardFeedbackService;
 import com.potato.balbambalbam.main.cardFeedback.service.CustomCardFeedbackService;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

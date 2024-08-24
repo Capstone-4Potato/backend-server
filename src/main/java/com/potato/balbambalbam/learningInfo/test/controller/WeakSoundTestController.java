@@ -11,7 +11,7 @@ import com.potato.balbambalbam.data.repository.WeakSoundTestSatusRepositoy;
 import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.learningInfo.weaksound.service.PhonemeService;

@@ -1,8 +1,8 @@
-package com.potato.balbambalbam.profile.join.service;
+package com.potato.balbambalbam.profile.token.service;
 
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.UserRepository;
-import com.potato.balbambalbam.profile.join.dto.CustomUserDetails;
+import com.potato.balbambalbam.profile.token.dto.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

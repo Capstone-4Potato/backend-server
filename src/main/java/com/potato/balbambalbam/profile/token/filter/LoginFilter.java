@@ -1,10 +1,11 @@
-package com.potato.balbambalbam.profile.join.jwt;
+package com.potato.balbambalbam.profile.token.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ExceptionDto;
-import com.potato.balbambalbam.profile.join.dto.CustomUserDetails;
+import com.potato.balbambalbam.profile.token.dto.CustomUserDetails;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
