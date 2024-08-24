@@ -16,6 +16,14 @@ import com.potato.balbambalbam.profile.join.service.JoinService;
 import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestDto;
 import com.potato.balbambalbam.learningInfo.weaksound.service.PhonemeService;
 import com.potato.balbambalbam.learningInfo.test.service.WeakSoundTestService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +37,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@Tag(name = "WeakSoundTest API", description = "사용자의 취약음소 테스트와 관련된 API를 제공한다.")
 public class WeakSoundTestController {
 
     private final ObjectMapper objectMapper;
@@ -63,12 +72,60 @@ public class WeakSoundTestController {
         return joinService.findUserBySocialId(socialId).getId();
     }
 
+    @Operation(summary = "취약음소 테스트 목록 조회", description = "모든 취약음소 테스트 목록을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공적으로 취약음소 테스트 목록을 반환한 경우",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = WeakSoundTest.class)),
+                            examples = @ExampleObject(value = "[{\"id\": 1, \"text\": \"example text\"}, {\"id\": 2, \"text\": \"another text\"}]"))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류 발생",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     @GetMapping("/test")
     public ResponseEntity<?> getWeakSoundTest() {
         List<WeakSoundTest> weakSoundTestList = weakSoundTestRepository.findAll();
         return ResponseEntity.ok(weakSoundTestList); //200
     }
 
+    @Operation(summary = "사용자 음성 파일 업로드 및 테스트", description = "사용자 음성 파일을 업로드하고 AI와의 테스트 결과를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공적으로 테스트 결과를 반환한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "{\"result\": \"example result\"}"))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "사용자 음성 파일이 비어있는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"사용자 음성 파일이 비었습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "해당 ID를 가진 테스트 카드를 찾을 수 없는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"해당 id를 가진 테스트 카드가 없습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류 발생",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile
             (@PathVariable("cardId") Long id,
@@ -106,6 +163,30 @@ public class WeakSoundTestController {
                 .orElseThrow(() -> new InvalidParameterException("해당 id를 가진 테스트 카드가 없습니다.")); //404
     }
 
+    @Operation(summary = "취약음소 분석 완료", description = "사용자의 취약음소 분석을 완료하고, 결과를 저장한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공적으로 취약음소 분석 결과를 저장한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class),
+                            examples = @ExampleObject(value = "{\"1\": 10, \"2\": 5}")) // 예: phonemeId와 count 쌍
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "취약음소 분석 결과가 없는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"취약음소가 없습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류 발생",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     @PostMapping("/test/finalize")
     public ResponseEntity<?> finalizeAnalysis(@RequestHeader("access") String access) {
         Long userId = extractUserIdFromToken(access);
@@ -115,7 +196,7 @@ public class WeakSoundTestController {
             topPhonemes = phonemeService.getTopPhonemes(userId);
 
             if (topPhonemes == null || topPhonemes.isEmpty()) {
-                throw new ResponseNotFoundException("취약음이 없습니다."); // 404
+                throw new ResponseNotFoundException("취약음소가 없습니다."); // 404
             }
 
             topPhonemes.forEach((phonemeId, count) -> {
