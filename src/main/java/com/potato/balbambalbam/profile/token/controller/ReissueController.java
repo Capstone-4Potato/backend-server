@@ -1,11 +1,18 @@
-package com.potato.balbambalbam.profile.join.controller;
+package com.potato.balbambalbam.profile.token.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +25,7 @@ import java.util.Date;
 
 @RestController
 @Slf4j
+@Tag(name = "RefreshToken API", description = "자동 로그인과 관련된 API를 제공한다.")
 public class ReissueController {
 
     private final JWTUtil jwtUtil;
@@ -28,6 +36,37 @@ public class ReissueController {
         this.refreshRepository = refreshRepository;
     }
 
+    @Operation(summary = "토큰 재발급", description = "만료된 또는 유효한 refresh 토큰을 이용하여 새로운 access 및 refresh 토큰을 재발급한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "토큰 재발급이 성공적으로 완료된 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"refresh 토근과 access 토큰이 재발급 되었습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "refresh 토큰이 요청에 포함되지 않은 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"refresh 토큰이 없습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "refresh 토큰이 만료된 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"refresh 토큰이 만료되었습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류로 인해 토큰 재발급에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 

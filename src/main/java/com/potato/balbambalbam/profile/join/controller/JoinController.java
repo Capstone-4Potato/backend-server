@@ -4,8 +4,15 @@ import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.profile.join.dto.DeleteUserDto;
 import com.potato.balbambalbam.profile.join.dto.EditDto;
 import com.potato.balbambalbam.profile.join.dto.JoinDto;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @ResponseBody
 @Slf4j
+@Tag(name = "User API", description = "로그인과 관련된 API를 제공한다.")
 public class JoinController {
 
     private final JoinService joinService;
@@ -40,16 +48,70 @@ public class JoinController {
         return socialId;
     }
 
+    @Operation(summary = "회원가입", description = "새로운 사용자를 생성한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "회원가입이 성공적으로 완료된 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"회원가입이 완료되었습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청으로 인해 회원가입에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"잘못된 요청입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류로 인해 회원가입에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     // 회원정보 받기
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@Validated @RequestBody JoinDto joinDto, HttpServletResponse response) {
 
         joinService.joinProcess(joinDto, response); //access, refresh 토큰 생성
-        log.info("회원가입이 완료되었습니다.");
 
         return ResponseEntity.ok().body("회원가입이 완료되었습니다."); //200
     }
 
+    @Operation(summary = "회원정보 수정", description = "기존 사용자의 정보를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "회원정보가 성공적으로 수정된 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EditDto.class),
+                            examples = @ExampleObject(value = "{\"userId\": 1, \"name\": \"New Name\", \"email\": \"newemail@example.com\"}"))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청으로 인해 회원정보 수정에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"잘못된 요청입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"인증되지 않은 사용자입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류로 인해 회원정보 수정에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     // 회원정보 수정
     @PatchMapping("/users")
     public ResponseEntity<?> updateUser(@Validated @RequestHeader("access") String access,
@@ -62,6 +124,37 @@ public class JoinController {
         return ResponseEntity.ok().body(editUser); //200
     }
 
+    @Operation(summary = "회원 탈퇴", description = "기존 사용자의 계정을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "회원 탈퇴가 성공적으로 완료된 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"회원 탈퇴가 완료되었습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청으로 인해 회원 탈퇴에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"잘못된 요청입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"인증되지 않은 사용자입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류로 인해 회원 탈퇴에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     //회원정보 삭제
     @DeleteMapping("/users")
     public ResponseEntity<?> deleteUser(@RequestHeader("access") String access,
@@ -83,6 +176,37 @@ public class JoinController {
         return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다."); //200
     }
 
+    @Operation(summary = "회원정보 조회", description = "사용자의 회원정보를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공적으로 회원정보를 반환한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EditDto.class),
+                            examples = @ExampleObject(value = "{\"userId\": 1, \"name\": \"User Name\", \"email\": \"user@example.com\"}"))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"인증되지 않은 사용자입니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "사용자를 찾을 수 없는 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"사용자를 찾을 수 없습니다.\""))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류로 인해 회원정보 조회에 실패한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "\"서버 오류가 발생했습니다.\""))
+            )
+    })
     //회원정보 출력
     @GetMapping("/users")
     public ResponseEntity<?> getUserById(@RequestHeader("access") String access) {

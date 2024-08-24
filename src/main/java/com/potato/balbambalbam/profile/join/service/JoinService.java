@@ -8,7 +8,7 @@ import com.potato.balbambalbam.exception.SocialIdChangeException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.profile.join.dto.EditDto;
 import com.potato.balbambalbam.profile.join.dto.JoinDto;
-import com.potato.balbambalbam.profile.join.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
