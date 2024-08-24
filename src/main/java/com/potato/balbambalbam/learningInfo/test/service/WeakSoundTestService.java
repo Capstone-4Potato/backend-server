@@ -2,7 +2,7 @@ package com.potato.balbambalbam.learningInfo.test.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestDto;
+import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestResponseDto;
 import com.potato.balbambalbam.learningInfo.weaksound.service.PhonemeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +31,7 @@ public class WeakSoundTestService {
     @Value("${ai.service.url}")
     private String AI_URL;
 
-    public WeakSoundTestDto sendToAi(Long userId, Map<String, Object> dataToSend) throws JsonProcessingException {
+    public WeakSoundTestResponseDto sendToAi(Long userId, Map<String, Object> dataToSend) throws JsonProcessingException {
         String testRequestJson = objectMapper.writeValueAsString(dataToSend); // dataToSend -> testRequestJson <Json>
         String testResponseJson = webClient.post()
                 .uri(AI_URL + "/ai/test")
@@ -40,7 +40,7 @@ public class WeakSoundTestService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        WeakSoundTestDto weakSoundTestDto = objectMapper.readValue(testResponseJson, WeakSoundTestDto.class);
+        WeakSoundTestResponseDto weakSoundTestDto = objectMapper.readValue(testResponseJson, WeakSoundTestResponseDto.class);
         phonemeService.storePhonemeData(userId, weakSoundTestDto);
         return weakSoundTestDto;
     }

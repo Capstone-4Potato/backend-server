@@ -6,8 +6,8 @@ import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.InvalidUserNameException;
 import com.potato.balbambalbam.exception.SocialIdChangeException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
-import com.potato.balbambalbam.profile.join.dto.EditDto;
-import com.potato.balbambalbam.profile.join.dto.JoinDto;
+import com.potato.balbambalbam.profile.join.dto.EditResponseDto;
+import com.potato.balbambalbam.profile.join.dto.JoinResponseDto;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -50,7 +50,7 @@ public class JoinService {
     }
 
     //새로운 회원정보 저장
-    public void joinProcess(JoinDto joinDto, HttpServletResponse response) {
+    public void joinProcess(JoinResponseDto joinDto, HttpServletResponse response) {
 
         String name = joinDto.getName();
         String socialId = joinDto.getSocialId();
@@ -91,7 +91,7 @@ public class JoinService {
 
     // 회원정보 업데이트
     @Transactional
-    public EditDto updateUser(Long userId, JoinDto joinDto) {
+    public EditResponseDto updateUser(Long userId, JoinResponseDto joinDto) {
 
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다.")); //404
@@ -106,7 +106,7 @@ public class JoinService {
 
         userRepository.save(editUser);
 
-        return new EditDto(editUser.getName(), editUser.getAge(), editUser.getGender());
+        return new EditResponseDto(editUser.getName(), editUser.getAge(), editUser.getGender());
     }
 
     //회원정보 삭제
@@ -151,10 +151,10 @@ public class JoinService {
     }
 
     //회원정보 검색
-    public EditDto findUserById(Long userId){
+    public EditResponseDto findUserById(Long userId){
         User editUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다.")); //404
-        return new EditDto(editUser.getName(), editUser.getAge(), editUser.getGender());
+        return new EditResponseDto(editUser.getName(), editUser.getAge(), editUser.getGender());
     }
 
     public User findUserBySocialId(String socialId) {
