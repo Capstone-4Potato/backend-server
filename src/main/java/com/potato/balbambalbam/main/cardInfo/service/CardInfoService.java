@@ -1,19 +1,24 @@
 package com.potato.balbambalbam.main.cardInfo.service;
 
 import com.potato.balbambalbam.data.entity.Card;
+import com.potato.balbambalbam.data.entity.CardVoice;
 import com.potato.balbambalbam.data.entity.CustomCard;
 import com.potato.balbambalbam.data.entity.User;
 import com.potato.balbambalbam.data.repository.CardRepository;
+import com.potato.balbambalbam.data.repository.CardVoiceRepository;
 import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
+import com.potato.balbambalbam.exception.VoiceNotFoundException;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsRequestDto;
 import com.potato.balbambalbam.main.cardInfo.dto.AiTtsResponseDto;
 import com.potato.balbambalbam.main.cardInfo.dto.CardInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +29,11 @@ public class CardInfoService {
     private final CardRepository cardRepository;
     private final AiTtsService aiTtsService;
     private final CustomCardRepository customCardRepository;
+    private final CardVoiceRepository cardVoiceRepository;
 
     public CardInfoResponseDto getCardInfo(Long userId, Long cardId) {
-        return createCardVoice(getAiTtsRequestDto(userId, getCardText(cardId)));
+        AiTtsRequestDto aiTtsRequestDto = getAiTtsRequestDto(userId, getCardText(cardId));
+        return getCardVoice(cardId, aiTtsRequestDto);
     }
 
     public CardInfoResponseDto getCustomCardInfo(Long userId, Long cardId) {
@@ -62,7 +69,7 @@ public class CardInfoService {
     }
 
     /**
-     * 프론트로 전달해줄 cardInfoResponseDto 생성
+     * 프론트로 전달해줄 customCard용 cardInfoResponseDto 생성
      */
     protected CardInfoResponseDto createCardVoice (AiTtsRequestDto aiTtsRequestDto) {
         AiTtsResponseDto aiTtsResponseDto = aiTtsService.getTtsVoice(aiTtsRequestDto);
@@ -70,6 +77,44 @@ public class CardInfoService {
         String correctAudio = aiTtsResponseDto.getCorrectAudio();
 
         return new CardInfoResponseDto(correctAudio);
+    }
+
+    /**
+     * 프론트로 전달해줄 일반 Card용 cardInfoResponseDto 생성
+     */
+    protected CardInfoResponseDto getCardVoice (Long cardId, AiTtsRequestDto aiTtsRequestDto) {
+        Byte gender = aiTtsRequestDto.getGender();
+        Integer age = aiTtsRequestDto.getAge();
+
+        CardVoice cardVoice = cardVoiceRepository.findById(cardId).orElseThrow(() -> new VoiceNotFoundException("TTS 음성이 존재하지 않습니다"));
+
+        String voice = null;
+        switch (gender) {
+            // 남자
+            case (0): {
+                if (age <= 14) {// 아이
+                    voice = cardVoice.getChildMale();
+                } else if(age <= 40) { // 청년
+                    voice = cardVoice.getAdultMale();
+                } else { //중장년
+                    voice = cardVoice.getElderlyMale();
+                }
+                break;
+            }
+            // 여자
+            case (1) : {
+                if(age <= 14) { // 아이
+                    voice = cardVoice.getChildFemale();
+                } else if(age <= 40) { // 청년
+                    voice = cardVoice.getAdultFemale();
+                } else { // 중장년
+                    voice = cardVoice.getElderlyFemale();
+                }
+                break;
+            }
+        }
+
+        return new CardInfoResponseDto(voice);
     }
 
 }
