@@ -45,7 +45,7 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
     @ExceptionHandler({RuntimeException.class, AiConnectionException.class,
             TimeoutException.class, CardDeleteException.class,
             WebClientResponseException.InternalServerError.class,
-            AiGenerationFailException.class})
+            AiGenerationFailException.class, VoiceNotFoundException.class})
     public ResponseEntity<ExceptionDto> timeoutExceptionHandler(Exception ex){
         return exceptionHandler(ex, HttpStatus.INTERNAL_SERVER_ERROR); //500
     }
