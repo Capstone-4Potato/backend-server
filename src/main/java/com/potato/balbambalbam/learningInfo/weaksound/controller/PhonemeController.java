@@ -157,7 +157,7 @@ public class PhonemeController {
                     responseCode = "200",
                     description = "사용자의 취약음소 데이터와 테스트 상태가 성공적으로 삭제된 경우",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))
+                            examples = @ExampleObject(value = "사용자의 취약음소 데이터가 삭제되었습니다."))
             ),
             @ApiResponse(
                     responseCode = "404",

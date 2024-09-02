@@ -69,7 +69,9 @@ public class WeakSoundTestController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "성공적으로 테스트 결과를 반환한 경우"
+                    description = "성공적으로 테스트 결과를 반환한 경우",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"userWeakPhoneme\": {\"ㄲ\" : 5, \"ㅏ\" : 2, \" \" : 1}, \"userWeakPhonemeLast\": {\"ㄱ\" : 2}}"))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -110,7 +112,7 @@ public class WeakSoundTestController {
                     responseCode = "200",
                     description = "취약음소가 있는 경우",
                     content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"1\": 3, \"17\": 3, \"14\": 2, \"40\": 1, \"phonemeId\": \"count\"}"))
+                            examples = @ExampleObject(value = "{\"1\": 3, \"14\": 2, \"40\": 1, \"phonemeId\": \"count\"}"))
             ),
             @ApiResponse(
                     responseCode = "404",
