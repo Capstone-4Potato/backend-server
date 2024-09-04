@@ -5,5 +5,4 @@ import java.io.Serializable;
 public class CardBookmarkId implements Serializable {
     private Long userId;
     private Long cardId;
-
 }

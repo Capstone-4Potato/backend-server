@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Entity(name = "pronunciation_picture")
-@Getter
-@ToString
+@Getter @ToString
 public class PronunciationPicture {
     @Id
     private Long id;
@@ -16,5 +15,4 @@ public class PronunciationPicture {
     private Long phonemeId;
     @Column(name = "explanation")
     private String explanation;
-
 }

@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class CustomCard {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +25,4 @@ public class CustomCard {
     private Integer highestScore;
     @Column(name = "bookmark")
     private Boolean isBookmarked;
-
 }

@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
-
-import java.sql.Blob;
 
 @Getter
 @Entity(name = "card_voice")
@@ -16,6 +13,7 @@ import java.sql.Blob;
 public class CardVoice {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
     @Column(name = "child_male", columnDefinition = "MEDIUMBLOB", length = 16777215)
@@ -37,7 +35,6 @@ public class CardVoice {
     private String elderlyFemale;
 
     @Builder
-
     public CardVoice(Long id, String childMale, String childFemale, String adultMale, String adultFemale, String elderlyMale, String elderlyFemale) {
         this.id = id;
         this.childMale = childMale;

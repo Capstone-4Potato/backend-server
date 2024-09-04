@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface CustomCardRepository extends JpaRepository<CustomCard, Long> {
-
     List<CustomCard> findAllByUserId(Long userId);
     @Override
     Optional<CustomCard> findById(Long cardId);
