@@ -2,15 +2,15 @@ package com.potato.balbambalbam.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.List;
-
-@Getter
 @Entity(name = "card")
-@ToString
+@NoArgsConstructor
+@Getter @ToString
 public class Card {
     @Id
     @Column(name = "id")
@@ -35,9 +35,7 @@ public class Card {
         this.pronunciation = pronunciation;
         this.categoryId = categoryId;
     }
-    public Card() {
 
-    }
     public void setPhonemesMap(List<Long> phonemesMap) {
         this.phonemesMap = phonemesMap;
     }
@@ -45,6 +43,7 @@ public class Card {
     public void setEngPronunciation(String engPronunciation) {
         this.engPronunciation = engPronunciation;
     }
+
     public void setEngTranslation(String engTranslation) {
         this.engTranslation = engTranslation;
     }
