@@ -10,10 +10,15 @@ import lombok.Setter;
 public class WeakSoundTestListDto {
     private Long id;
     private String text;
-    private String Pronunciation;
+    private String pronunciation;
     private String engPronunciation;
     private String engTranslation;
 
     public WeakSoundTestListDto(Long id, String text, String pronunciation, String engPronunciation, String engTranslation) {
+        this.id = id;
+        this.text = text;
+        this.pronunciation = pronunciation;
+        this.engPronunciation = engPronunciation;
+        this.engTranslation = engTranslation;
     }
 }
