@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.potato.balbambalbam.main.service.PhonemeServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-04-08T06:05:46" hostname="DESKTOP-QI32GAA" time="0.025">
+  <properties/>
+  <testcase name="dividePronunciationToPhoneme()" classname="com.potato.balbambalbam.main.service.PhonemeServiceTest" time="0.025"/>
+  <system-out><![CDATA[ch = 안
+ch = 녕
+ch = 하
+ch = 세
+ch = 욜
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
