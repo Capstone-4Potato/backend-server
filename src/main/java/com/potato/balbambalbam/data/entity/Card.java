@@ -3,6 +3,7 @@ package com.potato.balbambalbam.data.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -10,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 import java.util.List;
 @Entity(name = "card")
 @NoArgsConstructor
-@Getter @ToString
+@Getter @ToString @Setter
 public class Card {
     @Id
     @Column(name = "id")

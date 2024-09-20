@@ -5,10 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity(name = "category")
-@Getter @ToString
+@Getter @ToString @Setter
 @NoArgsConstructor
 public class Category {
     @Id
