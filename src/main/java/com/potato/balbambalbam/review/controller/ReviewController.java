@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Review API", description = "복습 카드를 제공한다")
 public class ReviewController {
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
@@ -45,5 +47,4 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(responseDto);
     }
-
 }
