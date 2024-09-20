@@ -20,12 +20,7 @@ public class UpdateAllTtsService {
     private final CardRepository cardRepository;
     private final CardVoiceRepository cardVoiceRepository;
 
-    public void saveAllTtsToFile() {
-        List<Card> emptyTtsCardList = cardRepository.findCardNotInCardVoice();
-        emptyTtsCardList.forEach(card -> getAiVoice(card));
-    }
-
-    protected void getAiVoice(Card card) {
+    public void updateCardVoice(Card card) {
         saveSixVoices(card.getId(), aiAllTtsService.getAiTtsResponse(card.getText()));
     }
 
@@ -43,6 +38,5 @@ public class UpdateAllTtsService {
                 .build();
 
         cardVoiceRepository.save(cardvoice);
-        log.info("{}번 음성 저장 완료", id);
     }
 }
