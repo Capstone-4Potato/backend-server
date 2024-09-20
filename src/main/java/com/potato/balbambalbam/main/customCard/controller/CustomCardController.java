@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "CustomCard 생성 & 삭제", description = "CustomCard를 생성하거나 삭제한다")
+@Tag(name = "CustomCard 갱신 API", description = "CustomCard를 생성하거나 삭제한다")
 public class CustomCardController {
     private final CustomCardService customCardService;
     private final JoinService joinService;
