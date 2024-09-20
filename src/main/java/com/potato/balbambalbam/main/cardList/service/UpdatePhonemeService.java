@@ -21,53 +21,41 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class UpdatePhonemeService {
+    private static final String[] CHOSUNG = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"};
+    private static final String[] JUNGSUNG = {"ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅘ", "ㅙ", "ㅚ", "ㅛ", "ㅜ", "ㅝ", "ㅞ", "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ"};
+    //첫 번째 값은 종성이 없는 경우를 위해 빈 문자열("")를 사용
+    private static final String[] JONGSUNG = {"", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"};
     private final PhonemeRepository phonemeRepository;
     private final CardRepository cardRepository;
 
-    private static final String[] CHOSUNG = {
-            "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
-    };
-    private static final String[] JUNGSUNG = {
-            "ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅘ", "ㅙ", "ㅚ", "ㅛ", "ㅜ", "ㅝ", "ㅞ", "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ"
-    };
-    //첫 번째 값은 종성이 없는 경우를 위해 빈 문자열("")를 사용
-    private static final String[] JONGSUNG = {
-            "", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
-    };
-    @Transactional
-    public void updateCardPhonemeColumn(){
-        List<Card> cardList = cardRepository.findAll();
-
-        cardList.stream().forEach(card -> {
-            Card foundCard  = cardRepository.findById(card.getId()).get();
-            if(isProceedCard(card)){
-                foundCard.setPhonemesMap(convertTextToPhonemeIds(foundCard.getText()));
-                cardRepository.save(foundCard);
-                log.info(foundCard + "update");
-            }
-        });
+    public void updateCardPhonemeColumn(Card card) {
+        if (isProceedCard(card)) {
+            card.setPhonemesMap(convertTextToPhonemeIds(card.getText()));
+            cardRepository.save(card);
+        }
     }
 
-    protected List<Long> convertTextToPhonemeIds(String text){
+    protected List<Long> convertTextToPhonemeIds(String text) {
         List<String[]> phonemes = extractPhonemesFromText(text);
         List<Long> phonemeIds = findPhonemeIds(phonemes);
 
         return phonemeIds;
     }
-    protected List<String[]> extractPhonemesFromText(String text){
+
+    protected List<String[]> extractPhonemesFromText(String text) {
         List<String[]> phonemeList = new ArrayList<>();
 
         char[] charText = text.toCharArray();
         //다 분류
 
         for (char ch : charText) {
-            if(!(ch >= '가' && ch <= '힣')){
+            if (!(ch >= '가' && ch <= '힣')) {
                 continue;
             }
-            ch = (char)(ch - 0xAC00);
-            char cho = (char)(ch/28/21);
-            char jung = (char)(ch/28%21);
-            char jong = (char)(ch%28);
+            ch = (char) (ch - 0xAC00);
+            char cho = (char) (ch / 28 / 21);
+            char jung = (char) (ch / 28 % 21);
+            char jong = (char) (ch % 28);
             String[] phoneme = {CHOSUNG[cho], JUNGSUNG[jung], JONGSUNG[jong]};
             phonemeList.add(phoneme);
         }
@@ -75,48 +63,44 @@ public class UpdatePhonemeService {
         return phonemeList;
     }
 
-    protected List<Long> findPhonemeIds(List<String[]> phonemes){
+    protected List<Long> findPhonemeIds(List<String[]> phonemes) {
         List<Long> phonemeIds = new ArrayList<>();
 
         //한 단어씩 초성 중성 종성 아이디 찾음
         phonemes.stream().forEach(strings -> {
             for (int i = 0; i < 3; i++) {   //0 : 초성 , 1 : 중성 , 2 : 초성
                 Optional<Phoneme> phonemeOptional = phonemeRepository.findPhonemeByTypeAndText(Long.valueOf(i), strings[i]);
-                if(phonemeOptional.isPresent()){    //받침이 없는 경우 넘어감
+                if (phonemeOptional.isPresent()) {    //받침이 없는 경우 넘어감
                     Phoneme phoneme = phonemeOptional.get();
                     phonemeIds.add(phoneme.getId());
                 }
-            }}
-        );
+            }
+        });
 
-        List<Long> distinctPhonemeIds= phonemeIds.stream().distinct().collect(Collectors.toList());    //중복 제거
+        List<Long> distinctPhonemeIds = phonemeIds.stream().distinct().collect(Collectors.toList());    //중복 제거
 
         return distinctPhonemeIds;
     }
 
     /**
      * Update를 진행할 카드인지 검사 (문장 category X && phoneme column == null)
+     *
      * @param card
      * @return
      */
-    protected boolean isProceedCard(Card card){
+    protected boolean isProceedCard(Card card) {
         //문장 카테고리는 phoneme update X
-        if(card.getCategoryId() > 31){
-            return false;
-        }
-        if(card.getPhonemesMap() != null){
-            return false;
-        }
-        return true;
+        return card.getCategoryId() <= 31;
     }
 
     /**
      * 한글 합치는 메소드
+     *
      * @param cho
      * @param jung
      * @return
      */
-    public String createHangul (String cho, String jung){
+    public String createHangul(String cho, String jung) {
         int choIndex = getIndex(CHOSUNG, cho);
         int jungIndex = getIndex(JUNGSUNG, jung);
 
@@ -124,9 +108,9 @@ public class UpdatePhonemeService {
         return String.valueOf((char) unicode);
     }
 
-    protected int getIndex(String[] array, String value){
+    protected int getIndex(String[] array, String value) {
         for (int i = 0; i < array.length; i++) {
-            if(array[i].equals(value)){
+            if (array[i].equals(value)) {
                 return i;
             }
         }

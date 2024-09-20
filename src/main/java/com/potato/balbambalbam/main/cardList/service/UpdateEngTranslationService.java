@@ -15,24 +15,10 @@ import java.util.List;
 public class UpdateEngTranslationService {
     private final CardRepository cardRepository;
     private final AiEngTranslationService aiEngTranslationService;
-    @Transactional
-    public void updateEngTranslation(){
-        List<Card> cardList = cardRepository.findAll();
 
-        cardList.stream().forEach(card -> {
-            Card foundCard  = cardRepository.findById(card.getId()).get();
-            if(isProceedCard(card)){
-                String text = foundCard.getText();
-                foundCard.setEngTranslation(aiEngTranslationService.getEngTranslation(text).getEngTranslation());
-                cardRepository.save(foundCard);
-                log.info(foundCard + "update engTranslation");
-            }
-        });
-    }
-    protected boolean isProceedCard(Card card){
-        if(card.getEngTranslation() != null){
-            return false;
-        }
-        return true;
+    public void updateEngTranslation(Card card){
+        String text = card.getText();
+        card.setEngTranslation(aiEngTranslationService.getEngTranslation(text).getEngTranslation());
+        cardRepository.save(card);
     }
 }
