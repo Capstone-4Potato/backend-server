@@ -67,6 +67,4 @@ public class CustomCardService {
 
         return customCardRepository.save(customCard);
     }
-
-
 }
