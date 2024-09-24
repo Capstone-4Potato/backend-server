@@ -7,12 +7,14 @@ import com.potato.balbambalbam.log.repository.ExceptionLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class ExceptionLogService {
 
     private final ExceptionInfoRepository exceptionInfoRepository;
@@ -26,21 +28,34 @@ public class ExceptionLogService {
     }
 
     public void logException(Exception ex, HttpStatus httpStatus, WebRequest request) {
-        // ExceptionInfo 저장
-        ExceptionInfo exceptionInfo = new ExceptionInfo();
-        exceptionInfo.setExceptionName(ex.getClass().getSimpleName());
-        exceptionInfo.setExceptionMessage(ex.getMessage());
-        exceptionInfo.setExceptionHttpStatus(httpStatus.value());
-        exceptionInfo.setExceptionLevel(getExceptionLevel(httpStatus));
-        ExceptionInfo savedInfo = exceptionInfoRepository.save(exceptionInfo);
+        // 기존 ExceptionInfo 찾기 또는 새로 생성
+        ExceptionInfo exceptionInfo = findOrCreateExceptionInfo(ex, httpStatus);
 
         // ExceptionLog 저장
         ExceptionLog exceptionLog = new ExceptionLog();
-        exceptionLog.setExceptionInfoId(savedInfo.getExceptionInfoId());
+        exceptionLog.setExceptionInfoId(exceptionInfo.getExceptionInfoId());
         exceptionLog.setTimestamp(LocalDateTime.now());
         exceptionLog.setClassName(ex.getStackTrace()[0].getClassName());
         exceptionLog.setRequestPath(((ServletWebRequest) request).getRequest().getRequestURI());
         exceptionLogRepository.save(exceptionLog);
+    }
+
+    private ExceptionInfo findOrCreateExceptionInfo(Exception ex, HttpStatus httpStatus) {
+        String exceptionName = ex.getClass().getSimpleName();
+        String exceptionMessage = ex.getMessage();
+        int exceptionHttpStatus = httpStatus.value();
+        String exceptionLevel = getExceptionLevel(httpStatus);
+
+        return exceptionInfoRepository.findByExceptionNameAndExceptionMessageAndExceptionHttpStatus(
+                        exceptionName, exceptionMessage, exceptionHttpStatus)
+                .orElseGet(() -> {
+                    ExceptionInfo newInfo = new ExceptionInfo();
+                    newInfo.setExceptionName(exceptionName);
+                    newInfo.setExceptionMessage(exceptionMessage);
+                    newInfo.setExceptionHttpStatus(exceptionHttpStatus);
+                    newInfo.setExceptionLevel(exceptionLevel);
+                    return exceptionInfoRepository.save(newInfo);
+                });
     }
 
     private String getExceptionLevel(HttpStatus httpStatus) {
