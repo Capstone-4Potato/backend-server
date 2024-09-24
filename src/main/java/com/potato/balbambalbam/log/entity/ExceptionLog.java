@@ -26,7 +26,4 @@ public class ExceptionLog {
 
     @Column(name = "request_path")
     private String requestPath;
-
-    @Column(name = "user_ip")
-    private String userIp;
 }
