@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.review.controller;
 
-import com.potato.balbambalbam.exception.ExceptionDto;
+import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.review.dto.CardDto;
 import com.potato.balbambalbam.review.dto.ReviewListResponseDto;
 import com.potato.balbambalbam.review.service.ReviewService;
