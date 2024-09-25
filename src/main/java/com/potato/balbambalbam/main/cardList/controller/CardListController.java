@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.exception.ExceptionDto;
+import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.dto.CardListResponseDto;
 import com.potato.balbambalbam.main.cardList.dto.ResponseCardDto;
 import com.potato.balbambalbam.main.cardList.service.CardListService;
