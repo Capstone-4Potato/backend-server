@@ -38,6 +38,7 @@ public class ExceptionLogService {
         exceptionLog.setClassName(ex.getStackTrace()[0].getClassName());
         exceptionLog.setRequestPath(((ServletWebRequest) request).getRequest().getRequestURI());
         exceptionLogRepository.save(exceptionLog);
+
     }
 
     // ExceptionInfo 찾기 또는 생성
