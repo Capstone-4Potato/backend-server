@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.main.cardList.controller;
 
-import com.potato.balbambalbam.exception.ExceptionDto;
+import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.main.cardList.service.CardWeakSoundService;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;

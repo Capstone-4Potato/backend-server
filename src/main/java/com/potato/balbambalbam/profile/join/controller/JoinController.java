@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.profile.join.controller;
 
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.exception.ExceptionDto;
+import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.profile.join.dto.DeleteUserResponseDto;
 import com.potato.balbambalbam.profile.join.dto.EditResponseDto;
 import com.potato.balbambalbam.profile.join.dto.JoinResponseDto;
