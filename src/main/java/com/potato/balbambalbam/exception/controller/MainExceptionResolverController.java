@@ -5,6 +5,7 @@ import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.log.service.ExceptionLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
 
 @Slf4j
@@ -29,60 +31,57 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
         this.exceptionLogService = exceptionLogService;
     }
 
-    // 일반적인 예외 처리
+    // Spring MVC에서 발생하는 일반적인 예외 처리 -> Error
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         exceptionLogService.logException(ex, HttpStatus.valueOf(statusCode.value()), request);
-        // 예외 로그 기록
         String className = ex.getStackTrace().length > 0 ? ex.getStackTrace()[0].getClassName() : "Unknown";
-        // 예외 클래스 이름 추출
         String exceptionName = extractClassName(ex.getClass().toString());
-        // 발생한 클래스 위치
         ExceptionDto exceptionDto = new ExceptionDto(statusCode.value(), exceptionName, ex.getMessage(), className);
-        // 클라이언트에게 반환할 예외 정보 dto 생성
+        log.error("[{}]: {}", exceptionName, ex.getMessage());
         return new ResponseEntity<>(exceptionDto, headers, statusCode);
     }
 
-    // 유효성 예외 처리
+    // 유효성 예외 처리 -> Warn
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         exceptionLogService.logException(ex, HttpStatus.valueOf(status.value()), request);
         String className = extractClassName(ex.getClass().toString());
         String defaultMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-        // 기본 에러 메시지 추출
         ExceptionDto exceptionDto = new ExceptionDto(status.value(), className, defaultMessage);
+        log.warn("[{}]: {}", className, defaultMessage);
         return new ResponseEntity<>(exceptionDto, headers, status);
     }
 
     // NOT_FOUND(404)
-    @ExceptionHandler({IllegalArgumentException.class, UserNotFoundException.class,
-            CategoryNotFoundException.class, CardNotFoundException.class,
-            InvalidParameterException.class, ResponseNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class,
+            CardNotFoundException.class, ResponseNotFoundException.class, CardGenerationFailException.class})
     public ResponseEntity<ExceptionDto> notFoundExceptionHandler(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        // HTTP 상태 결정
-        exceptionLogService.logException(ex, status, request);
-        // 예외 로그 기록
+        if (!isExcludedFromLogging(ex)) {
+            exceptionLogService.logInfoException(ex, status, request);
+        }
         return exceptionHandler(ex, status);
     }
 
     // INTERNAL_SERVER-ERROR(500)
-    @ExceptionHandler({RuntimeException.class, AiConnectionException.class,
-            TimeoutException.class, CardDeleteException.class,
-            WebClientResponseException.InternalServerError.class,
+    @ExceptionHandler({AiConnectionException.class, CardDeleteException.class,
             AiGenerationFailException.class, VoiceNotFoundException.class})
     public ResponseEntity<ExceptionDto> internalServerErrorExceptionHandler(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        exceptionLogService.logException(ex, status, request);
+        if (!isExcludedFromLogging(ex)) {
+            exceptionLogService.logInfoException(ex, status, request);
+        }
         return exceptionHandler(ex, status);
     }
 
     // BAD_REQUEST(400)
-    @ExceptionHandler({SocialIdChangeException.class, InvalidUserNameException.class,
-            ParameterNotFoundException.class})
+    @ExceptionHandler({InvalidUserNameException.class, ParameterNotFoundException.class})
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        exceptionLogService.logException(ex, status, request);
+        if (!isExcludedFromLogging(ex)) {
+            exceptionLogService.logInfoException(ex, status, request);
+        }
         return exceptionHandler(ex, status);
     }
 
@@ -90,7 +89,9 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
     @ExceptionHandler({TokenExpiredException.class})
     public ResponseEntity<ExceptionDto> unauthorizedExceptionHandler(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        exceptionLogService.logException(ex, status, request);
+        if (!isExcludedFromLogging(ex)) {
+            exceptionLogService.logException(ex, status, request);
+        }
         return exceptionHandler(ex, status);
     }
 
@@ -98,13 +99,31 @@ public class MainExceptionResolverController extends ResponseEntityExceptionHand
     protected ResponseEntity<ExceptionDto> exceptionHandler(Exception ex, HttpStatusCode httpStatus) {
         String className = extractClassName(ex.getClass().toString());
         String exMessage = ex.getMessage();
-        log.error("[{}]: {}", className, exMessage);
+        log.info("[{}]: {}", className, exMessage);
         return ResponseEntity.status(httpStatus).body(new ExceptionDto(httpStatus.value(), className, exMessage));
+    }
+
+    // 처리되지 않은 예외 발생 ->  Error
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionDto> globalExceptionHandler(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        exceptionLogService.logException(ex, status, request);
+        String className = extractClassName(ex.getClass().toString());
+        String exMessage = ex.getMessage();
+        log.error("[{}]: {}", className, exMessage);
+        return ResponseEntity.status(status).body(new ExceptionDto(status.value(), className, exMessage));
     }
 
     //클래스 이름 추출
     protected String extractClassName(String fullClassName) {
         String[] classNameParts = fullClassName.split("\\.");
         return classNameParts[classNameParts.length - 1];
+    }
+
+    // 자주 발생하는 예외 로그 제외
+    private boolean isExcludedFromLogging(Exception ex) {
+        return (ex instanceof VoiceNotFoundException ||
+                ex instanceof ParameterNotFoundException ||
+                ex instanceof TokenExpiredException);
     }
 }

@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -66,9 +67,7 @@ public class ReissueController {
             )
     })
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-
-        String refresh = request.getHeader("refresh");
+    public ResponseEntity<?> reissue(@RequestHeader("refresh") String refresh, HttpServletResponse response) {
 
         if (refresh == null) {
             throw new ResponseNotFoundException("refresh 토큰이 없습니다."); // 404
