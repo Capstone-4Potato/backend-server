@@ -68,6 +68,6 @@ tasks.withType(JavaCompile){
 
 bootJar{
 	archiveBaseName = 'BalbamBalbam-Application'
-	archiveVersion = '1.1.4'
+	archiveVersion = '1.1.5'
 	exclude '**/application-local.properties'
 }
