@@ -28,35 +28,37 @@ public class ExceptionLogService {
     }
 
     public void logException(Exception ex, HttpStatus httpStatus, WebRequest request) {
-        // 기존 ExceptionInfo 찾기 또는 새로 생성
-        ExceptionInfo exceptionInfo = findOrCreateExceptionInfo(ex, httpStatus);
+        logExceptionWithLevel(ex, httpStatus, request, getExceptionLevel(httpStatus));
+    }
 
-        // ExceptionLog 저장
+    public void logInfoException(Exception ex, HttpStatus httpStatus, WebRequest request) {
+        logExceptionWithLevel(ex, httpStatus, request, "INFO");
+    }
+
+    private void logExceptionWithLevel(Exception ex, HttpStatus httpStatus, WebRequest request, String level) {
+        ExceptionInfo exceptionInfo = findOrCreateExceptionInfo(ex, httpStatus, level);
+
         ExceptionLog exceptionLog = new ExceptionLog();
         exceptionLog.setExceptionInfoId(exceptionInfo.getExceptionInfoId());
         exceptionLog.setTimestamp(LocalDateTime.now());
-        exceptionLog.setClassName(ex.getStackTrace()[0].getClassName());
+        exceptionLog.setClassName(extractClassName(ex.getClass().toString()));
         exceptionLog.setRequestPath(((ServletWebRequest) request).getRequest().getRequestURI());
         exceptionLogRepository.save(exceptionLog);
-
     }
 
-    // ExceptionInfo 찾기 또는 생성
-    private ExceptionInfo findOrCreateExceptionInfo(Exception ex, HttpStatus httpStatus) {
+    private ExceptionInfo findOrCreateExceptionInfo(Exception ex, HttpStatus httpStatus, String level) {
         String exceptionName = ex.getClass().getSimpleName();
         String exceptionMessage = ex.getMessage();
         int exceptionHttpStatus = httpStatus.value();
-        String exceptionLevel = getExceptionLevel(httpStatus);
 
         return exceptionInfoRepository.findByExceptionNameAndExceptionMessageAndExceptionHttpStatus(
                         exceptionName, exceptionMessage, exceptionHttpStatus)
                 .orElseGet(() -> {
-                    // 없으면 생성
                     ExceptionInfo newInfo = new ExceptionInfo();
                     newInfo.setExceptionName(exceptionName);
                     newInfo.setExceptionMessage(exceptionMessage);
                     newInfo.setExceptionHttpStatus(exceptionHttpStatus);
-                    newInfo.setExceptionLevel(exceptionLevel);
+                    newInfo.setExceptionLevel(level);
                     return exceptionInfoRepository.save(newInfo);
                 });
     }
@@ -70,5 +72,10 @@ public class ExceptionLogService {
         } else {
             return "INFO";
         }
+    }
+
+    protected String extractClassName(String fullClassName) {
+        String[] classNameParts = fullClassName.split("\\.");
+        return classNameParts[classNameParts.length - 1];
     }
 }
