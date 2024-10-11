@@ -4,8 +4,8 @@ import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.learningInfo.learning.dto.LearningResponseDto;
 import com.potato.balbambalbam.learningInfo.learning.service.LearningService;
-import com.potato.balbambalbam.user.token.jwt.JWTUtil;
-import com.potato.balbambalbam.user.join.service.JoinService;
+import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
+import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -62,7 +62,7 @@ public class LearningController {
 
         List<CardScore> scores = learningService.findCardScoresByUserId(userId); // 사용자 카드 중 점수를 받은 카드
         List<Card> allCards = learningService.findAllCards(); // 전체 카드
-        Map<Long, Card> cardDetails = allCards.stream().collect(Collectors.toMap(Card::getId, card -> card));
+        Map<Long, Card> cardDetails = allCards.stream().collect(Collectors.toMap(Card::getCardId, card -> card));
 
         // 카드 카테고리 번호 유의하기!
         int syllableCount = (int) allCards.stream()
