@@ -1,11 +1,11 @@
-package com.potato.balbambalbam.profile.token.controller;
+package com.potato.balbambalbam.user.token.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
-import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
+import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

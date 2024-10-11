@@ -1,9 +1,9 @@
-package com.potato.balbambalbam.profile.token.filter;
+package com.potato.balbambalbam.user.token.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
+import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
