@@ -36,4 +36,4 @@ application-dev.properties
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+.DS_Store
