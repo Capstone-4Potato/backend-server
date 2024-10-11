@@ -1,3 +1,4 @@
+/*
 package com.potato.balbambalbam.log.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,3 +11,4 @@ public class TestController {
         throw new RuntimeException("Test exception");
     }
 }
+*/
