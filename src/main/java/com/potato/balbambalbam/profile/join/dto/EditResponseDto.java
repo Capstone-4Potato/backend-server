@@ -22,3 +22,4 @@ public class EditResponseDto {
         this.age = age;
         this.gender = gender;
     }
+}
