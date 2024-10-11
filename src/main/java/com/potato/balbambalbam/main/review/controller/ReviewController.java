@@ -1,9 +1,9 @@
-package com.potato.balbambalbam.review.controller;
+package com.potato.balbambalbam.main.review.controller;
 
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.review.dto.CardDto;
-import com.potato.balbambalbam.review.dto.ReviewListResponseDto;
-import com.potato.balbambalbam.review.service.ReviewService;
+import com.potato.balbambalbam.main.review.dto.CardDto;
+import com.potato.balbambalbam.main.review.dto.ReviewListResponseDto;
+import com.potato.balbambalbam.main.review.service.ReviewService;
 import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;

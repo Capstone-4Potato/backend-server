@@ -9,14 +9,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity(name = "category")
-@Getter @ToString @Setter
+@Getter @Setter
+@ToString
 @NoArgsConstructor
 public class Category {
     @Id
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "name", nullable = false)
-    private String name;
-    @Column(name = "parent_id")
-    private Long parentId;
+    @Column(name = "category_id")
+    private Long category_id;
+    @Column(name = "level", nullable = false)
+    private int level;
+
 }

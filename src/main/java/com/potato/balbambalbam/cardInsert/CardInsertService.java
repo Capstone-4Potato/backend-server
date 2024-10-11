@@ -28,29 +28,29 @@ public class CardInsertService {
     public int updateCardRecordList() {
         List<Card> cardList = cardRepository.findAll();
 
-        cardList.stream().forEach(card -> {
+        cardList.forEach(card -> {
             if(isNeedUpdate(card)){
                 updateCardRecord(card);
                 cardRepository.save(card);
-                log.info(card + "update record success");
+                log.info("{} update record success", card);
             }
         });
 
         return cardList.size();
     }
     @Transactional
-    private void updateCardRecord(Card card) {
+    protected void updateCardRecord(Card card) {
         updatePhonemeService.updateCardPhonemeColumn(card);
         updateEngPronunciationService.updateEngPronunciation(card);
         updateEngTranslationService.updateEngTranslation(card);
-        updateAllTtsService.updateCardVoice(card);
+        //updateAllTtsService.updateCardVoice(card);
     }
 
     protected boolean isNeedUpdate(Card card){
-        if(card.getCategoryId() > 31 && (card.getEngTranslation() != null || card.getPhonemesMap() != null || card.getEngPronunciation() != null || cardVoiceRepository.findById(card.getId()).isPresent())) {
+        if(card.getCategoryId() > 31 && (card.getCardTranslation() != null || card.getPhonemesMap() != null || card.getCardPronunciation() != null || cardVoiceRepository.findById(card.getCardId()).isPresent())) {
             return false;
         }
-        if(card.getEngTranslation() == null || card.getPhonemesMap() == null || card.getEngPronunciation() == null || !cardVoiceRepository.findById(card.getId()).isPresent()){
+        if(card.getCardTranslation() == null || card.getPhonemesMap() == null || card.getCardPronunciation() == null || !cardVoiceRepository.findById(card.getCardId()).isPresent()){
             return true;
         }
         return false;

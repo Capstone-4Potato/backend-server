@@ -36,7 +36,7 @@ jobs:
 
       # 4. Docker 이미지 빌드
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}:latest .
 
       # 5. Docker Hub 로그인
       - name: Log in to Docker Hub
@@ -47,7 +47,7 @@ jobs:
 
       # 6. Docker 이미지를 Docker Hub에 푸시
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}:latest
 
   # EC2에서 Docker 이미지 실행 작업
   deploy-to-ec2:
@@ -57,10 +57,10 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.WAS_HOST }} #서버의 public 주소
-          username: ${{ secrets.WAS_USERNAME }} #접속할 사용자
-          key: ${{ secrets.WAS_KEY }} #SSH 키
-          port: ${{ secrets.WAS_SSH_PORT }}
+          host: ${{ secrets.DEV_WAS_HOST }} #서버의 public 주소
+          username: ${{ secrets.DEV_WAS_USERNAME }} #접속할 사용자
+          key: ${{ secrets.DEV_WAS_KEY }} #SSH 키
+          port: ${{ secrets.DEV_WAS_SSH_PORT }}
           script: |
             cat ~/my_password.txt | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             if [ "$(docker ps -qa)" ]; then
@@ -68,5 +68,5 @@ jobs:
             else
               echo "No containers to remove."
             fi
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}
-            docker run -d -p 8080:8080 --env-file /home/ubuntu/src/config/development.env --name app ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}
+            docker run -d -p 8080:8080 --env-file /home/ubuntu/src/config/development.env --name app ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}

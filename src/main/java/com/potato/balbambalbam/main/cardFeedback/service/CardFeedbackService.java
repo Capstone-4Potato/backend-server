@@ -161,11 +161,11 @@ public class CardFeedbackService {
             Card foundCard = null;
             if (foundPhoneme.getType() == 0) {    //초성
                 hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
-                foundCard = cardRepository.findByTextOrderById(hangul).getLast();
+                foundCard = cardRepository.findByTextOrderByCardId()(hangul).getLast();
                 text = "Initial consonant " + phoneme;
             } else if (foundPhoneme.getType() == 1) {  //중성
                 hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
-                foundCard = cardRepository.findByTextOrderById(hangul).getFirst();
+                foundCard = cardRepository.findByTextOrderByCardId(hangul).getFirst();
                 text = "Medial vowel " + phoneme;
             }
             //카테고리 찾기
