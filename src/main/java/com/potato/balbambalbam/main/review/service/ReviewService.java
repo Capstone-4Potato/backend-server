@@ -1,11 +1,11 @@
-package com.potato.balbambalbam.review.service;
+package com.potato.balbambalbam.main.review.service;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
 import com.potato.balbambalbam.data.entity.Category;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CategoryNotFoundException;
-import com.potato.balbambalbam.review.dto.CardDto;
+import com.potato.balbambalbam.main.review.dto.CardDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

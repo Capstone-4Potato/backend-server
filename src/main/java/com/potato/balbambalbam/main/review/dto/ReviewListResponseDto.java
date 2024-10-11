@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.review.dto;
+package com.potato.balbambalbam.main.review.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
