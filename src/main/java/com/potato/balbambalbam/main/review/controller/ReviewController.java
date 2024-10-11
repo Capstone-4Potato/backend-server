@@ -4,7 +4,6 @@ import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.main.review.dto.CardDto;
 import com.potato.balbambalbam.main.review.dto.ReviewListResponseDto;
 import com.potato.balbambalbam.main.review.service.ReviewService;
-import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
 import com.potato.balbambalbam.profile.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,7 +27,7 @@ import java.util.List;
 @Tag(name = "Review API", description = "복습 카드를 제공한다")
 public class ReviewController {
     private final JoinService joinService;
-    private final JWTUtil jwtUtil;
+    private final com.potato.balbambalbam.user.token.jwt.JWTUtil jwtUtil;
     private final ReviewService reviewService;
 
     @GetMapping("/review")

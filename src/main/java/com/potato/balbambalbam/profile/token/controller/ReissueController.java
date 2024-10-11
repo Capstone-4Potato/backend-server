@@ -1,11 +1,11 @@
-package com.potato.balbambalbam.profile.token.controller;
+package com.potato.balbambalbam.user.token.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
-import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
+import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,12 +14,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -66,9 +66,7 @@ public class ReissueController {
             )
     })
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-
-        String refresh = request.getHeader("refresh");
+    public ResponseEntity<?> reissue(@RequestHeader("refresh") String refresh, HttpServletResponse response) {
 
         if (refresh == null) {
             throw new ResponseNotFoundException("refresh 토큰이 없습니다."); // 404
