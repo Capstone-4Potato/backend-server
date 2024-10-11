@@ -11,6 +11,12 @@ HELP.md
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+/build/classes
+/build/reports
+/build/resources
+/build/test-results
+/build/tmp
+resolvedMainClassName
 
 ### IntelliJ IDEA ###
 .idea
@@ -20,7 +26,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-application-local.properties
+application-dev.properties
 
 ### NetBeans ###
 /nbproject/private/
