@@ -1,12 +1,12 @@
-package com.potato.balbambalbam.profile.join.controller;
+package com.potato.balbambalbam.user.join.controller;
 
 import com.potato.balbambalbam.data.repository.RefreshRepository;
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.profile.join.dto.DeleteUserResponseDto;
-import com.potato.balbambalbam.profile.join.dto.EditResponseDto;
-import com.potato.balbambalbam.profile.join.dto.JoinResponseDto;
-import com.potato.balbambalbam.profile.token.jwt.JWTUtil;
-import com.potato.balbambalbam.profile.join.service.JoinService;
+import com.potato.balbambalbam.user.join.dto.DeleteUserResponseDto;
+import com.potato.balbambalbam.user.join.dto.EditResponseDto;
+import com.potato.balbambalbam.user.join.dto.JoinResponseDto;
+import com.potato.balbambalbam.user.token.jwt.JWTUtil;
+import com.potato.balbambalbam.user.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

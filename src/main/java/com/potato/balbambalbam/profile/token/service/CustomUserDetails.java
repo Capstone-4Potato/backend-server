@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.profile.token.service;
+package com.potato.balbambalbam.user.token.service;
 
 import com.potato.balbambalbam.data.entity.User;
 import org.springframework.security.core.GrantedAuthority;
