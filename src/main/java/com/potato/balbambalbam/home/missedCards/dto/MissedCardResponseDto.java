@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Schema(description = "복습카드 리스트 Response")
-public class ReviewListResponseDto<T> {
+@Schema(description = "missedCard 리스트 Response")
+public class MissedCardResponseDto<T> {
     private T cardList;
     private int count;
 
-    public ReviewListResponseDto(T cardList, int count) {
+    public MissedCardResponseDto(T cardList, int count) {
         this.cardList = cardList;
         this.count = count;
     }
