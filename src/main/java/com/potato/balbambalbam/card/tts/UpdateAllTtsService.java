@@ -19,7 +19,7 @@ public class UpdateAllTtsService {
     private final CardVoiceRepository cardVoiceRepository;
 
     public void updateCardVoice(Card card) {
-        saveSixVoices(card.getId(), aiAllTtsService.getAiTtsResponse(card.getText()));
+        saveSixVoices(card.getCardId(), aiAllTtsService.getAiTtsResponse(card.getText()));
     }
 
     @Transactional
