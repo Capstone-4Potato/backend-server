@@ -2,7 +2,7 @@ package com.potato.balbambalbam.learningInfo.test.controller;
 
 import com.potato.balbambalbam.data.entity.WeakSoundTest;
 import com.potato.balbambalbam.data.repository.WeakSoundTestRepository;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.exception.InvalidParameterException;
 import com.potato.balbambalbam.exception.ParameterNotFoundException;
 import com.potato.balbambalbam.learningInfo.test.dto.WeakSoundTestListDto;
