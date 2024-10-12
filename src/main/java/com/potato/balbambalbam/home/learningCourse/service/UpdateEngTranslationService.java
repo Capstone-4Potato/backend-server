@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.card.cardList.service;
+package com.potato.balbambalbam.home.learningCourse.service;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.repository.CardRepository;
@@ -15,7 +15,7 @@ public class UpdateEngTranslationService {
 
     public void updateEngTranslation(Card card){
         String text = card.getText();
-        card.setEngTranslation(aiEngTranslationService.getEngTranslation(text).getEngTranslation());
+        card.setCardTranslation(aiEngTranslationService.getEngTranslation(text).getEngTranslation());
         cardRepository.save(card);
     }
 }

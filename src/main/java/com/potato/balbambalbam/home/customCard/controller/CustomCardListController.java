@@ -1,9 +1,9 @@
-package com.potato.balbambalbam.card.cardList.controller;
+package com.potato.balbambalbam.home.learningCourse.controller;
 
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.card.cardList.dto.CardListResponseDto;
-import com.potato.balbambalbam.card.cardList.dto.ResponseCardDto;
-import com.potato.balbambalbam.card.cardList.service.CardListService;
+import com.potato.balbambalbam.home.learningCourse.dto.CardListResponseDto;
+import com.potato.balbambalbam.home.learningCourse.dto.ResponseCardDto;
+import com.potato.balbambalbam.home.learningCourse.service.CardListService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
