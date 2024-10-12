@@ -1,10 +1,7 @@
 package com.potato.balbambalbam.card.cardFeedback.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardScore;
-import com.potato.balbambalbam.data.entity.Category;
-import com.potato.balbambalbam.data.entity.Phoneme;
 import com.potato.balbambalbam.data.repository.CardRepository;
 import com.potato.balbambalbam.data.repository.CardScoreRepository;
 import com.potato.balbambalbam.data.repository.CategoryRepository;
@@ -14,14 +11,12 @@ import com.potato.balbambalbam.card.cardFeedback.dto.AiFeedbackRequestDto;
 import com.potato.balbambalbam.card.cardFeedback.dto.AiFeedbackResponseDto;
 import com.potato.balbambalbam.card.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.card.cardFeedback.dto.UserFeedbackResponseDto;
-import com.potato.balbambalbam.home.cardList.service.UpdatePhonemeService;
+import com.potato.balbambalbam.home.learningCourse.service.UpdatePhonemeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,7 +43,8 @@ public class CardFeedbackService {
         }
 
         //학습카드 추천
-        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, categoryId);
+        //Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = createRecommendCard(aiFeedbackResponseDto, categoryId);
+        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = null;
 
         return setUserFeedbackResponseDto(cardId, aiFeedbackResponseDto, recommendCard);
     }
@@ -100,96 +96,96 @@ public class CardFeedbackService {
         }
     }
 
-    /**
-     * 추천학습 카드 생성
-     *
-     * @param aiFeedbackResponseDto
-     * @param categoryId
-     * @return
-     */
-    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long categoryId) {
-        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
-
-        //0. 음절인 경우
-        if (categoryId < 15) {
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
-            recommendCard.put(-1L, recommendCardInfo);
-            return recommendCard;
-        }
-
-        //1. 100점인 경우 (단어, 문장)
-        if (aiFeedbackResponseDto.getUserAccuracy() == 100) {
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("perfect");
-            recommendCard.put(-100L, recommendCardInfo);
-            return recommendCard;
-        }
-
-        //2. 문장인데 100점이 아닌 경우
-        if (categoryId > 31) {
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
-            recommendCard.put(-1L, recommendCardInfo);
-            return recommendCard;
-        }
-
-        //3. 100점은 아닌데 추천학습 단어가 없는 경우(단어)
-        if (aiFeedbackResponseDto.getRecommendedPronunciations().get(0).equals("-1")) {
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("drop the extra sound");
-            recommendCard.put(-7L, recommendCardInfo);
-            return recommendCard;
-        }
-
-        //4. 단어 + 100점이 아닌 경우
-        return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
-
-    }
-
-    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> getWordRecommendCards(List<String> recommendPhonemes, List<String> recommendLastPhonemes) {
-        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
-
-        //틀린 음소가 4개 이상인 경우
-        if (recommendPhonemes.size() + recommendLastPhonemes.size() > 3) {
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("try again");
-            recommendCard.put(-4L, recommendCardInfo);
-            return recommendCard;
-        }
-
-        //틀린 음소가 3개 이하일 경우
-        recommendPhonemes.forEach(phoneme -> {
-            Phoneme foundPhoneme = phonemeRepository.findPhonemeByTextOrderById(phoneme).get(0);
-            String hangul = "";
-            String text = "";
-            Card foundCard = null;
-            if (foundPhoneme.getType() == 0) {    //초성
-                hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
-                foundCard = cardRepository.findByTextOrderByCardId()(hangul).getLast();
-                text = "Initial consonant " + phoneme;
-            } else if (foundPhoneme.getType() == 1) {  //중성
-                hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
-                foundCard = cardRepository.findByTextOrderByCardId(hangul).getFirst();
-                text = "Medial vowel " + phoneme;
-            }
-            //카테고리 찾기
-            Long categoryId = foundCard.getCategoryId();
-            Category subCategoryData = categoryRepository.findById(categoryId).get();
-            Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
-            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(text, categoryData.getName(), subCategoryData.getName());
-            recommendCard.put(foundCard.getId(), recommendCardInfo);
-        });
-
-        //종성
-        recommendLastPhonemes.forEach(phoneme -> {
-            if (!(phoneme.trim().length() == 0)) {
-                Long categoryId = getCategoryId(phoneme);
-                Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
-                Category subCategoryData = categoryRepository.findById(categoryId).get();
-                Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
-                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("final consonant " + phoneme, categoryData.getName(), subCategoryData.getName());
-                recommendCard.put(card.getId(), recommendCardInfo);
-            }
-        });
-
-        return recommendCard;
-    }
+//    /**
+//     * 추천학습 카드 생성
+//     *
+//     * @param aiFeedbackResponseDto
+//     * @param categoryId
+//     * @return
+//     */
+//    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> createRecommendCard(AiFeedbackResponseDto aiFeedbackResponseDto, Long categoryId) {
+//        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
+//
+//        //0. 음절인 경우
+//        if (categoryId < 15) {
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
+//            recommendCard.put(-1L, recommendCardInfo);
+//            return recommendCard;
+//        }
+//
+//        //1. 100점인 경우 (단어, 문장)
+//        if (aiFeedbackResponseDto.getUserAccuracy() == 100) {
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("perfect");
+//            recommendCard.put(-100L, recommendCardInfo);
+//            return recommendCard;
+//        }
+//
+//        //2. 문장인데 100점이 아닌 경우
+//        if (categoryId > 31) {
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("not word");
+//            recommendCard.put(-1L, recommendCardInfo);
+//            return recommendCard;
+//        }
+//
+//        //3. 100점은 아닌데 추천학습 단어가 없는 경우(단어)
+//        if (aiFeedbackResponseDto.getRecommendedPronunciations().get(0).equals("-1")) {
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("drop the extra sound");
+//            recommendCard.put(-7L, recommendCardInfo);
+//            return recommendCard;
+//        }
+//
+//        //4. 단어 + 100점이 아닌 경우
+//        return getWordRecommendCards(aiFeedbackResponseDto.getRecommendedPronunciations(), aiFeedbackResponseDto.getRecommendedLastPronunciations());
+//
+//    }
+//
+//    protected Map<Long, UserFeedbackResponseDto.RecommendCardInfo> getWordRecommendCards(List<String> recommendPhonemes, List<String> recommendLastPhonemes) {
+//        Map<Long, UserFeedbackResponseDto.RecommendCardInfo> recommendCard = new HashMap<>();
+//
+//        //틀린 음소가 4개 이상인 경우
+//        if (recommendPhonemes.size() + recommendLastPhonemes.size() > 3) {
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("try again");
+//            recommendCard.put(-4L, recommendCardInfo);
+//            return recommendCard;
+//        }
+//
+//        //틀린 음소가 3개 이하일 경우
+//        recommendPhonemes.forEach(phoneme -> {
+//            Phoneme foundPhoneme = phonemeRepository.findPhonemeByTextOrderById(phoneme).get(0);
+//            String hangul = "";
+//            String text = "";
+//            Card foundCard = null;
+//            if (foundPhoneme.getType() == 0) {    //초성
+//                hangul = updatePhonemeService.createHangul(foundPhoneme.getText(), "ㅏ");
+//                foundCard = cardRepository.findByTextOrderByCardId(hangul).getLast();
+//                text = "Initial consonant " + phoneme;
+//            } else if (foundPhoneme.getType() == 1) {  //중성
+//                hangul = updatePhonemeService.createHangul("ㅇ", foundPhoneme.getText());
+//                foundCard = cardRepository.findByTextOrderByCardId(hangul).getFirst();
+//                text = "Medial vowel " + phoneme;
+//            }
+//            //카테고리 찾기
+//            Long categoryId = foundCard.getCategoryId();
+//            Category subCategoryData = categoryRepository.findById(categoryId).get();
+//            Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
+//            UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo(text, categoryData.getName(), subCategoryData.getName());
+//            recommendCard.put(foundCard.getId(), recommendCardInfo);
+//        });
+//
+//        //종성
+//        recommendLastPhonemes.forEach(phoneme -> {
+//            if (!(phoneme.trim().length() == 0)) {
+//                Long categoryId = getCategoryId(phoneme);
+//                Card card = cardRepository.findAllByCategoryId(categoryId).get(0);
+//                Category subCategoryData = categoryRepository.findById(categoryId).get();
+//                Category categoryData = categoryRepository.findById(subCategoryData.getParentId()).get();
+//                UserFeedbackResponseDto.RecommendCardInfo recommendCardInfo = new UserFeedbackResponseDto.RecommendCardInfo("final consonant " + phoneme, categoryData.getName(), subCategoryData.getName());
+//                recommendCard.put(card.getId(), recommendCardInfo);
+//            }
+//        });
+//
+//        return recommendCard;
+//    }
 
     //종성 카테고리 아이디 찾기
     protected Long getCategoryId(String phoneme) {
