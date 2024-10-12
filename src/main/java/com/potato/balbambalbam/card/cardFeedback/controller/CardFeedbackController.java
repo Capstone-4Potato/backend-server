@@ -30,7 +30,7 @@ public class CardFeedbackController {
     private final JWTUtil jwtUtil;
 
     @PostMapping("/cards/{cardId}")
-    @Operation(summary = "card Feedback 제공", description = "userAudio, userScore, recommendCard, waveform 제공")
+    @Operation(summary = "card Feedback 제공", description = "userAudio, userScore, waveform 제공")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "OK : 카드 피드백 제공 성공", content = @Content(schema = @Schema(implementation = UserFeedbackResponseDto.class))),
