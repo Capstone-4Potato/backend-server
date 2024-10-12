@@ -6,7 +6,7 @@ import com.potato.balbambalbam.data.repository.CustomCardRepository;
 import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
-import com.potato.balbambalbam.home.cardList.service.AiEngTranslationService;
+import com.potato.balbambalbam.home.learningCourse.service.AiEngTranslationService;
 import com.potato.balbambalbam.home.customCard.dto.CustomCardResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

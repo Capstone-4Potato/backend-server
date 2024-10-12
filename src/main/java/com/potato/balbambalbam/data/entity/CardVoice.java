@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor @Builder
 public class CardVoice {
     @Id
-    @Column(name = "id")
+    @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
