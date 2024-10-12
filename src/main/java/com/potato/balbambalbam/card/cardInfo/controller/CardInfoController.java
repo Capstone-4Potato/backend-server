@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.card.cardInfo.controller;
 
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.card.cardInfo.dto.CardInfoResponseDto;
 import com.potato.balbambalbam.card.cardInfo.service.CardInfoService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
