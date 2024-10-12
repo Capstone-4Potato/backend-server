@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.home.learningCourse.controller;
+package com.potato.balbambalbam.home.customCard.controller;
 
 import com.potato.balbambalbam.log.dto.ExceptionDto;
 import com.potato.balbambalbam.home.learningCourse.dto.CardListResponseDto;
