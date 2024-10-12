@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.card.cardList.service;
+package com.potato.balbambalbam.home.learningCourse.service;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.repository.CardRepository;
@@ -16,7 +16,7 @@ public class UpdateEngPronunciationService {
 
     public void updateEngPronunciation(Card card) {
         String text = card.getText();
-        card.setEngPronunciation(aiPronunciationService.getEngPronunciation(text).getEngPronunciation());
+        card.setCardPronunciation(aiPronunciationService.getEngPronunciation(text).getEngPronunciation());
         cardRepository.save(card);
     }
 }

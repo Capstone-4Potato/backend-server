@@ -1,9 +1,9 @@
-package com.potato.balbambalbam.card.cardList.controller;
+package com.potato.balbambalbam.home.learningCourse.controller;
 
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.card.cardList.dto.CardListResponseDto;
-import com.potato.balbambalbam.card.cardList.dto.ResponseCardDto;
-import com.potato.balbambalbam.card.cardList.service.CardListService;
+import com.potato.balbambalbam.home.learningCourse.dto.CardListResponseDto;
+import com.potato.balbambalbam.home.learningCourse.dto.ResponseCardDto;
+import com.potato.balbambalbam.home.learningCourse.service.CardListService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,14 +22,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "CardList API", description = "카테고리에 따른 카드리스트를 제공하고, 북마크를 toggle한다")
+@Tag(name = "LearningCourse API", description = "카테고리에 따른 카드리스트를 제공")
 public class CardListController {
     private final CardListService cardListService;
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
     @GetMapping ("/cards/{level}")
-    @Operation(summary = "CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
+    @Operation(summary = "CardList 조회", description = "레벨에 맞는 카테고리의 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "ERROR : 존재하지 않는 카테고리 조회", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))

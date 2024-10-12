@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.card.cardList.service;
+package com.potato.balbambalbam.home.learningCourse.service;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardWeakSound;
@@ -41,7 +41,7 @@ public class CardWeakSoundService {
         cardList.forEach(card -> {
             List<Long> phonemes = card.getPhonemesMap();
             if(!Collections.disjoint(phonemes, phonemeList)){
-                cardWeakSoundList.add(new CardWeakSound(userId ,card.getId()));
+                cardWeakSoundList.add(new CardWeakSound(userId ,card.getCardId()));
             }
         });
         bulkRepository.saveAll(cardWeakSoundList);

@@ -1,10 +1,9 @@
-package com.potato.balbambalbam.card.cardList.service;
+package com.potato.balbambalbam.home.learningCourse.service;
 
 import com.potato.balbambalbam.data.entity.*;
 import com.potato.balbambalbam.data.repository.*;
 import com.potato.balbambalbam.exception.CardNotFoundException;
-import com.potato.balbambalbam.exception.CategoryNotFoundException;
-import com.potato.balbambalbam.card.cardList.dto.ResponseCardDto;
+import com.potato.balbambalbam.home.learningCourse.dto.ResponseCardDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
