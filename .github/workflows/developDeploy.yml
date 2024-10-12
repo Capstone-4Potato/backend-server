@@ -64,9 +64,10 @@ jobs:
           script: |
             cat ~/my_password.txt | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             if [ "$(docker ps -qa)" ]; then
-              docker rm -f $docker rm -f $(docker ps -qa)
+              docker rm -f $(docker ps -qa)
             else
               echo "No containers to remove."
             fi
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}
+            docker rm -f app || true
             docker run -d -p 8080:8080 --env-file /home/ubuntu/src/config/development.env --name app ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}
