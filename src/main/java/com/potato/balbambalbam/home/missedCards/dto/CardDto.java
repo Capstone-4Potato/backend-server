@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.home.review.dto;
+package com.potato.balbambalbam.home.missedCards.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
