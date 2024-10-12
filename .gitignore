@@ -15,8 +15,10 @@ bin/
 /build/reports
 /build/resources
 /build/test-results
+/build/generated
 /build/tmp
 resolvedMainClassName
+.gradle
 
 ### IntelliJ IDEA ###
 .idea
