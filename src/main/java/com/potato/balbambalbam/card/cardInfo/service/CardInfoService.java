@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.card.todayCourse.cardInfo.service;
+package com.potato.balbambalbam.card.cardInfo.service;
 
 import com.potato.balbambalbam.data.entity.Card;
 import com.potato.balbambalbam.data.entity.CardVoice;
@@ -11,9 +11,9 @@ import com.potato.balbambalbam.data.repository.UserRepository;
 import com.potato.balbambalbam.exception.CardNotFoundException;
 import com.potato.balbambalbam.exception.UserNotFoundException;
 import com.potato.balbambalbam.exception.VoiceNotFoundException;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.AiTtsRequestDto;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.AiTtsResponseDto;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.CardInfoResponseDto;
+import com.potato.balbambalbam.card.cardInfo.dto.AiTtsRequestDto;
+import com.potato.balbambalbam.card.cardInfo.dto.AiTtsResponseDto;
+import com.potato.balbambalbam.card.cardInfo.dto.CardInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

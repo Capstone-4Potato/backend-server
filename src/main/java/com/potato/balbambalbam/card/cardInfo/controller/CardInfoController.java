@@ -1,8 +1,8 @@
-package com.potato.balbambalbam.card.todayCourse.cardInfo.controller;
+package com.potato.balbambalbam.card.cardInfo.controller;
 
 import com.potato.balbambalbam.log.dto.ExceptionDto;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.CardInfoResponseDto;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.service.CardInfoService;
+import com.potato.balbambalbam.card.cardInfo.dto.CardInfoResponseDto;
+import com.potato.balbambalbam.card.cardInfo.service.CardInfoService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;

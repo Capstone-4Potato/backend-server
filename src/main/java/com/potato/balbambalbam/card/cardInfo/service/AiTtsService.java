@@ -1,9 +1,9 @@
-package com.potato.balbambalbam.card.todayCourse.cardInfo.service;
+package com.potato.balbambalbam.card.cardInfo.service;
 
 import com.potato.balbambalbam.exception.AiGenerationFailException;
 import com.potato.balbambalbam.exception.InvalidParameterException;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.AiTtsRequestDto;
-import com.potato.balbambalbam.card.todayCourse.cardInfo.dto.AiTtsResponseDto;
+import com.potato.balbambalbam.card.cardInfo.dto.AiTtsRequestDto;
+import com.potato.balbambalbam.card.cardInfo.dto.AiTtsResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
