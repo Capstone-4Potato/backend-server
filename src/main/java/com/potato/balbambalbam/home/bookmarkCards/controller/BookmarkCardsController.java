@@ -31,7 +31,7 @@ public class BookmarkCardsController {
     private final JWTUtil jwtUtil;
     private final BookmarkCardsService bookmarkCardsService;
 
-    @GetMapping("/cards/bookmark")
+    @GetMapping("/home/bookmark")
     @Operation(summary = "북마크 CardList 조회", description = "북마크 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),

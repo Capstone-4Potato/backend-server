@@ -29,7 +29,7 @@ public class CustomCardListController {
     private final JWTUtil jwtUtil;
     private final CardListService cardListService;
 
-    @GetMapping("/cards/custom")
+    @GetMapping("/home/custom")
     @Operation(summary = "Custom CardList 조회", description = "parameter에 맞는 카테고리의 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),

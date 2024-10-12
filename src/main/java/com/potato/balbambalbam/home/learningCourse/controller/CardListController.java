@@ -28,7 +28,7 @@ public class CardListController {
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
-    @GetMapping ("/cards/{level}")
+    @GetMapping ("/home/course/{level}")
     @Operation(summary = "CardList 조회", description = "레벨에 맞는 카테고리의 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),

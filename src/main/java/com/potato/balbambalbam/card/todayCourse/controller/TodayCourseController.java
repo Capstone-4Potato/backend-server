@@ -32,7 +32,7 @@ public class TodayCourseController {
     private final JoinService joinService;
     private final JWTUtil jwtUtil;
 
-    @PostMapping ("/today-course")
+    @PostMapping ("/cards/today-course")
     @Operation(summary = "todayCourse 요청", description = "사용자의 레벨과 요청 개수에 맞는 카드 리스트를 제공한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 제공", useReturnTypeSchema = true),

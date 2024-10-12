@@ -30,7 +30,7 @@ public class MissedCardsController {
     private final JWTUtil jwtUtil;
     private final MissedCardsService missedCardsService;
 
-    @GetMapping("/cards/missed")
+    @GetMapping("/home/missed")
     @Operation(summary = "복습 CardList 조회", description = "복습 카드 리스트를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK : 카드리스트 조회", useReturnTypeSchema = true),
