@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.card.cardFeedback.controller;
 
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.card.cardFeedback.dto.UserFeedbackRequestDto;
 import com.potato.balbambalbam.card.cardFeedback.dto.UserFeedbackResponseDto;
 import com.potato.balbambalbam.card.cardFeedback.service.CardFeedbackService;

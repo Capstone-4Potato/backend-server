@@ -2,9 +2,7 @@ package com.potato.balbambalbam.home.bookmarkCards.controller;
 
 import com.potato.balbambalbam.home.bookmarkCards.dto.BookmarkCardResponseDto;
 import com.potato.balbambalbam.home.missedCards.dto.CardDto;
-import com.potato.balbambalbam.home.missedCards.dto.MissedCardResponseDto;
-import com.potato.balbambalbam.home.missedCards.service.MissedCardsService;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;

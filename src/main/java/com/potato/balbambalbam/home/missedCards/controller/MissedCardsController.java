@@ -1,6 +1,6 @@
 package com.potato.balbambalbam.home.missedCards.controller;
 
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.home.missedCards.dto.CardDto;
 import com.potato.balbambalbam.home.missedCards.dto.MissedCardResponseDto;
 import com.potato.balbambalbam.home.missedCards.service.MissedCardsService;
