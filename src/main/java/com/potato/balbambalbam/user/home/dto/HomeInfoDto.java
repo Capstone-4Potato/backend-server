@@ -21,9 +21,9 @@ public class HomeInfoDto {
     private List<Boolean> weeklyAttendance;
     @Schema(description = "오늘의 추천 단어", example = "든든해")
     private String dailyWord;
-    @Schema(description = "오늘의 추천 단어 의미", example = "reliable, dependable")
+    @Schema(description = "오늘의 추천 단어 의미", example = "reliable")
     private String dailyWordMeaning;
-    @Schema(description = "오늘의 추천 단어 북마크 여부", example = "true")
+    @Schema(description = "오늘의 추천 단어 북마크 여부", example = "false")
     private Boolean isBookmarked;
 
 }
