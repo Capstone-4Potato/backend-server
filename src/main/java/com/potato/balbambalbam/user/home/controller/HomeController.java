@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Home API", description = "홈 화면에 필요한 사용자 레벨, 레벨 경험치, 사용자 경험치, 주간 출석 상황, 오늘의 추천 단어를 반환한다. ")
 public class HomeController {
 
     private final JoinService joinService;
