@@ -4,9 +4,11 @@ name: Java CI with Gradle
 # 워크플로우 트리거 설정
 on:
   push:
-    branches: [ "develop" ]  # test 브랜치에 푸시될 때 실행
+    branches:
+      - "develop"
   pull_request:
-    branches: [ "develop" ]  # test 브랜치로의 PR이 생성될 때 실행
+    branches:
+      - "develop"
 
 # github action vm의 권한 read로 설정
 permissions:
