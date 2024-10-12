@@ -2,7 +2,7 @@ package com.potato.balbambalbam.user.token.controller;
 
 import com.potato.balbambalbam.data.entity.Refresh;
 import com.potato.balbambalbam.data.repository.RefreshRepository;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.exception.ResponseNotFoundException;
 import com.potato.balbambalbam.exception.TokenExpiredException;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;

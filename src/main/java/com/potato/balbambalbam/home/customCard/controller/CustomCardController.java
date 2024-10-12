@@ -1,7 +1,7 @@
 package com.potato.balbambalbam.home.customCard.controller;
 
 import com.potato.balbambalbam.exception.CardDeleteException;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.home.customCard.dto.CustomCardRequestDto;
 import com.potato.balbambalbam.home.customCard.dto.CustomCardResponseDto;
 import com.potato.balbambalbam.home.customCard.service.CustomCardService;

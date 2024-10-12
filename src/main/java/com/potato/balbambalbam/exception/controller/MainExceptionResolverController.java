@@ -1,11 +1,10 @@
 package com.potato.balbambalbam.exception.controller;
 
 import com.potato.balbambalbam.exception.*;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.log.service.ExceptionLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -14,11 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.sql.SQLException;
-import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @RestControllerAdvice

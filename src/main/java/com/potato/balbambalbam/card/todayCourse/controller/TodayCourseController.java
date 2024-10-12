@@ -4,7 +4,7 @@ import com.potato.balbambalbam.home.learningCourse.dto.ResponseCardDto;
 import com.potato.balbambalbam.card.todayCourse.dto.CourseRequestDto;
 import com.potato.balbambalbam.card.todayCourse.dto.CourseResponseDto;
 import com.potato.balbambalbam.card.todayCourse.service.TodayCourseService;
-import com.potato.balbambalbam.log.dto.ExceptionDto;
+import com.potato.balbambalbam.exception.dto.ExceptionDto;
 import com.potato.balbambalbam.user.join.service.JoinService;
 import com.potato.balbambalbam.user.token.jwt.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;
