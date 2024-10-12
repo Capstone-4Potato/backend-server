@@ -1,4 +1,4 @@
-package com.potato.balbambalbam.card.todayCourse.cardInfo.dto;
+package com.potato.balbambalbam.card.cardInfo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
