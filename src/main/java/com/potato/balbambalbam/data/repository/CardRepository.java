@@ -15,7 +15,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findByCategoryIdIn(List<Long> categoryIds);
     Optional<Card> findByCardId(Long id);
     List<Card> findByTextOrderByCardId(String text);
-    @Query(value = "select * from card c where c.id not in (select cv.id from card_voice cv)", nativeQuery = true)
+    @Query(value = "select * from card c where c.card_id not in (select cv.card_id from card_voice cv)", nativeQuery = true)
     List<Card> findCardNotInCardVoice();
 
 }
