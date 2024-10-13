@@ -51,25 +51,9 @@ public class JoinController {
 
     @Operation(summary = "회원가입", description = "새로운 사용자를 생성한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "회원가입이 성공적으로 완료된 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "회원가입이 완료되었습니다."))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 요청으로 인해 회원가입에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "서버 오류로 인해 회원가입에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "회원가입이 성공적으로 완료된 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = @ExampleObject(value = "회원가입이 완료되었습니다."))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인해 회원가입에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 회원가입에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     // 회원정보 받기
     @PostMapping("/users")
@@ -82,30 +66,10 @@ public class JoinController {
 
     @Operation(summary = "회원정보 수정", description = "기존 사용자의 정보를 수정한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "회원정보가 성공적으로 수정된 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EditResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 요청으로 인해 회원정보 수정에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "서버 오류로 인해 회원정보 수정에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "회원정보가 성공적으로 수정된 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EditResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인해 회원정보 수정에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자가 접근하려고 하는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 회원정보 수정에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     // 회원정보 수정
     @PatchMapping("/users")
@@ -120,31 +84,10 @@ public class JoinController {
 
     @Operation(summary = "회원 탈퇴", description = "기존 사용자의 계정을 삭제한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "회원 탈퇴가 성공적으로 완료된 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "회원 탈퇴가 완료되었습니다."))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 요청으로 인해 회원 탈퇴에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "서버 오류로 인해 회원 탈퇴에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴가 성공적으로 완료된 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = @ExampleObject(value = "회원 탈퇴가 완료되었습니다."))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인해 회원 탈퇴에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자가 접근하려고 하는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 회원 탈퇴에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     //회원정보 삭제
     @DeleteMapping("/users")
@@ -168,30 +111,10 @@ public class JoinController {
 
     @Operation(summary = "회원정보 조회", description = "사용자의 회원정보를 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "성공적으로 회원정보를 반환한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EditResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증되지 않은 사용자가 접근하려고 하는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "사용자를 찾을 수 없는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "서버 오류로 인해 회원정보 조회에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "성공적으로 회원정보를 반환한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EditResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자가 접근하려고 하는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 회원정보 조회에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     //회원정보 출력
     @GetMapping("/users")
