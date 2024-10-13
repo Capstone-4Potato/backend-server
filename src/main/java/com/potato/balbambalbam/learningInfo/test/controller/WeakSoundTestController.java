@@ -52,12 +52,7 @@ public class WeakSoundTestController {
 
     @Operation(summary = "취약음소 테스트 목록 조회", description = "모든 취약음소 테스트 목록을 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "성공적으로 취약음소 테스트 목록을 반환한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = WeakSoundTestListDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "성공적으로 취약음소 테스트 목록을 반환한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = WeakSoundTestListDto.class)))
     })
     @GetMapping("/test")
     public ResponseEntity<List<WeakSoundTestListDto>> getWeakSoundTest() {
@@ -67,24 +62,9 @@ public class WeakSoundTestController {
 
     @Operation(summary = "사용자 음성 파일 업로드 및 테스트", description = "사용자 음성 파일을 업로드하고 AI와의 테스트 결과를 반환한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "성공적으로 테스트 결과를 반환한 경우",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"userWeakPhoneme\": {\"ㄲ\" : 5, \"ㅏ\" : 2, \" \" : 1}, \"userWeakPhonemeLast\": {\"ㄱ\" : 2}}"))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "사용자 음성 파일이 비어있는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "해당 ID를 가진 테스트 카드를 찾을 수 없는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "성공적으로 테스트 결과를 반환한 경우", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"userWeakPhoneme\": {\"ㄲ\" : 5, \"ㅏ\" : 2, \" \" : 1}, \"userWeakPhonemeLast\": {\"ㄱ\" : 2}}"))),
+            @ApiResponse(responseCode = "400", description = "사용자 음성 파일이 비어있는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "404", description = "해당 ID를 가진 테스트 카드를 찾을 수 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     @PostMapping("/test/{cardId}")
     public ResponseEntity<String> uploadFile(
@@ -108,18 +88,8 @@ public class WeakSoundTestController {
 
     @Operation(summary = "취약음소 분석 완료", description = "사용자의 취약음소 분석을 완료하고, 결과를 저장한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "취약음소가 있는 경우",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"1\": 3, \"14\": 2, \"40\": 1, \"phonemeId\": \"count\"}"))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "취약음소가 없는 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "취약음소가 있는 경우", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"1\": 3, \"14\": 2, \"40\": 1, \"phonemeId\": \"count\"}"))),
+            @ApiResponse(responseCode = "404", description = "취약음소가 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     @PostMapping("/test/finalize")
     public ResponseEntity<Map<Long, Integer>> finalizeAnalysis(@RequestHeader("access") String access) {

@@ -39,31 +39,10 @@ public class ReissueController {
 
     @Operation(summary = "토큰 재발급", description = "만료된 또는 유효한 refresh 토큰을 이용하여 새로운 access 및 refresh 토큰을 재발급한다.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "토큰 재발급이 성공적으로 완료된 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "refresh 토근과 access 토큰이 재발급 되었습니다."))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "refresh 토큰이 요청에 포함되지 않은 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "refresh 토큰이 만료된 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "서버 오류로 인해 토큰 재발급에 실패한 경우",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "토큰 재발급이 성공적으로 완료된 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = @ExampleObject(value = "refresh 토근과 access 토큰이 재발급 되었습니다."))),
+            @ApiResponse(responseCode = "404", description = "refresh 토큰이 요청에 포함되지 않은 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "401", description = "refresh 토큰이 만료된 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 토큰 재발급에 실패한 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class)))
     })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestHeader("refresh") String refresh, HttpServletResponse response) {
