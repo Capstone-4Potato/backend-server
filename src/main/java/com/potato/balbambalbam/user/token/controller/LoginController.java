@@ -16,12 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Operation(summary = "Login  API", description = "access 토큰과 refresh 토큰을 받을 수 있다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인이 완료되었습니다.",
-                    content = @Content(mediaType = "text/plain",
-                            schema = @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "401", description = "socialId가 없습니다.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDto.class))),
+            @ApiResponse(responseCode = "200", description = "로그인이 완료되었습니다.", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "401", description = "socialId가 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDto.class))),
     })
 
     @PostMapping("/login")

@@ -46,16 +46,9 @@ public class LearningController {
     }
 
     @Operation(summary = "사용자의 학습 진척도 조회", description = "사용자의 카테고리별 학습 진척도(%)를 제공한다.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "사용자의 학습 진척도를 가지고 온 경우",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = LearningResponseDto.class))
-                    )
-            }
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자의 학습 진척도를 가지고 온 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LearningResponseDto.class)))
+    })
     @GetMapping("/learning/progress")
     public ResponseEntity<LearningResponseDto> getLearningProgress(@RequestHeader("access") String access){
         Long userId = extractUserIdFromToken(access);
