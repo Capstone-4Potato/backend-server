@@ -6,9 +6,6 @@ on:
   push:
     branches:
       - "develop"
-  pull_request:
-    branches:
-      - "develop"
 
 # github action vm의 권한 read로 설정
 permissions:
@@ -71,5 +68,4 @@ jobs:
               echo "No containers to remove."
             fi
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}
-            docker rm -f app || true
             docker run -d -p 8080:8080 --env-file /home/ubuntu/src/config/development.env --name app ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_DEV_REPO }}
