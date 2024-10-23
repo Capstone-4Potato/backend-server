@@ -49,39 +49,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //csrf disable
         http
-                .csrf((auth) -> auth.disable());
-
-        //From 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
-
-        //http basic 인증 방식 disable
-        http
-                .httpBasic((auth) -> auth.disable());
-
-        http
-                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
-                        /*.requestMatchers("/login","/users").permitAll()
-                        .anyRequest().authenticated());*/
-
-        //jwt 필터 추가
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil, objectMapper), LoginFilter.class);
-
-        //로그인 필터 추가
-        http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository,objectMapper), UsernamePasswordAuthenticationFilter.class);
-
-        //로그아웃 필터 추가
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository,objectMapper), LogoutFilter.class);
-
-        http
+                .csrf((auth) -> auth.disable())
+                .formLogin((auth) -> auth.disable())
+                .httpBasic((auth) -> auth.disable())
+                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JWTFilter(jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository, objectMapper), JWTFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),
+                        jwtUtil, refreshRepository, objectMapper), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

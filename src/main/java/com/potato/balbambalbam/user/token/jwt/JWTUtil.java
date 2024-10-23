@@ -14,8 +14,9 @@ public class JWTUtil {
 
     private SecretKey secretKey;
 
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
+                Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     public String getSocialId(String token) {
@@ -51,8 +52,7 @@ public class JWTUtil {
 
     //토큰 생성하기
     public String createJwt(String category, String socialId, String role, Long expiredMs) {
-
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .claim("category", category)
                 .claim("socialId", socialId)
                 .claim("role", role)
@@ -60,5 +60,8 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+
+        return token;
+
     }
 }

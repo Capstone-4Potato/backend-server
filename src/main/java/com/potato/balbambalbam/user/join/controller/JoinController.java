@@ -15,12 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @Controller
 @ResponseBody
 @Slf4j
@@ -30,14 +32,6 @@ public class JoinController {
     private final JoinService joinService;
     private final RefreshRepository refreshRepository;
     private final JWTUtil jwtUtil;
-
-    public JoinController(JoinService joinService,
-                          JWTUtil jwtUtil,
-                          RefreshRepository refreshRepository) {
-        this.joinService = joinService;
-        this.jwtUtil = jwtUtil;
-        this.refreshRepository = refreshRepository;
-    }
 
     private Long extractUserIdFromToken(String access) {
         String socialId = jwtUtil.getSocialId(access);
