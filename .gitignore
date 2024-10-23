@@ -18,10 +18,10 @@ bin/
 /build/generated
 /build/tmp
 resolvedMainClassName
-.gradle
+.gradle/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
