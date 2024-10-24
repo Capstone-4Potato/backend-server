@@ -12,6 +12,11 @@ import java.util.List;
 @Repository
 public interface UserAttendanceRepository extends JpaRepository<UserAttendance, Long> {
     @Query("SELECT ua FROM user_attendance ua " +
+            "WHERE ua.userId = :userId AND ua.attendanceDate = :attendanceDate")
+    UserAttendance findByUserIdAndAttendanceDate(@Param("userId") Long userId,
+                                                 @Param("attendanceDate") LocalDate attendanceDate);
+
+    @Query("SELECT ua FROM user_attendance ua " +
             "WHERE ua.userId = :userId " +
             "AND ua.attendanceDate BETWEEN :startDate AND :endDate " +
             "ORDER BY ua.attendanceDate")

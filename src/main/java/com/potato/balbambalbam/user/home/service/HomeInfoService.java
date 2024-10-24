@@ -7,6 +7,7 @@ import com.potato.balbambalbam.data.repository.LevelRepository;
 import com.potato.balbambalbam.data.repository.UserAttendanceRepository;
 import com.potato.balbambalbam.data.repository.UserLevelRepository;
 import com.potato.balbambalbam.user.home.dto.HomeInfoDto;
+import jakarta.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -24,7 +25,10 @@ public class HomeInfoService {
     private final LevelRepository levelRepository;
     private final UserAttendanceRepository userAttendanceRepository;
 
+    @Transactional
     public HomeInfoDto getHomeInfo(Long userId) {
+        checkTodayAttendance(userId);
+
         HomeInfoDto homeInfoDto = new HomeInfoDto();
 
         setUserLevelInfo(userId, homeInfoDto);
@@ -32,6 +36,20 @@ public class HomeInfoService {
         setDailyWordInfo(userId, homeInfoDto);
 
         return homeInfoDto;
+    }
+
+    private void checkTodayAttendance(Long userId) {
+        LocalDate today = LocalDate.now();
+        UserAttendance todayAttendance = userAttendanceRepository.findByUserIdAndAttendanceDate(userId, today);
+
+        if (todayAttendance == null) {
+            UserAttendance newAttendance = new UserAttendance();
+            newAttendance.setUserId(userId);
+            newAttendance.setAttendanceDate(today);
+            newAttendance.setIsPresent(true);
+
+            userAttendanceRepository.save(newAttendance);
+        }
     }
 
     // 사용자 레벨 정보

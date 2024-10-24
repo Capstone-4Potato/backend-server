@@ -18,6 +18,7 @@ public interface RefreshRepository extends JpaRepository<Refresh, Long> {
     @Query("DELETE FROM refresh r WHERE r.id = :userId")
     void deleteByUserId(@Param("userId") Long userId);
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM refresh r WHERE r.socialId = :socialId")
     void deleteBySocialId(@Param("socialId") String socialId);
