@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface RefreshRepository extends JpaRepository<Refresh, Long> {
     Boolean existsByRefresh(String refresh);
 
+    @Transactional
     @Query("SELECT r.refresh FROM refresh r WHERE r.socialId = :socialId")
     String findRefreshBySocialId(@Param("socialId") String socialId);
 
